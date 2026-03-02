@@ -1,0 +1,230 @@
+﻿{
+  "name": "Saurav Raghuvanshi",
+  "title": "Digital Cloud Solution Architect",
+  "company": "Microsoft",
+  "subtitle": "Azure · Generative AI · Cloud-Native · Startups & Unicorns",
+  "tagline": "I help high-growth startups and unicorns build AI-powered, cloud-native platforms at scale.",
+  "location": "Bengaluru, India",
+  "email": "sauravraghuvanshi24@gmail.com",
+  "phone": "",
+  "availability": "Open to speaking engagements & collaborations · Responds within 24h (IST)",
+  "social": {
+    "linkedin": "https://www.linkedin.com/in/sauravraghuvanshi/",
+    "github": "https://github.com/sauravraghuvanshi",
+    "twitter": "https://x.com/Saurav_Raghu",
+    "calendly": "https://outlook.office.com/bookwithme/user/7724061ce7fa4a87acfd23b2dbaf800a@microsoft.com/meetingtype/ojiCbqKOdUCmNTWtPZFSnQ2?anonymous&ismsaljsauthenabled&ep=mlink"
+  },
+  "summary": "I'm a Digital Cloud Solution Architect at Microsoft, helping high-growth startups and unicorns harness the power of cloud and AI to build scalable, secure, and innovative solutions. My mission is to simplify complexity, accelerate value, and enable customers to achieve their boldest ambitions through technology.",
+  "aboutLong": "I specialize in designing cloud-native architectures and infusing AI into products to unlock new possibilities—from improving operational efficiency to creating intelligent, adaptive experiences. By combining technical depth with a growth mindset, I partner with founders and engineering leaders to modernize platforms, optimize investments, and drive long-term success.\n\nBeyond customer engagements, I'm passionate about thought leadership and community building. I've led initiatives like Code Without Barriers and Azure Developer Community India, mentored developers, and delivered sessions on AI and cloud transformation. I believe diversity and inclusion fuel innovation—and I strive to create impact that goes beyond technology.",
+  "missionStatement": "To simplify cloud and AI complexity, accelerate business value, and enable ambitious founders and engineering teams to build secure, scalable, and innovative products.",
+  "primaryCTA": "Let's build scalable, AI-powered cloud platforms together",
+  "whatImKnownFor": [
+    "Architecting secure, scalable, cloud-native platforms on Microsoft Azure for startups and unicorns",
+    "Designing AI-powered systems using Generative AI and Agentic AI — from prototype to production",
+    "Modernizing legacy platforms into resilient, cloud-native architectures with zero downtime",
+    "Optimizing cloud cost, security, reliability, and operational efficiency at scale",
+    "Acting as a trusted technical partner for founders and engineering leaders navigating cloud adoption",
+    "Delivering 70+ sessions on Azure and AI, training 30,000+ engineers and customers"
+  ],
+  "credibilityStats": [
+    { "value": "80+", "label": "Startups & Unicorns Empowered" },
+    { "value": "30K+", "label": "Engineers & Customers Trained" },
+    { "value": "70+", "label": "Azure & AI Sessions Delivered" },
+    { "value": "500+", "label": "Production Issues Resolved" }
+  ],
+  "skills": {
+    "Cloud & Architecture": {
+      "icon": "cloud",
+      "items": ["Microsoft Azure", "Azure Well-Architected Framework", "Cloud Adoption Framework", "Cloud-Native & Serverless", "High Availability & DR", "Hybrid & Multi-Cloud"]
+    },
+    "AI & Data": {
+      "icon": "cpu",
+      "items": ["Azure AI Foundry", "Generative AI", "Agentic AI", "AI Workflow Automation", "RAG Architectures", "Data-Driven Decision Systems"]
+    },
+    "DevOps & Platform Engineering": {
+      "icon": "git-branch",
+      "items": ["Terraform", "ARM Templates", "Docker", "Kubernetes", "CI/CD Automation", "Platform Reliability & Observability"]
+    },
+    "Programming & Tools": {
+      "icon": "server",
+      "items": ["Python", "Shell Scripting", "HTML / CSS", "Cloud Automation", "Azure CLI", "REST APIs"]
+    }
+  },
+  "certifications": [
+    {
+      "name": "Azure Administrator Associate",
+      "code": "AZ-104",
+      "issuer": "Microsoft",
+      "year": 2023,
+      "verifyUrl": "#",
+      "badge": "/images/certs/az-104.png",
+      "color": "blue"
+    },
+    {
+      "name": "Azure AI Fundamentals",
+      "code": "AI-900",
+      "issuer": "Microsoft",
+      "year": 2023,
+      "verifyUrl": "#",
+      "badge": "/images/certs/ai-900.png",
+      "color": "blue"
+    },
+    {
+      "name": "DevOps Engineer Expert",
+      "code": "AZ-400",
+      "issuer": "Microsoft",
+      "year": 2023,
+      "verifyUrl": "#",
+      "badge": "/images/certs/az-400.png",
+      "color": "blue"
+    },
+    {
+      "name": "AWS Certified Solutions Architect",
+      "code": "SAA-C03",
+      "issuer": "Amazon Web Services",
+      "year": 2022,
+      "verifyUrl": "#",
+      "badge": "/images/certs/aws-sa.png",
+      "color": "orange"
+    },
+    {
+      "name": "AWS Certified Cloud Practitioner",
+      "code": "CLF-C02",
+      "issuer": "Amazon Web Services",
+      "year": 2022,
+      "verifyUrl": "#",
+      "badge": "/images/certs/aws-cp.png",
+      "color": "orange"
+    },
+    {
+      "name": "Azure Cloud Architect Nanodegree",
+      "code": "ND081",
+      "issuer": "Udacity",
+      "year": 2022,
+      "verifyUrl": "#",
+      "badge": "/images/certs/udacity.png",
+      "color": "purple"
+    },
+    {
+      "name": "Azure Generative AI Nanodegree",
+      "code": "ND0013",
+      "issuer": "Udacity",
+      "year": 2023,
+      "verifyUrl": "#",
+      "badge": "/images/certs/udacity.png",
+      "color": "purple"
+    },
+    {
+      "name": "Computer Vision Nanodegree",
+      "code": "ND898",
+      "issuer": "Udacity",
+      "year": 2022,
+      "verifyUrl": "#",
+      "badge": "/images/certs/udacity.png",
+      "color": "purple"
+    }
+  ],
+  "testimonials": [
+    {
+      "id": 1,
+      "quote": "Saurav's guidance helped us re-architect our platform for scale in record time. His ability to translate complex Azure architecture into actionable engineering decisions is rare. He thinks like a founder, not just an architect.",
+      "author": "Founder",
+      "role": "CTO",
+      "company": "Early-stage SaaS Startup (Microsoft Startups Hub)",
+      "avatar": ""
+    },
+    {
+      "id": 2,
+      "quote": "The SupportIQ solution Saurav helped design genuinely changed how our team operates. Saving an hour per engineer per day compounded across the team is a massive productivity win. The ROI was immediate.",
+      "author": "Engineering Lead",
+      "role": "Head of Engineering",
+      "company": "Product Team",
+      "avatar": ""
+    },
+    {
+      "id": 3,
+      "quote": "Saurav ran the Cloud-Ready Academy program for our engineering cohort and the results were exceptional — 95% skills uplift, incredibly well-structured labs, and a genuine passion for helping developers grow.",
+      "author": "Program Manager",
+      "role": "L&D Manager",
+      "company": "Enterprise Training Program",
+      "avatar": ""
+    }
+  ],
+  "speaking": [
+    {
+      "title": "Building with Azure AI Foundry: From Prototype to Production",
+      "event": "Azure Developer Community India",
+      "year": 2024,
+      "type": "Community Talk",
+      "url": "#"
+    },
+    {
+      "title": "Generative AI for Real-World Products",
+      "event": "Microsoft Startup Events",
+      "year": 2024,
+      "type": "Workshop",
+      "url": "#"
+    },
+    {
+      "title": "Cloud-Native Architecture Patterns for Startups",
+      "event": "Code Without Barriers",
+      "year": 2023,
+      "type": "Workshop",
+      "url": "#"
+    },
+    {
+      "title": "Agentic AI: Designing Autonomous Workflows on Azure",
+      "event": "Azure Community Tech Talk",
+      "year": 2024,
+      "type": "Webinar",
+      "url": "#"
+    }
+  ],
+  "community": [
+    {
+      "role": "Lead",
+      "org": "Azure Developer Community India",
+      "description": "Leading community initiatives, organizing events, and driving Azure adoption among developers across India."
+    },
+    {
+      "role": "Organizer",
+      "org": "Code Without Barriers",
+      "description": "Organizing inclusive tech education events to make cloud and AI skills accessible to underrepresented communities."
+    },
+    {
+      "role": "Former Community Builder",
+      "org": "AWS Community Builder (Dev Tools)",
+      "description": "Contributed to the AWS developer community with content, workshops, and peer knowledge sharing."
+    },
+    {
+      "role": "Mentor",
+      "org": "Microsoft Startups Hub",
+      "description": "Mentoring early-stage founders and engineering teams on cloud architecture, AI adoption, and product scaling."
+    }
+  ],
+  "experience": [
+    {
+      "company": "Microsoft",
+      "role": "Digital Cloud Solution Architect",
+      "period": "Current",
+      "highlights": [
+        "Architect and modernize cloud-native platforms for high-growth startups and digital natives",
+        "Design secure, scalable Azure solutions aligned to measurable business outcomes",
+        "Guide customers on AI adoption, cloud optimization, and platform modernization",
+        "Act as a trusted technical partner for founders and engineering leaders"
+      ]
+    },
+    {
+      "company": "Microsoft",
+      "role": "Azure Developer Support Engineer",
+      "period": "Previous",
+      "highlights": [
+        "Resolved 500+ production Azure issues across PaaS and cloud services",
+        "Delivered 70+ sessions on Azure and AI, training 30,000+ engineers and customers",
+        "Collaborated with product engineering on APIM Workspace and Copilot features",
+        "Achieved consistent 5/5 customer satisfaction ratings",
+        "Served as SME for Microsoft Startups Hub, mentoring early-stage startups"
+      ]
+    }
+  ]
+}

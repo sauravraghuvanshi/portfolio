@@ -1,0 +1,104 @@
+[
+  {
+    "id": "supportiq-genai",
+    "title": "SupportIQ — Generative AI for Support Automation",
+    "description": "Built a Generative AI solution on Azure to automate support workflows for engineering teams. Leveraged Azure OpenAI and AI Foundry to intelligently triage, route, and resolve common support issues without manual intervention.",
+    "outcomes": [
+      "Reduced manual effort by ~1 hour per engineer per day",
+      "Improved support engineer efficiency by 14%",
+      "Delivered measurable operational and customer experience improvements"
+    ],
+    "tags": ["Generative AI", "Azure OpenAI", "Automation", "Support Engineering"],
+    "category": "AI",
+    "techStack": ["Azure OpenAI", "Azure AI Foundry", "Python", "Azure Functions", "Azure Logic Apps"],
+    "githubUrl": "#",
+    "liveUrl": "#",
+    "featured": true,
+    "year": 2024
+  },
+  {
+    "id": "cloud-ready-academy",
+    "title": "Cloud-Ready Academy — Azure Skilling at Scale",
+    "description": "Led end-to-end design of a structured Azure skilling initiative. Built hands-on labs, capstone projects, and learning modules to upskill diverse engineering audiences on cloud-native development and architecture.",
+    "outcomes": [
+      "Achieved 95% skills enhancement rate among participants",
+      "Scaled cloud learning to thousands of engineers",
+      "Built reusable lab content now used across multiple cohorts"
+    ],
+    "tags": ["Azure", "Developer Education", "Cloud Skilling", "Curriculum Design"],
+    "category": "Azure",
+    "techStack": ["Microsoft Azure", "Azure Labs", "GitHub", "Hands-on Learning"],
+    "githubUrl": "#",
+    "liveUrl": "#",
+    "featured": true,
+    "year": 2024
+  },
+  {
+    "id": "cloud-native-platform",
+    "title": "Cloud-Native Platform Modernization",
+    "description": "Led the modernization of a legacy monolithic application to a cloud-native, containerized microservices architecture on Azure Kubernetes Service. Implemented GitOps, observability, and zero-downtime deployment strategies.",
+    "outcomes": [
+      "Deployment frequency increased from weekly to daily",
+      "Mean time to recovery reduced from hours to minutes",
+      "Infrastructure costs reduced by 40%"
+    ],
+    "tags": ["AKS", "Kubernetes", "Microservices", "Azure", "DevOps"],
+    "category": "Azure",
+    "techStack": ["AKS", "Docker", "Terraform", "GitHub Actions", "Azure Monitor", "Helm"],
+    "githubUrl": "#",
+    "liveUrl": "#",
+    "featured": false,
+    "year": 2023
+  },
+  {
+    "id": "agentic-ai-workflows",
+    "title": "Agentic AI Workflow Automation",
+    "description": "Designed and implemented an Agentic AI system using Azure AI Foundry and Semantic Kernel that autonomously handles multi-step business workflows — from data ingestion and analysis to report generation and stakeholder notification.",
+    "outcomes": [
+      "Automated 12 previously manual end-to-end workflows",
+      "Reduced processing time by 80% on targeted workflows",
+      "Zero human intervention required for standard workflow execution"
+    ],
+    "tags": ["Agentic AI", "Azure AI Foundry", "Semantic Kernel", "Automation"],
+    "category": "AI",
+    "techStack": ["Azure AI Foundry", "Semantic Kernel", "Azure OpenAI", "Python", "Azure Service Bus"],
+    "githubUrl": "#",
+    "liveUrl": "#",
+    "featured": false,
+    "year": 2024
+  },
+  {
+    "id": "startup-landing-zone",
+    "title": "Azure Landing Zone for Startups",
+    "description": "Designed a right-sized Azure Landing Zone for a high-growth startup — hub-spoke networking, Azure Policy governance, identity baseline, and a self-service developer platform. Balanced enterprise-grade security with startup velocity.",
+    "outcomes": [
+      "New environment provisioning: 2 weeks → 2 hours",
+      "Security baseline achieved from day one",
+      "Passed investor due diligence cloud security review"
+    ],
+    "tags": ["Landing Zone", "Azure", "Governance", "Startups", "Terraform"],
+    "category": "Azure",
+    "techStack": ["Azure", "Terraform", "Azure Policy", "Entra ID", "GitHub Actions"],
+    "githubUrl": "#",
+    "liveUrl": "#",
+    "featured": false,
+    "year": 2023
+  },
+  {
+    "id": "devops-platform",
+    "title": "DevOps Platform Engineering",
+    "description": "Built an internal developer platform enabling self-service infrastructure provisioning, CI/CD pipeline templates, and standardized observability across multiple engineering teams.",
+    "outcomes": [
+      "Developer onboarding time reduced from 3 days to 2 hours",
+      "CI/CD pipeline adoption increased to 100% of teams",
+      "Deployment lead time reduced by 65%"
+    ],
+    "tags": ["DevOps", "Platform Engineering", "CI/CD", "Azure", "IaC"],
+    "category": "DevOps",
+    "techStack": ["Azure DevOps", "Terraform", "GitHub Actions", "Azure Monitor", "Bicep"],
+    "githubUrl": "#",
+    "liveUrl": "#",
+    "featured": false,
+    "year": 2023
+  }
+]

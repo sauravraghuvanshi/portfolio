@@ -1,0 +1,105 @@
+---
+title: "SupportIQ — Generative AI for Support Automation"
+subtitle: "Reducing manual support effort by 1 hour per engineer per day with Azure OpenAI"
+slug: "supportiq-genai"
+tags: ["Generative AI", "Azure OpenAI", "Automation", "AI Foundry", "Python"]
+category: "AI & Automation"
+timeline: "2024 (3 months)"
+role: "Lead Cloud Solution Architect"
+client: "Microsoft Internal / Engineering Teams"
+featured: true
+coverImage: "/images/case-studies/supportiq-cover.jpg"
+metrics:
+  - value: "1 hr"
+    label: "Saved per engineer per day"
+  - value: "14%"
+    label: "Efficiency improvement"
+  - value: "~0"
+    label: "Manual triage for common issues"
+  - value: "↑ CSAT"
+    label: "Customer satisfaction improvement"
+---
+
+## Context
+
+Support engineering teams handle hundreds of recurring, pattern-based issues every day — questions and incidents that follow predictable workflows but still consume significant engineer time for triage, response drafting, and resolution documentation. At scale, this creates a compounding problem: talented engineers spending cognitive energy on low-complexity, repetitive tasks rather than high-value architecture and product work.
+
+SupportIQ was designed to change that equation — using Generative AI to handle the routine so engineers can focus on the complex.
+
+## The Problem
+
+The support workflow had several structural inefficiencies:
+
+- **Manual triage**: Engineers manually reading, categorizing, and routing every incoming issue — even high-frequency, well-understood patterns
+- **Repetitive response drafting**: Significant time spent writing responses to questions with well-known answers, already documented in knowledge bases
+- **Inconsistent documentation**: Case resolution notes varied in quality and completeness, making institutional knowledge hard to build on
+- **No learning loop**: Each engineer re-solved problems others had already solved, with no automated knowledge capture
+
+The opportunity: automate the routine with intelligence, free engineers for meaningful work, and build a self-improving knowledge system.
+
+## Architecture
+
+SupportIQ was built on three core components:
+
+### 1. Intelligent Triage Engine (Azure OpenAI + AI Foundry)
+An AI-powered classifier that reads incoming support requests, identifies intent and category, assesses complexity, and routes accordingly:
+- **Routine / automatable** → AI handles end-to-end
+- **Complex / novel** → Routes to human engineer with AI-synthesized context
+- **Priority escalation** → Flags and fast-tracks based on severity signals
+
+### 2. Response Generation Pipeline
+For automatable issues, the pipeline:
+1. Retrieves relevant knowledge base articles via Azure AI Search (vector + keyword hybrid)
+2. Synthesizes a grounded, accurate response using GPT-4o with retrieved context (RAG)
+3. Validates the response against a quality rubric before delivery
+4. Logs the interaction for feedback and model improvement
+
+### 3. Resolution Documentation Automation
+After every resolved case (automated or human-handled), a structured summary is auto-generated:
+- Problem statement
+- Root cause
+- Resolution steps
+- Related articles updated/created
+
+This created a compounding knowledge base that improves with every resolved case.
+
+## Implementation Highlights
+
+### Key Technology Choices
+
+**Azure AI Foundry** as the orchestration layer — centralized model management, prompt versioning, evaluation framework, and deployment control. Foundry's built-in evaluation harness allowed continuous measurement of response quality against ground-truth answers.
+
+**Azure AI Search with hybrid retrieval** — combining vector semantic search with BM25 keyword search gave significantly better retrieval precision on technical content than vector-only approaches. This was essential for grounding responses accurately.
+
+**Function-calling for structured outputs** — all AI responses used structured function calling to ensure consistent, parseable output format. This made downstream validation and logging reliable.
+
+**Human-in-the-loop escalation** — the system was designed with calibrated confidence thresholds. Below threshold, cases automatically escalated to human engineers with AI-synthesized context pre-populated, turning escalations into assisted resolution rather than cold handoffs.
+
+### Quality Gates
+Every AI-generated response passed through:
+1. **Factual grounding check** — no claims not supported by retrieved context
+2. **Completeness check** — all required response fields populated
+3. **Tone/safety check** — Azure AI Content Safety integration
+4. **Confidence threshold** — responses below 85% confidence confidence routed to human review
+
+## Results
+
+| Metric | Before | After |
+|--------|--------|-------|
+| Average engineer time per issue | ~70 min | ~10 min (complex only) |
+| Manual effort — routine issues | 100% | ~5% (human oversight only) |
+| Engineer efficiency | Baseline | +14% |
+| Response consistency score | Variable | Standardized |
+| Knowledge base coverage | Static | Self-improving |
+
+**The compounding effect**: Every automated resolution strengthens the knowledge base, improving future automation rates. Three months post-deployment, automation coverage continued to expand as the system learned from edge cases.
+
+## Lessons Learned
+
+**1. RAG quality is everything** — The single biggest investment in quality was knowledge base curation and chunking strategy. A well-structured, up-to-date knowledge base dramatically outperformed a larger, poorly structured one. Garbage in, garbage out applies doubly in RAG systems.
+
+**2. Confidence calibration > accuracy maximization** — Early versions targeted the highest possible automation rate. The right target is correctly calibrating when to automate vs. escalate. A well-calibrated system that escalates appropriately earns engineer trust far faster than one that occasionally delivers confidently wrong answers.
+
+**3. Human-in-the-loop is a feature, not a fallback** — Designing escalations as "AI-assisted human resolution" rather than "AI failure mode" changed engineer perception of the system. Engineers saw it as a collaborator, not a replacement threat.
+
+**4. Measure the right things** — Time saved per engineer per day is the metric that resonated with stakeholders. Technical benchmarks (retrieval accuracy, BLEU scores) are useful internally but don't drive organizational buy-in. Lead with business outcomes.

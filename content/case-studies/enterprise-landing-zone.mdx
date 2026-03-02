@@ -1,0 +1,103 @@
+---
+title: "Azure Landing Zone for Startup Scale"
+subtitle: "Designing a governance-first, developer-friendly Azure platform for a high-growth startup"
+slug: "enterprise-landing-zone"
+tags: ["Azure", "Landing Zone", "Terraform", "Startups", "Governance", "Security"]
+category: "Cloud Architecture"
+timeline: "2023 (3 months)"
+role: "Cloud Solution Architect"
+client: "High-Growth SaaS Startup (Microsoft Startups Hub)"
+featured: false
+coverImage: "/images/case-studies/landing-zone-cover.jpg"
+metrics:
+  - value: "2 hrs"
+    label: "New environment provisioning (was 2 weeks)"
+  - value: "✓"
+    label: "Investor security review passed"
+  - value: "Day 1"
+    label: "Security baseline achieved"
+  - value: "40%"
+    label: "Infrastructure cost reduction"
+---
+
+## Context
+
+A high-growth SaaS startup in the Microsoft Startups Hub had reached Series A and was under pressure from investors and enterprise customers to demonstrate a mature cloud security and governance posture. Their existing Azure environment had grown organically: multiple subscriptions with inconsistent naming, no governance layer, and a security posture that would not pass enterprise customer due diligence.
+
+The engineering team was small, talented, and moving fast — any solution had to match startup velocity while establishing enterprise-grade foundations.
+
+## The Challenge
+
+The startup faced a classic scale-up dilemma:
+- **Security maturity required** by enterprise customers and investors before closing contracts
+- **Developer velocity must be preserved** — the team shipped daily and couldn't accept a governance framework that slowed them down
+- **Small team** — 4 engineers, no dedicated platform or security team
+- **Tight timeline** — 8 weeks to pass a customer security assessment
+
+The right answer: a right-sized landing zone that was secure by default but developer-friendly by design.
+
+## Architecture Approach
+
+We adopted a simplified version of the Azure Landing Zone architecture, scaled for a startup's reality rather than an enterprise's complexity.
+
+### Management Group Structure
+```
+Root
+├── Platform (shared services)
+│   ├── Identity (Entra ID, RBAC)
+│   └── Connectivity (Hub VNet, Firewall)
+└── Landing Zones
+    ├── Production (strict policy)
+    ├── Staging (moderate policy)
+    └── Development (permissive, sandbox)
+```
+
+### Key Design Decisions
+
+**Hub-Spoke Networking**: Single hub with Azure Firewall for north-south inspection. Spoke VNets for Production, Staging, and Dev. Private Endpoints for all data services — no public endpoints.
+
+**Policy-as-Code**: Azure Policy deployed via Terraform. Small, focused policy set: deny public storage blobs, require resource tagging, enforce encryption at rest. Not enterprise-complete — but complete for their audit scope.
+
+**Self-Service Subscription Vending**: A simple GitHub Actions workflow that creates a new environment on PR merge. Engineers can request new environments without tickets — reducing provisioning from 2 weeks to 2 hours.
+
+**Workload Identity Federation**: Replaced all service principals with Workload Identity Federation for GitHub Actions. Zero long-lived secrets in CI/CD.
+
+## Implementation
+
+Three-phase delivery to match their timeline:
+
+**Phase 1 (Weeks 1–3)**: Foundation
+- Management groups, initial policy set, hub VNet
+- Identity baseline: Entra ID groups, RBAC assignments, PIM for admin roles
+- Defender for Cloud enabled, security score baseline established
+
+**Phase 2 (Weeks 4–6)**: Migrate + Harden
+- Migrate production workloads to new landing zone
+- Private endpoints for all storage, databases, key vaults
+- GitHub Actions pipelines migrated to Workload Identity
+
+**Phase 3 (Weeks 7–8)**: Audit-Ready
+- Generate audit evidence package
+- Security assessment walkthrough with customer security team
+- Runbook documentation for the engineering team
+
+## Results
+
+| Metric | Before | After |
+|--------|--------|-------|
+| Customer security assessment | Not started | Passed |
+| Defender for Cloud score | 32% | 87% |
+| Public endpoints | 14 | 0 |
+| Environment provisioning | 2 weeks | 2 hours |
+| Long-lived credentials in CI/CD | 12 | 0 |
+| Infrastructure costs | Baseline | -40% |
+
+The startup closed their first enterprise contract within 30 days of the assessment passing.
+
+## Lessons Learned
+
+**1. Right-size, don't enterprise-size** — A startup with 4 engineers doesn't need the same landing zone as a 3,000-person enterprise. The right architecture for the context is always better than the theoretically correct complete architecture for a different context.
+
+**2. Developer experience is security** — Governance that is too hard to follow gets worked around. We made secure defaults the path of least resistance — private endpoints, Workload Identity, tagged resources — so developers naturally stayed within guardrails.
+
+**3. Audit evidence is a product** — Preparing for security assessments is much easier when evidence collection is automated. Every Defender for Cloud recommendation exports to a structured report. Building this into the platform from the start saved weeks of manual prep.
