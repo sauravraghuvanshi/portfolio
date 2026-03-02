@@ -31,12 +31,15 @@ jobs:
           zip -rq $GITHUB_WORKSPACE/standalone-deploy.zip .
 
       - name: Deploy to Azure via Kudu zip-deploy
+        env:
+          DEPLOY_USER: ${{ secrets.AZURE_DEPLOY_USER }}
+          DEPLOY_PASS: ${{ secrets.AZURE_DEPLOY_PASSWORD }}
         run: |
           HTTP_STATUS=$(curl -X POST \
             --max-time 300 \
-            -u "${{ secrets.AZURE_DEPLOY_USER }}:${{ secrets.AZURE_DEPLOY_PASSWORD }}" \
+            -u "${DEPLOY_USER}:${DEPLOY_PASS}" \
             -H "Content-Type: application/zip" \
-            --data-binary @$GITHUB_WORKSPACE/standalone-deploy.zip \
+            --data-binary @"$GITHUB_WORKSPACE/standalone-deploy.zip" \
             "https://sauravraghuvanshi-portfolio.scm.azurewebsites.net/api/zipdeploy?isAsync=false" \
             -w "%{http_code}" \
             -o /tmp/deploy-response.txt \
