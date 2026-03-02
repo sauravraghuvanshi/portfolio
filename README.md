@@ -1,183 +1,149 @@
-# Alex Morgan — Cloud Solution Architect Portfolio
+# Saurav Raghuvanshi — Portfolio
 
-A premium, responsive portfolio website built with Next.js 15 (App Router), TypeScript, Tailwind CSS, and Framer Motion.
+**Digital Cloud Solution Architect @ Microsoft** · Bengaluru, India
 
-## Quick start
+> I help high-growth startups and unicorns build AI-powered, cloud-native platforms at scale.
+
+**Live site:** https://sauravraghuvanshi-portfolio.azurewebsites.net
+[![Build and Deploy to Azure](https://github.com/sauravraghuvanshi/portfolio/actions/workflows/deploy.yml/badge.svg)](https://github.com/sauravraghuvanshi/portfolio/actions/workflows/deploy.yml)
+
+---
+
+## Tech stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16 (App Router) · TypeScript |
+| Styling | Tailwind CSS v4 |
+| Animation | Framer Motion |
+| Content | JSON + MDX (no CMS) |
+| Deployment | Azure App Service (Linux, Node 20 LTS) |
+| CI/CD | GitHub Actions → Azure |
+
+---
+
+## Local development
 
 ```bash
+cd portfolio
 npm install
 npm run dev
-# Visit http://localhost:3000
+# http://localhost:3000
 ```
 
-## Customizing content
+> `npm run dev` uses the current `content/events.json`. To regenerate from source Word docs, place the `My Events/` folder one level above `portfolio/` and run `npm run generate-events`.
 
-All content is stored in plain JSON and MDX files — no code changes required for most updates.
-
-### 1. Update your personal info
-
-Edit `content/profile.json`:
-
-| Field | What to update |
-|-------|----------------|
-| `name` | Your full name |
-| `title` | Your job title |
-| `tagline` | One-line value proposition |
-| `location` | City, state, remote preference |
-| `email` | Your contact email |
-| `social` | LinkedIn, GitHub, Twitter, Calendly URLs |
-| `summary` | 2–3 sentence bio |
-| `credibilityStats` | years of experience, # projects, key metrics |
-| `whatImKnownFor` | 4–6 bullet points |
-| `skills` | Skill groups and items |
-| `certifications` | Your actual certifications |
-| `testimonials` | Real quotes from clients/colleagues |
-| `speaking` | Conference talks, workshops |
-| `experience` | Work history with highlights |
-
-### 2. Replace placeholder case studies
-
-Each case study is a `.mdx` file in `content/case-studies/`. Three sample case studies are provided. To add or replace:
-
-1. Copy one of the existing `.mdx` files
-2. Update the frontmatter:
-
-```yaml
 ---
-title: "Your Case Study Title"
-subtitle: "Brief subtitle"
-slug: "your-case-study-slug"
-tags: ["Azure", "Terraform"]
-category: "Cloud Architecture"
-timeline: "Jan 2024 – Jun 2024"
-role: "Lead Cloud Architect"
-client: "Your Client (can be anonymized)"
-featured: true
-coverImage: "/images/case-studies/your-image.jpg"
-metrics:
-  - value: "61%"
-    label: "Cost reduction"
-  - value: "2 hrs"
-    label: "Provisioning time"
----
+
+## Content pipeline
+
+Event data (speaking engagements, community sessions, workshops) is generated from Word documents:
+
+```
+My Events/          ← source DOCX files + photos (local only, not in repo)
+    ↓
+npm run generate-events
+    ↓
+content/events.json          ← committed to repo
+public/events/{slug}/*.jpg   ← committed to repo
+    ↓
+next build → 46 static pages
 ```
 
-3. Write the body in MDX (standard Markdown + JSX components)
-
-### 3. Update projects
-
-Edit `content/projects.json` — add, remove, or modify entries. Each project has:
-- `id`, `title`, `description`
-- `outcomes` — measurable results, max 3
-- `tags`, `category`, `techStack`
-- `githubUrl`, `liveUrl` — use `"#"` to hide the icon
-- `featured` — shows on homepage if `true`
-
-### 4. Add your resume PDF
-
-Place your resume PDF at `public/resume.pdf`. The Resume page has a "Download PDF" button that links to it.
-
-### 5. Add profile/cover images
-
-- Profile placeholder: `public/images/profile.jpg`
-- Case study covers: `public/images/case-studies/[name].jpg` (1200×630 recommended)
-- Certification badges: `public/images/certs/[code].png`
-
-### 6. Update the domain
-
-Search-replace `alexmorgan.dev` with your actual domain in:
-- `app/layout.tsx` (metadataBase)
-- `app/sitemap.ts`
-- `app/robots.ts`
-- `components/JsonLd.tsx`
-
-## Pages
-
-| Route | Description |
-|-------|-------------|
-| `/` | Homepage with all sections |
-| `/case-studies` | All case studies listing |
-| `/case-studies/[slug]` | Individual case study |
-| `/projects` | Full project gallery with filters |
-| `/resume` | HTML resume + PDF download |
-
-## Deploying to Vercel
-
-### Option A: Vercel CLI
-
+When new events are added locally:
 ```bash
-npm i -g vercel
-vercel --prod
+npm run generate-events   # reads My Events/, writes content/events.json + public/events/
+git add content/events.json public/events/
+git commit -m "content: add new events"
+git push                  # triggers CI/CD → auto-deploys
 ```
 
-### Option B: GitHub
+---
 
-1. Push this repo to GitHub
-2. Visit [vercel.com](https://vercel.com) → New Project
-3. Import your GitHub repo
-4. Vercel auto-detects Next.js — click Deploy
+## Deployment
 
-### Custom domain
+CI/CD is fully automated via GitHub Actions. Every push to `main`:
+1. Installs dependencies
+2. Runs `npm run build` (prebuild + Next.js build + postbuild)
+3. Zips `.next/standalone/`
+4. Deploys to Azure App Service
 
-In Vercel dashboard → Settings → Domains → add your domain.
+See [`AZURE-DEPLOY.md`](../AZURE-DEPLOY.md) for manual deployment steps and troubleshooting.
+
+---
 
 ## Architecture
 
 ```
 portfolio/
-├── app/                    # Next.js App Router pages
-│   ├── layout.tsx           # Root layout (nav, footer, fonts, SEO)
-│   ├── page.tsx             # Homepage
-│   ├── sitemap.ts           # Auto-generated sitemap
-│   ├── robots.ts            # robots.txt
-│   ├── not-found.tsx        # 404 page
+├── app/                        # Next.js App Router pages
+│   ├── layout.tsx              # Root layout (nav, footer, fonts, SEO)
+│   ├── page.tsx                # Homepage (all sections)
+│   ├── sitemap.ts              # Auto-generated sitemap
+│   ├── robots.ts               # robots.txt
+│   ├── not-found.tsx           # 404 page
 │   ├── case-studies/
-│   │   ├── page.tsx         # Case studies listing
-│   │   └── [slug]/page.tsx  # Individual case study (MDX)
-│   ├── projects/page.tsx    # Projects gallery
-│   └── resume/page.tsx      # Resume page
+│   │   ├── page.tsx            # Case studies listing
+│   │   └── [slug]/page.tsx     # Individual case study (MDX)
+│   ├── events/
+│   │   ├── page.tsx            # Events listing with filters
+│   │   └── [slug]/page.tsx     # Individual event detail + gallery
+│   ├── projects/page.tsx       # Projects gallery
+│   ├── resume/page.tsx         # Resume page + PDF download
+│   └── social/page.tsx         # Social links
 ├── components/
-│   ├── layout/              # Navigation, Footer
-│   ├── sections/            # Homepage sections (Hero, About, Skills, etc.)
-│   ├── ui/                  # Primitive components (Button, Badge, Card, etc.)
-│   └── JsonLd.tsx           # JSON-LD schema components
+│   ├── layout/                 # Navigation, Footer
+│   ├── sections/               # Homepage sections (Hero, About, Skills, Speaking, etc.)
+│   ├── events/                 # EventGallery (lightbox)
+│   └── ui/                     # Primitives (Button, Badge, Card, etc.)
 ├── content/
-│   ├── profile.json         # Personal info, skills, certs, testimonials
-│   ├── projects.json        # Project gallery data
-│   └── case-studies/        # MDX case studies
+│   ├── profile.json            # Personal info, skills, certs, testimonials, experience
+│   ├── events.json             # Generated — 32 speaking/community events
+│   ├── events-overrides.json   # Manual overrides merged at build time
+│   ├── projects.json           # Project gallery data
+│   └── case-studies/           # MDX case studies
+├── scripts/
+│   ├── generate-events.mjs     # Parses My Events/ DOCX → events.json + photos
+│   └── postbuild.mjs           # Copies public/ + .next/static/ into standalone/
 ├── lib/
-│   ├── content.ts           # Content loading utilities
-│   └── utils.ts             # cn(), formatDate(), etc.
-└── public/                  # Static assets
+│   ├── content.ts              # Data loading utilities
+│   └── utils.ts                # cn(), formatDate(), etc.
+└── public/                     # Static assets (images, events photos, resume PDF)
 ```
 
-## Performance checklist
+---
 
-- [x] next/font for zero-CLS font loading
-- [x] AVIF/WebP image formats via next/image
-- [x] Security headers (CSP, HSTS, X-Frame-Options)
+## Pages
+
+| Route | Description |
+|---|---|
+| `/` | Homepage — Hero, About, Skills, Featured Work, Speaking, Contact |
+| `/events` | 32 speaking & community events with filters |
+| `/events/[slug]` | Event detail — description, highlights, photo gallery |
+| `/case-studies` | Architecture case studies |
+| `/case-studies/[slug]` | Individual case study (MDX) |
+| `/projects` | Full project gallery with filters |
+| `/resume` | HTML resume + PDF download |
+
+---
+
+## Performance
+
+- [x] `next/font` for zero-CLS font loading
+- [x] AVIF/WebP image formats via `next/image`
+- [x] Security headers (X-Frame-Options, CSP, Referrer-Policy)
 - [x] `prefers-reduced-motion` respected by Framer Motion
 - [x] Semantic HTML + ARIA labels
-- [x] Skip-to-content link
-- [x] Keyboard navigation
+- [x] Keyboard navigation + skip-to-content
 - [x] Dark/light mode with zero flash
 - [x] JSON-LD schema (Person, WebSite, CreativeWork)
-- [x] sitemap.xml + robots.txt
+- [x] `sitemap.xml` + `robots.txt`
 - [x] OpenGraph + Twitter card metadata per page
 
-## Personalizing where to paste your values
+---
 
-After running locally and verifying the site works, replace the following placeholders:
+## Connect
 
-| Placeholder | File | What to replace with |
-|-------------|------|---------------------|
-| `Alex Morgan` | `content/profile.json` | Your real name |
-| `alex.morgan@example.com` | `content/profile.json` | Your real email |
-| `Seattle, WA` | `content/profile.json` | Your location |
-| `https://linkedin.com/in/alexmorgan` | `content/profile.json` | Your LinkedIn URL |
-| `https://github.com/alexmorgan` | `content/profile.json` | Your GitHub URL |
-| `https://calendly.com/alexmorgan/30min` | `content/profile.json` | Your Calendly or meeting link |
-| `alexmorgan.dev` | Multiple files | Your domain |
-| `(replace with real company)` | `content/profile.json` | Your actual employer names |
-| `(replace with real metric)` | All MDX case studies | Your actual measured results |
-| `/resume.pdf` | `public/` | Add your actual resume PDF |
+- LinkedIn: [linkedin.com/in/sauravraghuvanshi](https://www.linkedin.com/in/sauravraghuvanshi/)
+- GitHub: [github.com/sauravraghuvanshi](https://github.com/sauravraghuvanshi)
+- X/Twitter: [@Saurav_Raghu](https://x.com/Saurav_Raghu)
