@@ -39,6 +39,7 @@ deploy.zip
 logs.zip
 standalone-deploy.zip
 nul
+publish-profile.xml
 
 # claude temp files
 tmpclaude-*
