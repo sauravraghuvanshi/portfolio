@@ -51,7 +51,7 @@ export default function Hero() {
 
           {/* Headline */}
           <motion.h1 variants={itemVariants} className="heading-xl text-slate-900 dark:text-white mb-6">
-            Helping Startup and Unicorn{" "}
+            Helping Startups and Unicorns{" "}
             <br />
             <span className="gradient-text">Harness the Power of Cloud &amp; AI</span>
           </motion.h1>
