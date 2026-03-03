@@ -47,7 +47,7 @@ npm run generate-events
 content/events.json          ← committed to repo
 public/events/{slug}/*.jpg   ← committed to repo
     ↓
-next build → 46 static pages
+next build → 47 static pages
 ```
 
 When new events are added locally:
@@ -57,6 +57,8 @@ git add content/events.json public/events/
 git commit -m "content: add new events"
 git push                  # triggers CI/CD → auto-deploys
 ```
+
+Talks data (`content/talks.json`) is maintained manually — add a new object with `id` (YouTube video ID), `title`, `topic`, and `featured: true/false`. No generation script needed; push to deploy.
 
 ---
 
@@ -90,17 +92,19 @@ portfolio/
 │   │   └── [slug]/page.tsx     # Individual event detail + gallery
 │   ├── projects/page.tsx       # Projects gallery
 │   ├── resume/page.tsx         # Resume page + PDF download
-│   └── social/page.tsx         # Social links
+│   ├── social/page.tsx         # Social links
+│   └── talks/page.tsx          # YouTube talks with topic filters
 ├── components/
 │   ├── layout/                 # Navigation, Footer
-│   ├── sections/               # Homepage sections (Hero, About, Skills, Speaking, etc.)
+│   ├── sections/               # Homepage sections (Hero, About, Skills, FeaturedTalks, Speaking, etc.)
 │   ├── events/                 # EventGallery (lightbox)
-│   └── ui/                     # Primitives (Button, Badge, Card, etc.)
+│   └── ui/                     # Primitives (Button, Badge, Card, YouTubeEmbed, etc.)
 ├── content/
 │   ├── profile.json            # Personal info, skills, certs, testimonials, experience
 │   ├── events.json             # Generated — 32 speaking/community events
 │   ├── events-overrides.json   # Manual overrides merged at build time
 │   ├── projects.json           # Project gallery data
+│   ├── talks.json              # 12 YouTube session IDs, titles, topics
 │   └── case-studies/           # MDX case studies
 ├── scripts/
 │   ├── generate-events.mjs     # Parses My Events/ DOCX → events.json + photos
@@ -117,7 +121,8 @@ portfolio/
 
 | Route | Description |
 |---|---|
-| `/` | Homepage — Hero, About, Skills, Featured Work, Speaking, Contact |
+| `/` | Homepage — Hero, About, Skills, Featured Work, Speaking, Talks, Contact |
+| `/talks` | 12 YouTube sessions with topic filters |
 | `/events` | 32 speaking & community events with filters |
 | `/events/[slug]` | Event detail — description, highlights, photo gallery |
 | `/case-studies` | Architecture case studies |
@@ -131,6 +136,7 @@ portfolio/
 
 - [x] `next/font` for zero-CLS font loading
 - [x] AVIF/WebP image formats via `next/image`
+- [x] YouTube embeds lazy-loaded (thumbnail first, iframe injected on click)
 - [x] Security headers (X-Frame-Options, CSP, Referrer-Policy)
 - [x] `prefers-reduced-motion` respected by Framer Motion
 - [x] Semantic HTML + ARIA labels
