@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getCaseStudy, getAllCaseStudies } from "@/lib/content";
 import { compileMDX } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
 import { ArrowLeft, ArrowRight, Clock, Tag, User, Building2 } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import type { Metadata } from "next";
@@ -43,7 +44,12 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
 
   const { content } = await compileMDX({
     source: caseStudy.content,
-    options: { parseFrontmatter: false },
+    options: {
+      parseFrontmatter: false,
+      mdxOptions: {
+        remarkPlugins: [remarkGfm],
+      },
+    },
     components: {
       h2: ({ children, ...props }) => (
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-10 mb-4 scroll-mt-24" {...props}>
