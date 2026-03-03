@@ -33,7 +33,7 @@ export default function HomePage() {
   const caseStudies = getFeaturedCaseStudies();
   const projects = getProjects();
   const allEvents = getEvents();
-  const talks = getTalks();
+  const talks = getTalks().filter((t) => t.featured);
   const speakingEvents = SPEAKING_SLUGS
     .map((slug) => allEvents.find((e) => e.slug === slug))
     .filter((e): e is NonNullable<typeof e> => e != null);

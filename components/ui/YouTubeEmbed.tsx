@@ -10,6 +10,9 @@ interface YouTubeEmbedProps {
 
 export default function YouTubeEmbed({ videoId, title }: YouTubeEmbedProps) {
   const [playing, setPlaying] = useState(false);
+  const [thumbSrc, setThumbSrc] = useState(
+    `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
+  );
 
   if (playing) {
     return (
@@ -32,11 +35,12 @@ export default function YouTubeEmbed({ videoId, title }: YouTubeEmbedProps) {
       aria-label={`Play: ${title}`}
     >
       <Image
-        src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
+        src={thumbSrc}
         alt={title}
         fill
         sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
         className="object-cover transition-transform duration-500 group-hover:scale-105"
+        onError={() => setThumbSrc(`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`)}
       />
       {/* Overlay */}
       <div className="absolute inset-0 bg-black/20 group-hover:bg-black/35 transition-colors duration-300" />
