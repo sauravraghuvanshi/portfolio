@@ -508,10 +508,10 @@
       "Community",
       "Microsoft"
     ],
-    "summary": "Co-presented at Azure Developer Day Bengaluru, delivering a session on using OpenAI's image generation models for real-world applications and exploring Multi-Cloud Patterns (MCP) for modern architecture. The full-day event at Microsoft Ferns Office focused on cloud innovation, GenAI, and meaningful developer connections.",
+    "summary": "Co-presented at Azure Developer Day Bengaluru, delivering a session on using OpenAI's image generation models for real-world applications and exploring Model Context Protocol (MCP) for modern architecture. The full-day event at Microsoft Ferns Office focused on cloud innovation, GenAI, and meaningful developer connections.",
     "highlights": [
       "Co-presented a session on OpenAI image generation models and their real-world applications",
-      "Explored Multi-Cloud Patterns (MCP) and their role in modern cloud architecture design",
+      "Explored Model Context Protocol (MCP) and their role in modern cloud architecture design",
       "Delivered hands-on demos showcasing GenAI integration within Azure development workflows",
       "Facilitated networking between Bengaluru's cloud and AI developer community"
     ],
