@@ -1,4 +1,4 @@
-import { getProfile, getFeaturedCaseStudies, getProjects, getEvents } from "@/lib/content";
+import { getProfile, getFeaturedCaseStudies, getProjects, getEvents, getTalks } from "@/lib/content";
 import Hero from "@/components/sections/Hero";
 import CredibilityBar from "@/components/sections/CredibilityBar";
 import About from "@/components/sections/About";
@@ -6,6 +6,7 @@ import Skills from "@/components/sections/Skills";
 import FeaturedCaseStudies from "@/components/sections/FeaturedCaseStudies";
 import ProjectsGrid from "@/components/sections/ProjectsGrid";
 import Speaking from "@/components/sections/Speaking";
+import FeaturedTalks from "@/components/sections/FeaturedTalks";
 import Certifications from "@/components/sections/Certifications";
 import Contact from "@/components/sections/Contact";
 import type { Metadata } from "next";
@@ -32,6 +33,7 @@ export default function HomePage() {
   const caseStudies = getFeaturedCaseStudies();
   const projects = getProjects();
   const allEvents = getEvents();
+  const talks = getTalks();
   const speakingEvents = SPEAKING_SLUGS
     .map((slug) => allEvents.find((e) => e.slug === slug))
     .filter((e): e is NonNullable<typeof e> => e != null);
@@ -45,6 +47,7 @@ export default function HomePage() {
       <FeaturedCaseStudies caseStudies={caseStudies} />
       <ProjectsGrid projects={projects} limit={6} />
       <Speaking events={speakingEvents} />
+      <FeaturedTalks talks={talks} />
       <Certifications certifications={profile.certifications} />
       <Contact
         email={profile.email}

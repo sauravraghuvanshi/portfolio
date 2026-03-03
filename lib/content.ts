@@ -112,3 +112,22 @@ export function getEvents(): Event[] {
 export function getEvent(slug: string): Event | null {
   return getEvents().find((e) => e.slug === slug) ?? null;
 }
+
+// ---------------------------------------------------------------------------
+// Talks
+// ---------------------------------------------------------------------------
+
+export interface Talk {
+  id: string;
+  title: string;
+  topic: string;
+  description?: string;
+  featured: boolean;
+}
+
+export function getTalks(): Talk[] {
+  const filePath = path.join(contentDir, "talks.json");
+  if (!fs.existsSync(filePath)) return [];
+  const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
+  return JSON.parse(raw) as Talk[];
+}
