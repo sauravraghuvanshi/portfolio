@@ -25,7 +25,7 @@ export default function Contact({ email, availability, social }: ContactProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const mailtoUrl = `mailto:${email}?subject=${encodeURIComponent(formState.subject || "Portfolio Inquiry")}&body=${encodeURIComponent(
-      `Hi Alex,\n\nMy name is ${formState.name}.\n\n${formState.message}\n\nBest,\n${formState.name}`
+      `Hi Saurav,\n\nMy name is ${formState.name}.\n\n${formState.message}\n\nBest,\n${formState.name}`
     )}`;
     window.location.href = mailtoUrl;
     setSubmitted(true);
