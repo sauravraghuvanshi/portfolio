@@ -15,9 +15,7 @@ const domains = [
   "Azure Architecture",
   "AI Workloads",
   "App Modernization",
-  "DevSecOps",
   "Landing Zones",
-  "FinOps",
   "Platform Engineering",
 ];
 
