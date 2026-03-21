@@ -10,6 +10,7 @@ export async function POST(request: NextRequest) {
 
   const formData = await request.formData();
   const file = formData.get("file") as File | null;
+  const slug = formData.get("slug") as string | null;
 
   if (!file) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
@@ -24,8 +25,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "File too large (max 5MB)" }, { status: 400 });
   }
 
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const url = saveImage(file.name, buffer);
-
-  return NextResponse.json({ url, message: "Image uploaded" });
+  try {
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const url = await saveImage(file.name, buffer, slug || undefined);
+    return NextResponse.json({ url, message: "Image uploaded" });
+  } catch (err) {
+    console.error("Image upload error:", err);
+    return NextResponse.json({ error: "Failed to upload image" }, { status: 500 });
+  }
 }

@@ -2,14 +2,13 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import type { BlogPostMeta } from "./content";
+import { uploadToBlob } from "./azure-storage";
 
 const contentDir = path.join(process.cwd(), "content");
 const blogDir = path.join(contentDir, "blog");
-const imageDir = path.join(process.cwd(), "public", "blog", "images");
 
 function ensureDirs() {
   if (!fs.existsSync(blogDir)) fs.mkdirSync(blogDir, { recursive: true });
-  if (!fs.existsSync(imageDir)) fs.mkdirSync(imageDir, { recursive: true });
 }
 
 export function saveBlogPost(meta: BlogPostMeta, content: string): void {
@@ -32,10 +31,26 @@ export function deleteBlogPost(slug: string): boolean {
   return true;
 }
 
-export function saveImage(filename: string, buffer: Buffer): string {
-  ensureDirs();
+const MIME_TYPES: Record<string, string> = {
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".png": "image/png",
+  ".webp": "image/webp",
+  ".avif": "image/avif",
+  ".gif": "image/gif",
+};
+
+export async function saveImage(
+  filename: string,
+  buffer: Buffer,
+  slug?: string
+): Promise<string> {
   const safe = filename.replace(/[^a-zA-Z0-9._-]/g, "-").toLowerCase();
   const finalName = `${Date.now()}-${safe}`;
-  fs.writeFileSync(path.join(imageDir, finalName), buffer);
-  return `/blog/images/${finalName}`;
+  const folder = slug || "_uploads";
+  const blobPath = `${folder}/${finalName}`;
+  const ext = "." + (safe.split(".").pop()?.toLowerCase() || "png");
+  const contentType = MIME_TYPES[ext] || "application/octet-stream";
+
+  return uploadToBlob(blobPath, buffer, contentType);
 }
