@@ -11,40 +11,37 @@ import {
   ChevronDown,
   ChevronUp,
   Loader2,
+  Plus,
+  X,
 } from "lucide-react";
-import type { BlogPost } from "@/lib/content";
+import type { CaseStudy } from "@/lib/content";
 import MediaResizeBar from "./MediaResizeBar";
 import YouTubeEmbed from "../ui/YouTubeEmbed";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
-interface BlogEditorProps {
+interface CaseStudyEditorProps {
   mode: "create" | "edit";
-  initialData?: BlogPost;
+  initialData?: CaseStudy;
 }
 
 const categories = [
-  "General",
-  "Azure",
+  "AI & Automation",
+  "Cloud Education",
   "Cloud Architecture",
-  "API Management",
   "DevOps",
   "Security",
-  "AI & ML",
-  "Web Development",
 ];
 
-export default function BlogEditor({ mode, initialData }: BlogEditorProps) {
+export default function CaseStudyEditor({ mode, initialData }: CaseStudyEditorProps) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
   const editorRef = useRef<HTMLDivElement>(null);
 
-  // Insert text at cursor position in the editor's textarea
   function insertAtCursor(text: string) {
     const textarea = editorRef.current?.querySelector("textarea");
     if (!textarea) {
-      // Fallback: append to content
       setContent((prev) => prev + text);
       return;
     }
@@ -54,7 +51,6 @@ export default function BlogEditor({ mode, initialData }: BlogEditorProps) {
     const after = textarea.value.substring(end);
     const newVal = before + text + after;
     setContent(newVal);
-    // Restore cursor position after React re-render
     requestAnimationFrame(() => {
       textarea.selectionStart = textarea.selectionEnd = start + text.length;
       textarea.focus();
@@ -62,17 +58,16 @@ export default function BlogEditor({ mode, initialData }: BlogEditorProps) {
   }
 
   const [title, setTitle] = useState(initialData?.title ?? "");
-  const [description, setDescription] = useState(initialData?.description ?? "");
-  const [category, setCategory] = useState(initialData?.category ?? "General");
+  const [subtitle, setSubtitle] = useState(initialData?.subtitle ?? "");
+  const [category, setCategory] = useState(initialData?.category ?? "Cloud Architecture");
   const [tags, setTags] = useState(initialData?.tags?.join(", ") ?? "");
+  const [timeline, setTimeline] = useState(initialData?.timeline ?? "");
+  const [role, setRole] = useState(initialData?.role ?? "");
+  const [client, setClient] = useState(initialData?.client ?? "");
   const [coverImage, setCoverImage] = useState(initialData?.coverImage ?? "");
   const [featured, setFeatured] = useState(initialData?.featured ?? false);
-  const [status, setStatus] = useState<"draft" | "published">(
-    initialData?.status ?? "draft"
-  );
-  const [externalUrl, setExternalUrl] = useState(initialData?.externalUrl ?? "");
-  const [externalSource, setExternalSource] = useState(
-    initialData?.externalSource ?? ""
+  const [metrics, setMetrics] = useState<{ value: string; label: string }[]>(
+    initialData?.metrics ?? [{ value: "", label: "" }]
   );
   const [content, setContent] = useState(initialData?.content ?? "");
   const [saving, setSaving] = useState(false);
@@ -85,7 +80,6 @@ export default function BlogEditor({ mode, initialData }: BlogEditorProps) {
     width: string;
   } | null>(null);
 
-  // Regex-replace width attribute for a specific media element in the markdown
   function updateMediaWidth(
     src: string,
     mediaType: "img" | "youtube",
@@ -112,7 +106,6 @@ export default function BlogEditor({ mode, initialData }: BlogEditorProps) {
     setActiveMedia((prev) => (prev ? { ...prev, width: newWidth } : null));
   }
 
-  // Detect if cursor is on a media line and show the resize bar
   function detectMediaAtCursor(text: string, cursorPos: number) {
     const lineStart = text.lastIndexOf("\n", cursorPos - 1) + 1;
     const lineEnd = text.indexOf("\n", cursorPos);
@@ -198,6 +191,21 @@ export default function BlogEditor({ mode, initialData }: BlogEditorProps) {
     }
   }
 
+  // --- Metrics helpers ---
+  function addMetric() {
+    setMetrics((prev) => [...prev, { value: "", label: "" }]);
+  }
+
+  function removeMetric(index: number) {
+    setMetrics((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  function updateMetric(index: number, field: "value" | "label", val: string) {
+    setMetrics((prev) =>
+      prev.map((m, i) => (i === index ? { ...m, [field]: val } : m))
+    );
+  }
+
   async function handleSave() {
     if (!title.trim()) {
       setMessage({ type: "error", text: "Title is required" });
@@ -209,24 +217,25 @@ export default function BlogEditor({ mode, initialData }: BlogEditorProps) {
 
     const payload = {
       title,
-      description,
+      subtitle,
       category,
       tags: tags
         .split(",")
         .map((t) => t.trim())
         .filter(Boolean),
+      timeline,
+      role,
+      client,
       coverImage: coverImage || undefined,
       featured,
-      status,
+      metrics: metrics.filter((m) => m.value || m.label),
       content,
-      externalUrl: externalUrl || undefined,
-      externalSource: externalSource || undefined,
     };
 
     const url =
       mode === "create"
-        ? "/api/admin/blog"
-        : `/api/admin/blog/${initialData!.slug}`;
+        ? "/api/admin/case-studies"
+        : `/api/admin/case-studies/${initialData!.slug}`;
     const method = mode === "create" ? "POST" : "PUT";
 
     const res = await fetch(url, {
@@ -237,7 +246,6 @@ export default function BlogEditor({ mode, initialData }: BlogEditorProps) {
 
     setSaving(false);
 
-    // Handle non-JSON responses (e.g., HTML error pages or redirects)
     const contentType = res.headers.get("content-type") || "";
     if (!contentType.includes("application/json")) {
       setMessage({ type: "error", text: `Server error (${res.status}): unexpected response` });
@@ -249,10 +257,10 @@ export default function BlogEditor({ mode, initialData }: BlogEditorProps) {
     if (res.ok) {
       setMessage({
         type: "success",
-        text: mode === "create" ? "Post created!" : "Post updated!",
+        text: mode === "create" ? "Case study created!" : "Case study updated!",
       });
       if (mode === "create" && data.slug) {
-        router.push(`/admin/blog/${data.slug}/edit`);
+        router.push(`/admin/case-studies/${data.slug}/edit`);
       } else {
         router.refresh();
       }
@@ -261,7 +269,6 @@ export default function BlogEditor({ mode, initialData }: BlogEditorProps) {
     }
   }
 
-  // Detect media at cursor when user clicks or moves cursor in editor
   const handleCursorActivity = useCallback(() => {
     const textarea = editorRef.current?.querySelector("textarea");
     if (!textarea) return;
@@ -282,7 +289,6 @@ export default function BlogEditor({ mode, initialData }: BlogEditorProps) {
     };
   }, [handleCursorActivity]);
 
-  // Custom image command that opens file picker instead of inserting placeholder
   const imageUploadCommand = useCallback(() => ({
     name: "image",
     keyCommand: "image",
@@ -309,7 +315,7 @@ export default function BlogEditor({ mode, initialData }: BlogEditorProps) {
           className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-surface-dark px-3 py-2 text-sm text-slate-300 transition hover:bg-slate-800"
         >
           {showMeta ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-          {showMeta ? "Hide Details" : "Post Details"}
+          {showMeta ? "Hide Details" : "Case Study Details"}
         </button>
         <button
           onClick={handleInsertImage}
@@ -327,7 +333,7 @@ export default function BlogEditor({ mode, initialData }: BlogEditorProps) {
         </button>
         <div className="ml-auto flex items-center gap-2">
           <a
-            href={initialData ? `/blog/${initialData.slug}` : "#"}
+            href={initialData ? `/case-studies/${initialData.slug}` : "#"}
             target="_blank"
             rel="noopener noreferrer"
             className={`inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-surface-dark px-3 py-2 text-sm text-slate-300 transition hover:bg-slate-800 ${!initialData ? "pointer-events-none opacity-40" : ""}`}
@@ -400,20 +406,20 @@ export default function BlogEditor({ mode, initialData }: BlogEditorProps) {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="w-full rounded-lg border border-slate-700 bg-surface-dark-2 px-3 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-brand-500"
-              placeholder="Post title..."
+              placeholder="Case study title..."
             />
           </div>
 
           <div className="md:col-span-2 lg:col-span-3">
             <label className="mb-1 block text-xs font-medium uppercase text-slate-400">
-              Description
+              Subtitle
             </label>
             <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={subtitle}
+              onChange={(e) => setSubtitle(e.target.value)}
               rows={2}
               className="w-full rounded-lg border border-slate-700 bg-surface-dark-2 px-3 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-brand-500"
-              placeholder="Short description for SEO and previews..."
+              placeholder="Brief description of the case study..."
             />
           </div>
 
@@ -442,7 +448,43 @@ export default function BlogEditor({ mode, initialData }: BlogEditorProps) {
               value={tags}
               onChange={(e) => setTags(e.target.value)}
               className="w-full rounded-lg border border-slate-700 bg-surface-dark-2 px-3 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-brand-500"
-              placeholder="azure, api, cloud"
+              placeholder="Azure, AI, Cloud"
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block text-xs font-medium uppercase text-slate-400">
+              Timeline
+            </label>
+            <input
+              value={timeline}
+              onChange={(e) => setTimeline(e.target.value)}
+              className="w-full rounded-lg border border-slate-700 bg-surface-dark-2 px-3 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-brand-500"
+              placeholder="e.g., April 2024 - April 2025"
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block text-xs font-medium uppercase text-slate-400">
+              Role
+            </label>
+            <input
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="w-full rounded-lg border border-slate-700 bg-surface-dark-2 px-3 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-brand-500"
+              placeholder="e.g., Lead Cloud Solution Architect"
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block text-xs font-medium uppercase text-slate-400">
+              Client
+            </label>
+            <input
+              value={client}
+              onChange={(e) => setClient(e.target.value)}
+              className="w-full rounded-lg border border-slate-700 bg-surface-dark-2 px-3 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-brand-500"
+              placeholder="e.g., Microsoft Internal / Engineering Teams"
             />
           </div>
 
@@ -455,7 +497,7 @@ export default function BlogEditor({ mode, initialData }: BlogEditorProps) {
                 value={coverImage}
                 onChange={(e) => setCoverImage(e.target.value)}
                 className="flex-1 rounded-lg border border-slate-700 bg-surface-dark-2 px-3 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-brand-500"
-                placeholder="/blog/images/..."
+                placeholder="/images/case-studies/..."
               />
               <button
                 onClick={() => coverInputRef.current?.click()}
@@ -467,20 +509,6 @@ export default function BlogEditor({ mode, initialData }: BlogEditorProps) {
             </div>
           </div>
 
-          <div>
-            <label className="mb-1 block text-xs font-medium uppercase text-slate-400">
-              Status
-            </label>
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value as "draft" | "published")}
-              className="w-full rounded-lg border border-slate-700 bg-surface-dark-2 px-3 py-2.5 text-sm text-white outline-none transition focus:border-brand-500"
-            >
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
-            </select>
-          </div>
-
           <div className="flex items-end">
             <label className="flex items-center gap-2 text-sm text-slate-300">
               <input
@@ -489,32 +517,47 @@ export default function BlogEditor({ mode, initialData }: BlogEditorProps) {
                 onChange={(e) => setFeatured(e.target.checked)}
                 className="h-4 w-4 rounded border-slate-700 bg-surface-dark-2 accent-brand-600"
               />
-              Featured post
+              Featured case study
             </label>
           </div>
 
-          <div>
-            <label className="mb-1 block text-xs font-medium uppercase text-slate-400">
-              External URL
+          {/* Metrics */}
+          <div className="md:col-span-2 lg:col-span-3">
+            <label className="mb-2 block text-xs font-medium uppercase text-slate-400">
+              Metrics
             </label>
-            <input
-              value={externalUrl}
-              onChange={(e) => setExternalUrl(e.target.value)}
-              className="w-full rounded-lg border border-slate-700 bg-surface-dark-2 px-3 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-brand-500"
-              placeholder="https://..."
-            />
-          </div>
-
-          <div>
-            <label className="mb-1 block text-xs font-medium uppercase text-slate-400">
-              External Source
-            </label>
-            <input
-              value={externalSource}
-              onChange={(e) => setExternalSource(e.target.value)}
-              className="w-full rounded-lg border border-slate-700 bg-surface-dark-2 px-3 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-brand-500"
-              placeholder="e.g., Microsoft Tech Community"
-            />
+            <div className="space-y-2">
+              {metrics.map((m, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <input
+                    value={m.value}
+                    onChange={(e) => updateMetric(i, "value", e.target.value)}
+                    className="w-28 rounded-lg border border-slate-700 bg-surface-dark-2 px-3 py-2 text-sm text-white placeholder-slate-500 outline-none transition focus:border-brand-500"
+                    placeholder="Value"
+                  />
+                  <input
+                    value={m.label}
+                    onChange={(e) => updateMetric(i, "label", e.target.value)}
+                    className="flex-1 rounded-lg border border-slate-700 bg-surface-dark-2 px-3 py-2 text-sm text-white placeholder-slate-500 outline-none transition focus:border-brand-500"
+                    placeholder="Label (e.g., Engineers using SupportIQ)"
+                  />
+                  <button
+                    onClick={() => removeMetric(i)}
+                    className="rounded-md p-1.5 text-slate-400 transition hover:bg-red-500/15 hover:text-red-400"
+                    title="Remove metric"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+              <button
+                onClick={addMetric}
+                className="inline-flex items-center gap-1 rounded-lg border border-dashed border-slate-700 px-3 py-1.5 text-xs text-slate-400 transition hover:border-slate-500 hover:text-slate-300"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                Add Metric
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -548,7 +591,6 @@ export default function BlogEditor({ mode, initialData }: BlogEditorProps) {
             },
           }}
           commandsFilter={(cmd) => {
-            // Replace the built-in image command with our file-upload version
             if (cmd.name === "image") {
               return imageUploadCommand();
             }

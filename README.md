@@ -15,8 +15,10 @@
 - **Speaking & Events** — 32 speaking engagements with photo galleries and filters
 - **YouTube Talks** — 12 sessions with lazy-loaded embeds (thumbnail-first, iframe on click)
 - **Technical Blog** — MDX-powered blog with rich typography, syntax highlighting, and reading time
-- **Admin Panel** — Protected dashboard at `/admin` with authentication
+- **Admin Panel** — Protected dashboard at `/admin` with authentication, managing blogs, case studies, and projects
 - **Blog Editor** — Medium-style MDX editor with live preview, image upload, and drag-and-drop media
+- **Case Study Editor** — MDX editor for case studies with metrics, timeline, role, and client fields
+- **Project Editor** — Form-based editor for projects with outcomes, tech stack, and category fields
 - **Media Resize** — Inline image resize controls in the editor
 - **Azure Blob Storage** — Blog images stored in Azure Blob Storage with per-post folder hierarchy
 - **Dark/Light Mode** — System-aware theme toggle with zero flash
@@ -110,15 +112,27 @@ portfolio/
 │   │   ├── layout.tsx                # Admin layout (sidebar)
 │   │   ├── page.tsx                  # Admin dashboard
 │   │   ├── login/page.tsx            # Login page
-│   │   └── blog/
-│   │       ├── page.tsx              # Blog post list (admin)
-│   │       ├── new/page.tsx          # Create new post
-│   │       └── [slug]/edit/page.tsx  # Edit existing post
+│   │   ├── blog/
+│   │   │   ├── page.tsx              # Blog post list (admin)
+│   │   │   ├── new/page.tsx          # Create new post
+│   │   │   └── [slug]/edit/page.tsx  # Edit existing post
+│   │   ├── case-studies/
+│   │   │   ├── page.tsx              # Case study list (admin)
+│   │   │   ├── new/page.tsx          # Create new case study
+│   │   │   └── [slug]/edit/page.tsx  # Edit existing case study
+│   │   └── projects/
+│   │       ├── page.tsx              # Project list (admin)
+│   │       ├── new/page.tsx          # Create new project
+│   │       └── [id]/edit/page.tsx    # Edit existing project
 │   ├── api/
 │   │   ├── auth/[...nextauth]/route.ts  # NextAuth handler
 │   │   └── admin/
 │   │       ├── blog/route.ts         # POST — create blog post
 │   │       ├── blog/[slug]/route.ts  # PUT/DELETE — update/delete post
+│   │       ├── case-studies/route.ts  # POST — create case study
+│   │       ├── case-studies/[slug]/route.ts  # PUT/DELETE — update/delete case study
+│   │       ├── projects/route.ts     # POST — create project
+│   │       ├── projects/[id]/route.ts  # PUT/DELETE — update/delete project
 │   │       └── upload/route.ts       # POST — image upload to Azure Blob
 │   ├── case-studies/
 │   │   ├── page.tsx                  # Case studies listing
@@ -133,7 +147,7 @@ portfolio/
 ├── components/
 │   ├── layout/                       # Navigation, Footer, LayoutShell
 │   ├── sections/                     # Homepage sections + BlogGrid, FeaturedBlogPosts
-│   ├── admin/                        # AdminSidebar, BlogEditor, MediaResizeBar, DeletePostButton
+│   ├── admin/                        # AdminSidebar, BlogEditor, CaseStudyEditor, ProjectEditor, MediaResizeBar, DeleteItemButton
 │   ├── events/                       # EventGallery (lightbox)
 │   └── ui/                           # Primitives (Badge, Card, YouTubeEmbed, etc.)
 ├── content/
@@ -146,7 +160,7 @@ portfolio/
 │   └── blog/                         # MDX blog posts
 ├── lib/
 │   ├── content.ts                    # Data loading (profiles, blogs, events, talks)
-│   ├── admin.ts                      # Blog CRUD + image upload helpers
+│   ├── admin.ts                      # Blog, Case Study, Project CRUD + image upload helpers
 │   ├── azure-storage.ts              # Azure Blob Storage client (uploadToBlob)
 │   ├── mdx-components.tsx            # Shared MDX component map
 │   └── utils.ts                      # cn(), formatDate(), etc.
@@ -179,6 +193,12 @@ portfolio/
 | `/admin/blog` | Blog post management |
 | `/admin/blog/new` | Create new blog post |
 | `/admin/blog/[slug]/edit` | Edit existing blog post |
+| `/admin/case-studies` | Case study management |
+| `/admin/case-studies/new` | Create new case study |
+| `/admin/case-studies/[slug]/edit` | Edit existing case study |
+| `/admin/projects` | Project management |
+| `/admin/projects/new` | Create new project |
+| `/admin/projects/[id]/edit` | Edit existing project |
 
 ---
 

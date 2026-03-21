@@ -4,18 +4,18 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Trash2 } from "lucide-react";
 
-export default function DeletePostButton({
-  slug,
+export default function DeleteItemButton({
+  deleteUrl,
   title,
 }: {
-  slug: string;
+  deleteUrl: string;
   title: string;
 }) {
   const router = useRouter();
   const [confirming, setConfirming] = useState(false);
 
   async function handleDelete() {
-    const res = await fetch(`/api/admin/blog/${slug}`, { method: "DELETE" });
+    const res = await fetch(deleteUrl, { method: "DELETE" });
     if (res.ok) {
       router.refresh();
     }
