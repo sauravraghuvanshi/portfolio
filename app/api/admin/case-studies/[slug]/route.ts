@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { saveCaseStudy, deleteCaseStudy } from "@/lib/admin";
 import { getCaseStudy } from "@/lib/content";
+import { revalidatePath } from "next/cache";
 import type { CaseStudyMeta } from "@/lib/content";
 
 interface RouteParams {
@@ -37,6 +38,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     };
 
     saveCaseStudy(meta, body.content ?? existing.content);
+    revalidatePath("/case-studies");
+    revalidatePath(`/case-studies/${slug}`);
+    revalidatePath("/");
     return NextResponse.json({ slug, message: "Case study updated" });
   } catch (err) {
     console.error("Case study update error:", err);
@@ -56,5 +60,8 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     return NextResponse.json({ error: "Case study not found" }, { status: 404 });
   }
 
+  revalidatePath("/case-studies");
+  revalidatePath(`/case-studies/${slug}`);
+  revalidatePath("/");
   return NextResponse.json({ message: "Case study deleted" });
 }

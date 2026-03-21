@@ -8,13 +8,10 @@ import { ArrowLeft, ArrowRight, Clock, User, Building2 } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import type { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+
 interface CaseStudyPageProps {
   params: Promise<{ slug: string }>;
-}
-
-export async function generateStaticParams() {
-  const caseStudies = getAllCaseStudies();
-  return caseStudies.map((cs) => ({ slug: cs.slug }));
 }
 
 export async function generateMetadata({ params }: CaseStudyPageProps): Promise<Metadata> {

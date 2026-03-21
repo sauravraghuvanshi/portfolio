@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { saveCaseStudy } from "@/lib/admin";
 import { getCaseStudy } from "@/lib/content";
 import { slugify } from "@/lib/utils";
+import { revalidatePath } from "next/cache";
 import type { CaseStudyMeta } from "@/lib/content";
 
 export async function POST(request: NextRequest) {
@@ -40,6 +41,9 @@ export async function POST(request: NextRequest) {
     };
 
     saveCaseStudy(meta, content || "");
+    revalidatePath("/case-studies");
+    revalidatePath(`/case-studies/${slug}`);
+    revalidatePath("/");
     return NextResponse.json({ slug, message: "Case study created" }, { status: 201 });
   } catch (err) {
     console.error("Case study save error:", err);

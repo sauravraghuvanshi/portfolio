@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { saveProject, deleteProject } from "@/lib/admin";
 import { getProjects } from "@/lib/content";
+import { revalidatePath } from "next/cache";
 import type { Project } from "@/lib/content";
 
 interface RouteParams {
@@ -37,6 +38,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     };
 
     saveProject(project);
+    revalidatePath("/projects");
+    revalidatePath("/");
     return NextResponse.json({ id, message: "Project updated" });
   } catch (err) {
     console.error("Project update error:", err);
@@ -56,5 +59,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     return NextResponse.json({ error: "Project not found" }, { status: 404 });
   }
 
+  revalidatePath("/projects");
+  revalidatePath("/");
   return NextResponse.json({ message: "Project deleted" });
 }

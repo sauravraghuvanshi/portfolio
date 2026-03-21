@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { saveBlogPost, deleteBlogPost } from "@/lib/admin";
 import { getBlogPost } from "@/lib/content";
+import { revalidatePath } from "next/cache";
 import type { BlogPostMeta } from "@/lib/content";
 
 interface RouteParams {
@@ -38,6 +39,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     };
 
     saveBlogPost(meta, body.content ?? existing.content);
+    revalidatePath("/blog");
+    revalidatePath(`/blog/${slug}`);
+    revalidatePath("/");
     return NextResponse.json({ slug, message: "Post updated" });
   } catch (err) {
     console.error("Blog update error:", err);
@@ -57,5 +61,8 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     return NextResponse.json({ error: "Post not found" }, { status: 404 });
   }
 
+  revalidatePath("/blog");
+  revalidatePath(`/blog/${slug}`);
+  revalidatePath("/");
   return NextResponse.json({ message: "Post deleted" });
 }

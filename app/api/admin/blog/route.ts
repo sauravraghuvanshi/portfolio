@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { saveBlogPost } from "@/lib/admin";
 import { getBlogPost } from "@/lib/content";
 import { slugify } from "@/lib/utils";
+import { revalidatePath } from "next/cache";
 import type { BlogPostMeta } from "@/lib/content";
 
 export async function POST(request: NextRequest) {
@@ -40,6 +41,9 @@ export async function POST(request: NextRequest) {
     };
 
     saveBlogPost(meta, content || "");
+    revalidatePath("/blog");
+    revalidatePath(`/blog/${slug}`);
+    revalidatePath("/");
     return NextResponse.json({ slug, message: "Post created" }, { status: 201 });
   } catch (err) {
     console.error("Blog save error:", err);

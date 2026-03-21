@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { saveProject } from "@/lib/admin";
 import { getProjects } from "@/lib/content";
 import { slugify } from "@/lib/utils";
+import { revalidatePath } from "next/cache";
 import type { Project } from "@/lib/content";
 
 export async function POST(request: NextRequest) {
@@ -41,6 +42,8 @@ export async function POST(request: NextRequest) {
     };
 
     saveProject(project);
+    revalidatePath("/projects");
+    revalidatePath("/");
     return NextResponse.json({ id, message: "Project created" }, { status: 201 });
   } catch (err) {
     console.error("Project save error:", err);
