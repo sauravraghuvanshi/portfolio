@@ -4,6 +4,7 @@ import path from "path";
 const nextConfig: NextConfig = {
   output: "standalone",
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
+  serverExternalPackages: ["@azure/storage-blob", "@azure/identity"],
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
