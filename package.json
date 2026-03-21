@@ -12,7 +12,6 @@
     "generate-events": "node scripts/generate-events.mjs"
   },
   "dependencies": {
-    "@azure/identity": "^4.13.1",
     "@azure/storage-blob": "^12.31.0",
     "@mdx-js/loader": "^3.1.1",
     "@mdx-js/react": "^3.1.1",

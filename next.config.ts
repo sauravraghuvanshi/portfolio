@@ -4,7 +4,7 @@ import path from "path";
 const nextConfig: NextConfig = {
   output: "standalone",
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
-  serverExternalPackages: ["@azure/storage-blob", "@azure/identity"],
+  serverExternalPackages: ["@azure/storage-blob"],
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "sauravportfolioblob.blob.core.windows.net",
+        hostname: "sauravportfoliomedia.blob.core.windows.net",
         pathname: "/blog-images/**",
       },
     ],

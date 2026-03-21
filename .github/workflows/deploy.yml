@@ -24,7 +24,7 @@ jobs:
 
       - name: Build
         env:
-          NEXT_PUBLIC_AZURE_STORAGE_URL: https://sauravportfolioblob.blob.core.windows.net/blog-images
+          NEXT_PUBLIC_AZURE_STORAGE_URL: https://sauravportfoliomedia.blob.core.windows.net/blog-images
         run: npm run build
 
       - name: Create deployment zip
@@ -42,7 +42,7 @@ jobs:
             -u "${DEPLOY_USER}:${DEPLOY_PASS}" \
             -H "Content-Type: application/zip" \
             --data-binary @"$GITHUB_WORKSPACE/standalone-deploy.zip" \
-            "https://sauravraghuvanshi-portfolio.scm.azurewebsites.net/api/zipdeploy?isAsync=false" \
+            "https://saurav-portfolio.scm.azurewebsites.net/api/zipdeploy?isAsync=false" \
             -w "%{http_code}" \
             -o /tmp/deploy-response.txt \
             -s)
