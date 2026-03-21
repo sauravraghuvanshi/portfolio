@@ -4,6 +4,8 @@ import { ArrowRight, Clock, Tag, Building2 } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import type { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Case Studies",
   description:
