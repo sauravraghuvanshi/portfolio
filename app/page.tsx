@@ -1,9 +1,10 @@
-import { getProfile, getFeaturedCaseStudies, getProjects, getEvents, getTalks } from "@/lib/content";
+import { getProfile, getFeaturedCaseStudies, getProjects, getEvents, getTalks, getFeaturedBlogPosts } from "@/lib/content";
 import Hero from "@/components/sections/Hero";
 import CredibilityBar from "@/components/sections/CredibilityBar";
 import About from "@/components/sections/About";
 import Skills from "@/components/sections/Skills";
 import FeaturedCaseStudies from "@/components/sections/FeaturedCaseStudies";
+import FeaturedBlogPosts from "@/components/sections/FeaturedBlogPosts";
 import ProjectsGrid from "@/components/sections/ProjectsGrid";
 import Speaking from "@/components/sections/Speaking";
 import FeaturedTalks from "@/components/sections/FeaturedTalks";
@@ -34,6 +35,7 @@ export default function HomePage() {
   const projects = getProjects();
   const allEvents = getEvents();
   const talks = getTalks().filter((t) => t.featured);
+  const blogPosts = getFeaturedBlogPosts();
   const speakingEvents = SPEAKING_SLUGS
     .map((slug) => allEvents.find((e) => e.slug === slug))
     .filter((e): e is NonNullable<typeof e> => e != null);
@@ -46,8 +48,9 @@ export default function HomePage() {
       <Skills skills={profile.skills} />
       <FeaturedCaseStudies caseStudies={caseStudies} />
       <ProjectsGrid projects={projects} limit={6} />
-      <Speaking events={speakingEvents} />
       <FeaturedTalks talks={talks} />
+      <FeaturedBlogPosts posts={blogPosts} />
+      <Speaking events={speakingEvents} />
       <Certifications certifications={profile.certifications} />
       <Contact
         email={profile.email}

@@ -6,16 +6,25 @@ import Image from "next/image";
 interface YouTubeEmbedProps {
   videoId: string;
   title: string;
+  width?: string;
 }
 
-export default function YouTubeEmbed({ videoId, title }: YouTubeEmbedProps) {
+export default function YouTubeEmbed({ videoId, title, width = "100%" }: YouTubeEmbedProps) {
   const [playing, setPlaying] = useState(false);
   const [thumbSrc, setThumbSrc] = useState(
     `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
   );
 
+  const hasCustomWidth = width && width !== "100%";
+  const wrapper = (children: React.ReactNode) =>
+    hasCustomWidth ? (
+      <div style={{ maxWidth: width, margin: "0 auto" }}>{children}</div>
+    ) : (
+      <>{children}</>
+    );
+
   if (playing) {
-    return (
+    return wrapper(
       <div className="aspect-video w-full rounded-xl overflow-hidden bg-black">
         <iframe
           src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`}
@@ -28,7 +37,7 @@ export default function YouTubeEmbed({ videoId, title }: YouTubeEmbedProps) {
     );
   }
 
-  return (
+  return wrapper(
     <button
       onClick={() => setPlaying(true)}
       className="relative aspect-video w-full group overflow-hidden rounded-xl bg-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"

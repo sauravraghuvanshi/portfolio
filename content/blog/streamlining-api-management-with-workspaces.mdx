@@ -1,0 +1,96 @@
+---
+title: 'Streamlining API Management with Workspaces: A Comprehensive Guide'
+slug: streamlining-api-management-with-workspaces
+description: >-
+  A deep dive into Azure API Management Workspaces — how to set them up, manage
+  APIs, enforce policies, and control access with RBAC for decentralized API
+  governance at scale.
+date: '2023-05-09'
+updated: '2026-03-21'
+category: Azure
+tags:
+  - Azure API Management
+  - API Governance
+  - RBAC
+  - Cloud Architecture
+coverImage: /blog/images/1774075653379-api-management-api.png
+featured: true
+status: published
+externalUrl: >-
+  https://techcommunity.microsoft.com/blog/azurepaasblog/streamlining-api-management-with-workspaces-a-comprehensive-guide/3813372
+externalSource: Microsoft Tech Community
+---
+
+> This article was originally published on [Microsoft Tech Community](https://techcommunity.microsoft.com/blog/azurepaasblog/streamlining-api-management-with-workspaces-a-comprehensive-guide/3813372).
+
+## Workspace Overview
+
+Azure API Management enables organizations to create, manage, and secure APIs at scale. The Workspace feature provides a logical container for grouping related APIs, policies, and configurations. Multiple Workspaces can exist within a single APIM instance, useful for organizing by department, project, or environment.
+
+Workspaces enable a decentralized approach to API development. Individual teams can independently manage and market their own APIs, while a central platform team oversees the overall APIM infrastructure. Each workspace contains APIs, products, subscriptions, and related entities accessible only to workspace collaborators. Access is controlled via Azure's role-based access control (RBAC).
+
+**Reference:** [Workspaces in Azure API Management | Microsoft Learn](https://learn.microsoft.com/en-us/azure/api-management/workspaces-overview)
+
+## Create a Workspace
+
+1. Sign in to the Azure portal and navigate to your API Management instance.
+2. In the left-hand menu, click on the **"Workspaces"** tab.
+3. Click on the **"Add"** button to create a new workspace.
+4. In the "Add workspace" page, enter a name and optionally provide a description.
+
+## Key Features of Workspace
+
+### Managing APIs in the Workspace
+
+Grouping related APIs in a workspace helps teams manage, govern, and deploy APIs in a streamlined manner. This improves cross-team collaboration, reduces deployment errors and downtime, and enhances scalability and reliability. Access within a workspace is governed through Azure RBAC.
+
+- Creating APIs in a Workspace follows the same process as creating them directly in API Management, except you do so inside the workspace.
+- For detailed steps on creating an API, see: [Tutorial — Import and publish your first API in Azure API Management | Microsoft Learn](https://learn.microsoft.com/en-us/azure/api-management/import-and-publish)
+
+### Managing Policy for All APIs in a Workspace
+
+Workspace-level policies let teams enforce security, governance, and compliance requirements across all APIs in the workspace, improving consistency and reducing per-API management overhead.
+
+- Policy implementation at the Workspace scope mirrors implementation at the APIM level.
+- Use `context.Api.Workspace` and `context.Product.Workspace` objects in workspace-scoped policies and in the all-APIs policy at the service level.
+- Navigate to **Workspace → APIs → All APIs**, then click the **editor tab**.
+- Add the desired policy to apply it across all workspace APIs.
+- Pre-built policies are available: [Azure API Management policy samples | Microsoft Learn](https://learn.microsoft.com/en-us/azure/api-management/policies/)
+
+### Product and Subscription in the Workspace
+
+In a workspace, a **product** is scoped to that specific workspace and available only to its collaborators, enabling teams to manage and monetize APIs within their own development context.
+
+A **subscription** grants access to a product or set of products for a developer or consumer. Subscriptions created within a workspace are only accessible to workspace collaborators.
+
+- **Publish APIs with products** — APIs can belong to a service-level or workspace-level product:
+  - **Workspace-level product:** Visibility configurable based on membership in workspace-level or service-level groups.
+  - **Service-level product:** Visibility configurable only for service-level groups.
+- **Manage access via subscriptions** — Subscriptions requested to an API or product within a workspace are created in that workspace.
+
+### Assigning Workspace Access to Users
+
+#### Service-Scoped Roles
+
+1. From the API Management instance, click **Access Control (IAM)** in the left blade.
+2. Click **Add → Add role assignment**.
+3. Assign one of these service-scoped roles:
+   - **API Management Service Workspace API Developer:** Read access to tags/products; write access to assign APIs to products and tags to products/APIs.
+   - **API Management Service Workspace API Product Manager:** Same as above, plus read access to users and write access to assign users to groups.
+
+#### Workspace-Scoped Roles
+
+1. From the APIM instance, click **Workspaces (preview)**.
+2. Enter the target workspace.
+3. Click **Access control (IAM)** from the left blade.
+4. Click **Add → Add role assignment**.
+5. Assign one of these workspace-scoped roles:
+   - **API Management Workspace Reader:** Read-only access to workspace entities.
+   - **API Management Workspace Contributor:** Can manage the workspace and view (but not modify) its members.
+   - **API Management Workspace API Developer:** Read access to workspace entities; read/write access for editing APIs.
+   - **API Management Workspace API Product Manager:** Read access to workspace entities; read/write access for publishing APIs.
+
+## References
+
+- [APIM Workspaces Overview](https://learn.microsoft.com/en-us/azure/api-management/workspaces-overview)
+- [Manage APIs and other resources in your API Management Workspace](https://learn.microsoft.com/en-us/azure/api-management/api-management-in-workspace)

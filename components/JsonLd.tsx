@@ -84,6 +84,38 @@ export function WebSiteSchema() {
   );
 }
 
+interface BlogPostSchemaProps {
+  title: string;
+  description: string;
+  slug: string;
+  tags: string[];
+  datePublished: string;
+  dateModified: string;
+}
+
+export function BlogPostSchema({ title, description, slug, tags, datePublished, dateModified }: BlogPostSchemaProps) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": `https://sauravraghuvanshi.dev/blog/${slug}`,
+    headline: title,
+    description,
+    url: `https://sauravraghuvanshi.dev/blog/${slug}`,
+    keywords: tags.join(", "),
+    datePublished,
+    dateModified,
+    author: { "@id": "https://sauravraghuvanshi.dev/#person" },
+    publisher: { "@id": "https://sauravraghuvanshi.dev/#person" },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
 interface CaseStudySchemaProps {
   title: string;
   description: string;

@@ -3,6 +3,7 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import Navigation from "@/components/layout/Navigation";
 import Footer from "@/components/layout/Footer";
+import LayoutShell from "@/components/layout/LayoutShell";
 import { PersonSchema, WebSiteSchema } from "@/components/JsonLd";
 import "./globals.css";
 
@@ -101,11 +102,12 @@ export default function RootLayout({
         <WebSiteSchema />
       </head>
       <body className="min-h-screen flex flex-col antialiased">
-        <Navigation />
-        <main id="main-content" className="flex-1 pt-16">
+        <LayoutShell
+          navigation={<Navigation />}
+          footer={<Footer />}
+        >
           {children}
-        </main>
-        <Footer />
+        </LayoutShell>
       </body>
     </html>
   );

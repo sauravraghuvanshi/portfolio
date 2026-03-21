@@ -131,3 +131,70 @@ export function getTalks(): Talk[] {
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
   return JSON.parse(raw) as Talk[];
 }
+
+// ---------------------------------------------------------------------------
+// Blog
+// ---------------------------------------------------------------------------
+
+export interface BlogPostMeta {
+  title: string;
+  slug: string;
+  description: string;
+  date: string;
+  updated?: string;
+  category: string;
+  tags: string[];
+  coverImage?: string;
+  featured: boolean;
+  status: "published" | "draft";
+  readingTime?: string;
+  externalUrl?: string;
+  externalSource?: string;
+}
+
+export interface BlogPost extends BlogPostMeta {
+  content: string;
+}
+
+function computeReadingTime(content: string): string {
+  const words = content.trim().split(/\s+/).length;
+  const minutes = Math.max(1, Math.ceil(words / 200));
+  return `${minutes} min read`;
+}
+
+export function getBlogSlugs(): string[] {
+  const blogDir = path.join(contentDir, "blog");
+  if (!fs.existsSync(blogDir)) return [];
+  return fs
+    .readdirSync(blogDir)
+    .filter((f) => f.endsWith(".mdx"))
+    .map((f) => f.replace(".mdx", ""));
+}
+
+export function getBlogPost(slug: string): BlogPost | null {
+  const filePath = path.join(contentDir, "blog", `${slug}.mdx`);
+  if (!fs.existsSync(filePath)) return null;
+  const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
+  const { data, content } = matter(raw);
+  const meta = data as BlogPostMeta;
+  if (!meta.readingTime) {
+    meta.readingTime = computeReadingTime(content);
+  }
+  return { ...meta, content };
+}
+
+export function getAllBlogPosts(includeDrafts = false): BlogPost[] {
+  const slugs = getBlogSlugs();
+  return slugs
+    .map((slug) => getBlogPost(slug))
+    .filter((post): post is BlogPost => {
+      if (!post) return false;
+      if (!includeDrafts && post.status === "draft") return false;
+      return true;
+    })
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+}
+
+export function getFeaturedBlogPosts(): BlogPost[] {
+  return getAllBlogPosts().filter((post) => post.featured).slice(0, 3);
+}

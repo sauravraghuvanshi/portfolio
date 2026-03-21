@@ -1,13 +1,21 @@
 import { MetadataRoute } from "next";
-import { getCaseStudySlugs } from "@/lib/content";
+import { getCaseStudySlugs, getAllBlogPosts } from "@/lib/content";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://sauravraghuvanshi.dev";
   const slugs = getCaseStudySlugs();
+  const blogPosts = getAllBlogPosts();
 
   const caseStudyUrls = slugs.map((slug) => ({
     url: `${baseUrl}/case-studies/${slug}`,
     lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
+  const blogUrls = blogPosts.map((post) => ({
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: new Date(post.updated || post.date),
     changeFrequency: "monthly" as const,
     priority: 0.8,
   }));
@@ -26,7 +34,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: `${baseUrl}/blog`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/projects`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/events`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/talks`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.7,
@@ -44,5 +70,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     },
     ...caseStudyUrls,
+    ...blogUrls,
   ];
 }
