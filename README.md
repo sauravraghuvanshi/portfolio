@@ -4,40 +4,71 @@
 
 > I help high-growth startups and unicorns build AI-powered, cloud-native platforms at scale.
 
-**Live site:** https://sauravraghuvanshi-portfolio.azurewebsites.net
+**Live site:** https://saurav-portfolio.azurewebsites.net
 [![Build and Deploy to Azure](https://github.com/sauravraghuvanshi/portfolio/actions/workflows/deploy.yml/badge.svg)](https://github.com/sauravraghuvanshi/portfolio/actions/workflows/deploy.yml)
 
 ---
 
-## Tech stack
+## Features
+
+- **Portfolio & Resume** — Skills, certifications, projects, case studies, downloadable PDF resume
+- **Speaking & Events** — 32 speaking engagements with photo galleries and filters
+- **YouTube Talks** — 12 sessions with lazy-loaded embeds (thumbnail-first, iframe on click)
+- **Technical Blog** — MDX-powered blog with rich typography, syntax highlighting, and reading time
+- **Admin Panel** — Protected dashboard at `/admin` with authentication
+- **Blog Editor** — Medium-style MDX editor with live preview, image upload, and drag-and-drop media
+- **Media Resize** — Inline image resize controls in the editor
+- **Azure Blob Storage** — Blog images stored in Azure Blob Storage with per-post folder hierarchy
+- **Dark/Light Mode** — System-aware theme toggle with zero flash
+- **SEO** — JSON-LD schema, OpenGraph/Twitter cards, sitemap, robots.txt
+- **Responsive** — Mobile-first design with Framer Motion animations
+
+---
+
+## Tech Stack
 
 | Layer | Technology |
 |---|---|
-| Framework | Next.js 16 (App Router) · TypeScript |
-| Styling | Tailwind CSS v4 |
+| Framework | Next.js 16 (App Router) · TypeScript · `output: "standalone"` |
+| Styling | Tailwind CSS v4 (CSS variables, no config file) |
 | Animation | Framer Motion |
 | Content | JSON + MDX (no CMS) |
-| Deployment | Azure App Service (Linux, Node 20 LTS) |
-| CI/CD | GitHub Actions → Azure |
+| Auth | NextAuth v5 (Credentials provider, JWT sessions) |
+| Editor | `@uiw/react-md-editor` with custom toolbar |
+| Image Storage | Azure Blob Storage (`@azure/storage-blob`) |
+| Deployment | Azure App Service (Linux, Node 20 LTS, F1 Free) |
+| CI/CD | GitHub Actions → Kudu zip-deploy |
 
 ---
 
-## Local development
+## Local Development
 
 ```bash
 cd portfolio
+cp .env.example .env.local   # configure admin credentials + Azure storage
 npm install
-npm run dev
-# http://localhost:3000
+npm run dev                   # http://localhost:3000
 ```
 
-> `npm run dev` uses the current `content/events.json`. To regenerate from source Word docs, place the `My Events/` folder one level above `portfolio/` and run `npm run generate-events`.
+### Environment Variables
+
+| Variable | Required | Description |
+|---|---|---|
+| `ADMIN_USERNAME` | Yes | Admin panel login username |
+| `ADMIN_PASSWORD` | Yes | Admin panel login password |
+| `AUTH_SECRET` | Yes | NextAuth secret (`openssl rand -base64 32`) |
+| `AUTH_TRUST_HOST` | Yes | Set to `true` |
+| `AZURE_STORAGE_CONNECTION_STRING` | Yes | Azure Blob Storage connection string |
+| `AZURE_STORAGE_CONTAINER_NAME` | Yes | Container name (default: `blog-images`) |
+| `NEXT_PUBLIC_AZURE_STORAGE_URL` | Yes | Public blob URL base (build-time inlined) |
+
+> On Azure App Service, also set `AUTH_URL` to the public site URL (required for NextAuth callback resolution).
 
 ---
 
-## Content pipeline
+## Content Pipeline
 
-Event data (speaking engagements, community sessions, workshops) is generated from Word documents:
+### Events (auto-generated)
 
 ```
 My Events/          ← source DOCX files + photos (local only, not in repo)
@@ -46,31 +77,18 @@ npm run generate-events
     ↓
 content/events.json          ← committed to repo
 public/events/{slug}/*.jpg   ← committed to repo
-    ↓
-next build → 47 static pages
 ```
 
-When new events are added locally:
-```bash
-npm run generate-events   # reads My Events/, writes content/events.json + public/events/
-git add content/events.json public/events/
-git commit -m "content: add new events"
-git push                  # triggers CI/CD → auto-deploys
-```
+Use `content/events-overrides.json` for manual corrections — the generator merges overrides automatically.
 
-Talks data (`content/talks.json`) is maintained manually — add a new object with `id` (YouTube video ID), `title`, `topic`, and `featured: true/false`. No generation script needed; push to deploy.
+### Talks (manual)
 
----
+Edit `content/talks.json` — add `{ "id": "VIDEO_ID", "title": "...", "topic": "...", "featured": true/false }`. Push to deploy.
 
-## Deployment
+### Blog Posts (admin panel or manual)
 
-CI/CD is fully automated via GitHub Actions. Every push to `main`:
-1. Installs dependencies
-2. Runs `npm run build` (prebuild + Next.js build + postbuild)
-3. Zips `.next/standalone/`
-4. Deploys to Azure App Service
-
-See [`AZURE-DEPLOY.md`](../AZURE-DEPLOY.md) for manual deployment steps and troubleshooting.
+- **Via Admin Panel:** Login at `/admin`, create/edit posts with the visual editor. Images upload to Azure Blob Storage automatically.
+- **Manual:** Create `.mdx` files in `content/blog/` with frontmatter (title, slug, description, date, category, tags, coverImage, status, featured).
 
 ---
 
@@ -78,41 +96,66 @@ See [`AZURE-DEPLOY.md`](../AZURE-DEPLOY.md) for manual deployment steps and trou
 
 ```
 portfolio/
-├── app/                        # Next.js App Router pages
-│   ├── layout.tsx              # Root layout (nav, footer, fonts, SEO)
-│   ├── page.tsx                # Homepage (all sections)
-│   ├── sitemap.ts              # Auto-generated sitemap
-│   ├── robots.ts               # robots.txt
-│   ├── not-found.tsx           # 404 page
+├── app/
+│   ├── layout.tsx                    # Root layout (nav, footer, fonts, SEO)
+│   ├── page.tsx                      # Homepage (11 sections)
+│   ├── sitemap.ts                    # Auto-generated sitemap
+│   ├── robots.ts                     # robots.txt
+│   ├── not-found.tsx                 # 404 page
+│   ├── blog/
+│   │   ├── page.tsx                  # Blog listing with search/filter
+│   │   ├── [slug]/page.tsx           # Blog post detail (rich reader)
+│   │   └── images/[...path]/route.ts # Legacy image fallback
+│   ├── admin/
+│   │   ├── layout.tsx                # Admin layout (sidebar)
+│   │   ├── page.tsx                  # Admin dashboard
+│   │   ├── login/page.tsx            # Login page
+│   │   └── blog/
+│   │       ├── page.tsx              # Blog post list (admin)
+│   │       ├── new/page.tsx          # Create new post
+│   │       └── [slug]/edit/page.tsx  # Edit existing post
+│   ├── api/
+│   │   ├── auth/[...nextauth]/route.ts  # NextAuth handler
+│   │   └── admin/
+│   │       ├── blog/route.ts         # POST — create blog post
+│   │       ├── blog/[slug]/route.ts  # PUT/DELETE — update/delete post
+│   │       └── upload/route.ts       # POST — image upload to Azure Blob
 │   ├── case-studies/
-│   │   ├── page.tsx            # Case studies listing
-│   │   └── [slug]/page.tsx     # Individual case study (MDX)
+│   │   ├── page.tsx                  # Case studies listing
+│   │   └── [slug]/page.tsx           # Individual case study (MDX)
 │   ├── events/
-│   │   ├── page.tsx            # Events listing with filters
-│   │   └── [slug]/page.tsx     # Individual event detail + gallery
-│   ├── projects/page.tsx       # Projects gallery
-│   ├── resume/page.tsx         # Resume page + PDF download
-│   ├── social/page.tsx         # Social links
-│   └── talks/page.tsx          # YouTube talks with topic filters
+│   │   ├── page.tsx                  # Events listing with filters
+│   │   └── [slug]/page.tsx           # Event detail + photo gallery
+│   ├── projects/page.tsx             # Projects gallery
+│   ├── resume/page.tsx               # Resume page + PDF download
+│   ├── social/page.tsx               # Social links
+│   └── talks/page.tsx                # YouTube talks with topic filters
 ├── components/
-│   ├── layout/                 # Navigation, Footer
-│   ├── sections/               # Homepage sections (Hero, About, Skills, FeaturedTalks, Speaking, etc.)
-│   ├── events/                 # EventGallery (lightbox)
-│   └── ui/                     # Primitives (Button, Badge, Card, YouTubeEmbed, etc.)
+│   ├── layout/                       # Navigation, Footer, LayoutShell
+│   ├── sections/                     # Homepage sections + BlogGrid, FeaturedBlogPosts
+│   ├── admin/                        # AdminSidebar, BlogEditor, MediaResizeBar, DeletePostButton
+│   ├── events/                       # EventGallery (lightbox)
+│   └── ui/                           # Primitives (Badge, Card, YouTubeEmbed, etc.)
 ├── content/
-│   ├── profile.json            # Personal info, skills, certs, testimonials, experience
-│   ├── events.json             # Generated — 32 speaking/community events
-│   ├── events-overrides.json   # Manual overrides merged at build time
-│   ├── projects.json           # Project gallery data
-│   ├── talks.json              # 12 YouTube session IDs, titles, topics
-│   └── case-studies/           # MDX case studies
-├── scripts/
-│   ├── generate-events.mjs     # Parses My Events/ DOCX → events.json + photos
-│   └── postbuild.mjs           # Copies public/ + .next/static/ into standalone/
+│   ├── profile.json                  # Personal info, skills, certs, experience
+│   ├── events.json                   # Generated — 32 speaking events
+│   ├── events-overrides.json         # Manual overrides merged at build time
+│   ├── projects.json                 # Project gallery data
+│   ├── talks.json                    # 12 YouTube session IDs
+│   ├── case-studies/                 # MDX case studies
+│   └── blog/                         # MDX blog posts
 ├── lib/
-│   ├── content.ts              # Data loading utilities
-│   └── utils.ts                # cn(), formatDate(), etc.
-└── public/                     # Static assets (images, events photos, resume PDF)
+│   ├── content.ts                    # Data loading (profiles, blogs, events, talks)
+│   ├── admin.ts                      # Blog CRUD + image upload helpers
+│   ├── azure-storage.ts              # Azure Blob Storage client (uploadToBlob)
+│   ├── mdx-components.tsx            # Shared MDX component map
+│   └── utils.ts                      # cn(), formatDate(), etc.
+├── auth.ts                           # NextAuth v5 config (Credentials provider)
+├── middleware.ts                      # Protects /admin/* routes
+├── scripts/
+│   ├── generate-events.mjs           # DOCX → events.json + photos
+│   └── postbuild.mjs                 # Copies public/ + static/ into standalone/
+└── public/                           # Static assets (images, resume PDF)
 ```
 
 ---
@@ -121,7 +164,9 @@ portfolio/
 
 | Route | Description |
 |---|---|
-| `/` | Homepage — Hero, About, Skills, Featured Work, Speaking, Talks, Contact |
+| `/` | Homepage — Hero, About, Skills, Case Studies, Projects, Talks, Blog, Speaking, Certs, Contact |
+| `/blog` | Blog listing with category filter and search |
+| `/blog/[slug]` | Blog post — rich typography, reading time, cover image |
 | `/talks` | 12 YouTube sessions with topic filters |
 | `/events` | 32 speaking & community events with filters |
 | `/events/[slug]` | Event detail — description, highlights, photo gallery |
@@ -129,15 +174,51 @@ portfolio/
 | `/case-studies/[slug]` | Individual case study (MDX) |
 | `/projects` | Full project gallery with filters |
 | `/resume` | HTML resume + PDF download |
+| `/social` | Social links hub |
+| `/admin` | Admin dashboard (protected) |
+| `/admin/blog` | Blog post management |
+| `/admin/blog/new` | Create new blog post |
+| `/admin/blog/[slug]/edit` | Edit existing blog post |
 
 ---
 
-## Performance
+## Deployment
+
+CI/CD is fully automated via GitHub Actions. Every push to `main`:
+
+1. Installs dependencies (`npm ci`)
+2. Builds (`npm run build` — prebuild + Next.js + postbuild)
+3. Zips `.next/standalone/`
+4. Deploys to Azure App Service via Kudu zip-deploy
+
+### Azure Infrastructure
+
+| Resource | Value |
+|---|---|
+| App Service | `saurav-portfolio.azurewebsites.net` |
+| Storage Account | `sauravportfoliomedia` |
+| Blob Container | `blog-images` (public access) |
+| Region | Central India |
+| Plan | F1 Free (Linux, Node 20) |
+
+### GitHub Secrets
+
+| Secret | Description |
+|---|---|
+| `AZURE_DEPLOY_USER` | Kudu zip-deploy username |
+| `AZURE_DEPLOY_PASSWORD` | Kudu zip-deploy password |
+
+See [`AZURE-DEPLOY.md`](../AZURE-DEPLOY.md) for manual deployment steps and troubleshooting.
+
+---
+
+## Performance & Security
 
 - [x] `next/font` for zero-CLS font loading
 - [x] AVIF/WebP image formats via `next/image`
-- [x] YouTube embeds lazy-loaded (thumbnail first, iframe injected on click)
-- [x] Security headers (X-Frame-Options, CSP, Referrer-Policy)
+- [x] YouTube embeds lazy-loaded (thumbnail first, iframe on click)
+- [x] Blog images served from Azure Blob Storage with immutable cache headers
+- [x] Security headers (X-Content-Type-Options, X-Frame-Options, XSS-Protection, Referrer-Policy, Permissions-Policy)
 - [x] `prefers-reduced-motion` respected by Framer Motion
 - [x] Semantic HTML + ARIA labels
 - [x] Keyboard navigation + skip-to-content
@@ -145,6 +226,7 @@ portfolio/
 - [x] JSON-LD schema (Person, WebSite, CreativeWork)
 - [x] `sitemap.xml` + `robots.txt`
 - [x] OpenGraph + Twitter card metadata per page
+- [x] Admin routes protected by NextAuth middleware
 
 ---
 
