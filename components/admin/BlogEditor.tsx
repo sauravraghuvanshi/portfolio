@@ -144,6 +144,7 @@ export default function BlogEditor({ mode, initialData }: BlogEditorProps) {
   async function uploadImage(file: File): Promise<string | null> {
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("folder", "blog");
     if (mode === "edit" && initialData?.slug) {
       formData.append("slug", initialData.slug);
     }

@@ -10,6 +10,8 @@ import {
   PenSquare,
   BookOpen,
   FolderKanban,
+  Video,
+  Calendar,
   Plus,
   LogOut,
 } from "lucide-react";
@@ -39,6 +41,20 @@ const navSections = [
     items: [
       { label: "Projects", href: "/admin/projects", icon: FolderKanban },
       { label: "New Project", href: "/admin/projects/new", icon: Plus },
+    ],
+  },
+  {
+    title: "Talks",
+    items: [
+      { label: "Talks", href: "/admin/talks", icon: Video },
+      { label: "New Talk", href: "/admin/talks/new", icon: Plus },
+    ],
+  },
+  {
+    title: "Events",
+    items: [
+      { label: "Events", href: "/admin/events", icon: Calendar },
+      { label: "New Event", href: "/admin/events/new", icon: Plus },
     ],
   },
 ];

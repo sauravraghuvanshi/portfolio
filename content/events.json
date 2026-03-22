@@ -128,7 +128,8 @@
       "/events/azure-developer-day-in-bengaluru-by-msa-cit-chapter/cover.jpg",
       "/events/azure-developer-day-in-bengaluru-by-msa-cit-chapter/photo-1.jpg"
     ],
-    "coverImagePosition": "center"
+    "coverImagePosition": "center",
+    "featured": true
   },
   {
     "slug": "azure-devops-day",
@@ -154,6 +155,7 @@
       "Attracted 120+ community members demonstrating strong demand for DevOps skills in Bangalore"
     ],
     "coverImage": "/events/azure-devops-day/photo-1.jpg",
+    "coverImagePosition": "center",
     "images": [
       "/events/azure-devops-day/photo-5.jpg",
       "/events/azure-devops-day/photo-2.jpg",
@@ -161,7 +163,7 @@
       "/events/azure-devops-day/photo-4.jpg",
       "/events/azure-devops-day/photo-6.jpg"
     ],
-    "coverImagePosition": "center"
+    "featured": true
   },
   {
     "slug": "microsoft-azure-networking",
@@ -410,7 +412,8 @@
       "/events/microsoft-ai-tour-bangalore/photo-12.jpg",
       "/events/microsoft-ai-tour-bangalore/photo-13.jpg"
     ],
-    "coverImagePosition": "center"
+    "coverImagePosition": "center",
+    "featured": true
   },
   {
     "slug": "microsoft-future-ready-technology-summit",
@@ -440,7 +443,8 @@
       "/events/microsoft-future-ready-technology-summit/photo-5.jpg",
       "/events/microsoft-future-ready-technology-summit/photo-6.jpg",
       "/events/microsoft-future-ready-technology-summit/photo-7.jpg"
-    ]
+    ],
+    "featured": true
   },
   {
     "slug": "the-past-few-months-at-microsoft-have-been-nothing-short-of-incredible",
@@ -492,7 +496,8 @@
     "images": [
       "/events/microsoft-india-town-hall-meet-mlsa-edition/photo-2.jpg",
       "/events/microsoft-india-town-hall-meet-mlsa-edition/photo-3.jpg"
-    ]
+    ],
+    "featured": true
   },
   {
     "slug": "azure-developer-day",
@@ -521,7 +526,8 @@
       "/events/azure-developer-day/cover.jpg",
       "/events/azure-developer-day/photo-2.jpg"
     ],
-    "coverImagePosition": "center"
+    "coverImagePosition": "center",
+    "featured": true
   },
   {
     "slug": "building-your-own-copilot-using-azure-openai",
@@ -546,7 +552,8 @@
     ],
     "impact": [],
     "coverImage": "/events/building-your-own-copilot-using-azure-openai/cover.jpg",
-    "images": []
+    "images": [],
+    "featured": true
   },
   {
     "slug": "enhancing-cloud-engineering-with-github-copilot",
@@ -571,7 +578,8 @@
     ],
     "impact": [],
     "coverImage": "/events/enhancing-cloud-engineering-with-github-copilot/cover.jpg",
-    "images": []
+    "images": [],
+    "featured": true
   },
   {
     "slug": "microsoft-ai-skills-fest",

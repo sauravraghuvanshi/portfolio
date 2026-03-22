@@ -20,17 +20,6 @@ export const metadata: Metadata = {
     "Digital Cloud Solution Architect at Microsoft helping high-growth startups and unicorns build AI-powered, cloud-native platforms at scale. Azure · Generative AI · Agentic AI.",
 };
 
-const SPEAKING_SLUGS = [
-  "microsoft-ai-tour-bangalore",
-  "microsoft-future-ready-technology-summit",
-  "azure-developer-day",
-  "microsoft-india-town-hall-meet-mlsa-edition",
-  "enhancing-cloud-engineering-with-github-copilot",
-  "azure-developer-day-in-bengaluru-by-msa-cit-chapter",
-  "azure-devops-day",
-  "building-your-own-copilot-using-azure-openai",
-];
-
 export default function HomePage() {
   const profile = getProfile();
   const caseStudies = getFeaturedCaseStudies();
@@ -38,9 +27,7 @@ export default function HomePage() {
   const allEvents = getEvents();
   const talks = getTalks().filter((t) => t.featured);
   const blogPosts = getFeaturedBlogPosts();
-  const speakingEvents = SPEAKING_SLUGS
-    .map((slug) => allEvents.find((e) => e.slug === slug))
-    .filter((e): e is NonNullable<typeof e> => e != null);
+  const speakingEvents = allEvents.filter((e) => e.featured);
 
   return (
     <>

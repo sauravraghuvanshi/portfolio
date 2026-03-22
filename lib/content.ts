@@ -107,6 +107,7 @@ export interface EventMeta {
   coverImage: string | null;
   coverImagePosition?: "top" | "center" | "bottom";
   images: string[];
+  featured?: boolean;
 }
 
 export type Event = EventMeta;

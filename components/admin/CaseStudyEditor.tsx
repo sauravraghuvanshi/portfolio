@@ -137,6 +137,7 @@ export default function CaseStudyEditor({ mode, initialData }: CaseStudyEditorPr
   async function uploadImage(file: File): Promise<string | null> {
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("folder", "case-studies");
     if (mode === "edit" && initialData?.slug) {
       formData.append("slug", initialData.slug);
     }

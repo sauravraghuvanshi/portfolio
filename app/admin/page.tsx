@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { getAllBlogPosts, getAllCaseStudies, getProjects } from "@/lib/content";
+import { getAllBlogPosts, getAllCaseStudies, getProjects, getTalks, getEvents } from "@/lib/content";
 import { formatDate } from "@/lib/utils";
-import { FileText, Eye, PenSquare, Plus, BookOpen, FolderKanban } from "lucide-react";
+import { FileText, Eye, PenSquare, Plus, BookOpen, FolderKanban, Video, Calendar } from "lucide-react";
 
 export default function AdminDashboard() {
   const allPosts = getAllBlogPosts(true);
@@ -9,6 +9,8 @@ export default function AdminDashboard() {
   const drafts = allPosts.filter((p) => p.status === "draft");
   const caseStudies = getAllCaseStudies();
   const projects = getProjects();
+  const talks = getTalks();
+  const events = getEvents();
 
   const stats = [
     { label: "Blog Posts", value: allPosts.length, icon: FileText },
@@ -16,6 +18,8 @@ export default function AdminDashboard() {
     { label: "Drafts", value: drafts.length, icon: PenSquare },
     { label: "Case Studies", value: caseStudies.length, icon: BookOpen },
     { label: "Projects", value: projects.length, icon: FolderKanban },
+    { label: "Talks", value: talks.length, icon: Video },
+    { label: "Events", value: events.length, icon: Calendar },
   ];
 
   return (
@@ -44,10 +48,24 @@ export default function AdminDashboard() {
             <Plus className="h-4 w-4" />
             New Project
           </Link>
+          <Link
+            href="/admin/talks/new"
+            className="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-surface-dark px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800"
+          >
+            <Plus className="h-4 w-4" />
+            New Talk
+          </Link>
+          <Link
+            href="/admin/events/new"
+            className="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-surface-dark px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800"
+          >
+            <Plus className="h-4 w-4" />
+            New Event
+          </Link>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
         {stats.map((stat) => (
           <div
             key={stat.label}
@@ -69,7 +87,7 @@ export default function AdminDashboard() {
       {/* Recent Blog Posts */}
       <div className="rounded-xl border border-slate-800 bg-surface-dark">
         <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
-          <h2 className="font-semibold text-white">Recent Posts</h2>
+          <h2 className="font-semibold text-white">Blog Posts</h2>
           <Link href="/admin/blog" className="text-xs text-brand-400 hover:underline">
             View all
           </Link>
@@ -206,6 +224,102 @@ export default function AdminDashboard() {
                   )}
                   <Link
                     href={`/admin/projects/${project.id}/edit`}
+                    className="rounded-md p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-white"
+                  >
+                    <PenSquare className="h-4 w-4" />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Recent Talks */}
+      <div className="rounded-xl border border-slate-800 bg-surface-dark">
+        <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
+          <h2 className="font-semibold text-white">Talks</h2>
+          <Link href="/admin/talks" className="text-xs text-brand-400 hover:underline">
+            View all
+          </Link>
+        </div>
+        {talks.length === 0 ? (
+          <div className="px-5 py-12 text-center text-slate-400">
+            No talks yet.{" "}
+            <Link href="/admin/talks/new" className="text-brand-400 hover:underline">
+              Create your first talk
+            </Link>
+          </div>
+        ) : (
+          <div className="divide-y divide-slate-800">
+            {talks.slice(0, 5).map((talk) => (
+              <div
+                key={talk.id}
+                className="flex items-center justify-between px-5 py-3"
+              >
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-white">
+                    {talk.title}
+                  </p>
+                  <p className="text-xs text-slate-400">{talk.topic}</p>
+                </div>
+                <div className="ml-4 flex items-center gap-2">
+                  {talk.featured && (
+                    <span className="rounded-full bg-accent-500/15 px-2 py-0.5 text-xs font-medium text-accent-400">
+                      Featured
+                    </span>
+                  )}
+                  <Link
+                    href={`/admin/talks/${talk.id}/edit`}
+                    className="rounded-md p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-white"
+                  >
+                    <PenSquare className="h-4 w-4" />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Recent Events */}
+      <div className="rounded-xl border border-slate-800 bg-surface-dark">
+        <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
+          <h2 className="font-semibold text-white">Events</h2>
+          <Link href="/admin/events" className="text-xs text-brand-400 hover:underline">
+            View all
+          </Link>
+        </div>
+        {events.length === 0 ? (
+          <div className="px-5 py-12 text-center text-slate-400">
+            No events yet.{" "}
+            <Link href="/admin/events/new" className="text-brand-400 hover:underline">
+              Create your first event
+            </Link>
+          </div>
+        ) : (
+          <div className="divide-y divide-slate-800">
+            {events.slice(0, 5).map((event) => (
+              <div
+                key={event.slug}
+                className="flex items-center justify-between px-5 py-3"
+              >
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-white">
+                    {event.title}
+                  </p>
+                  <p className="text-xs text-slate-400">
+                    {event.format} &middot; {event.year} &middot; {event.topic}
+                  </p>
+                </div>
+                <div className="ml-4 flex items-center gap-2">
+                  {event.featured && (
+                    <span className="rounded-full bg-accent-500/15 px-2 py-0.5 text-xs font-medium text-accent-400">
+                      Featured
+                    </span>
+                  )}
+                  <Link
+                    href={`/admin/events/${event.slug}/edit`}
                     className="rounded-md p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-white"
                   >
                     <PenSquare className="h-4 w-4" />

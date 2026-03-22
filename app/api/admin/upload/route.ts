@@ -11,6 +11,7 @@ export async function POST(request: NextRequest) {
   const formData = await request.formData();
   const file = formData.get("file") as File | null;
   const slug = formData.get("slug") as string | null;
+  const folder = formData.get("folder") as string | null;
 
   if (!file) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
@@ -27,7 +28,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const buffer = Buffer.from(await file.arrayBuffer());
-    const url = await saveImage(file.name, buffer, slug || undefined);
+    const url = await saveImage(file.name, buffer, folder || undefined, slug || undefined);
     return NextResponse.json({ url, message: "Image uploaded" });
   } catch (err) {
     console.error("Image upload error:", err);

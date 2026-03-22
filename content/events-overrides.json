@@ -4,7 +4,11 @@
     "year": 2026,
     "format": "Organizer",
     "topic": "Azure",
-    "tags": ["Azure", "Community", "Microsoft"],
+    "tags": [
+      "Azure",
+      "Community",
+      "Microsoft"
+    ],
     "summary": "Co-hosted .NET Day Bangalore at Microsoft's Bangalore office, bringing together developers passionate about the .NET ecosystem. The event featured sessions by industry leaders covering the latest advancements in .NET development and Azure integration.",
     "highlights": [
       "Co-hosted the event at Microsoft Bangalore office as part of the Azure Developer Community",
@@ -25,7 +29,12 @@
     "year": 2026,
     "format": "Mentor",
     "topic": "Azure",
-    "tags": ["Azure", "Cloud", "Microsoft", "Bootcamp"],
+    "tags": [
+      "Azure",
+      "Cloud",
+      "Microsoft",
+      "Bootcamp"
+    ],
     "summary": "Mentored participants through the 45-day AZ-104: Microsoft Azure Administrator bootcamp, a collaboration between Azure Developer Community and Reskilll. The program empowered students with hands-on Azure skills covering identity management, networking, storage, VMs, and cloud security.",
     "highlights": [
       "Delivered mentorship across a 45-day structured learning program for AZ-104 certification",
@@ -45,7 +54,13 @@
     "year": 2026,
     "format": "Speaker",
     "topic": "Azure",
-    "tags": ["Azure", "AI", "OpenAI", "Microsoft", "Bootcamp"],
+    "tags": [
+      "Azure",
+      "AI",
+      "OpenAI",
+      "Microsoft",
+      "Bootcamp"
+    ],
     "summary": "Led sessions in the Azure AI Engineer Associate Bootcamp (AI-102), a 6-week virtual program supported by Microsoft Azure and the Azure Developer Community. Participants gained hands-on experience building AI solutions with Azure Cognitive Services and Azure OpenAI.",
     "highlights": [
       "Delivered technical sessions across a 6-week bootcamp from October to November",
@@ -62,7 +77,12 @@
     "year": 2026,
     "format": "Speaker",
     "topic": "Azure",
-    "tags": ["Azure", "AI", "Community", "Microsoft"],
+    "tags": [
+      "Azure",
+      "AI",
+      "Community",
+      "Microsoft"
+    ],
     "summary": "Spoke at Azure AI/ML Day hosted at the Microsoft Bangalore office, sharing practical insights on Azure AI and Machine Learning services. The event united community members and industry practitioners to explore the evolving Azure AI landscape through sessions and live demonstrations.",
     "highlights": [
       "Delivered a technical session on Azure AI and ML services at Microsoft Bangalore",
@@ -84,7 +104,12 @@
     "year": 2026,
     "format": "Speaker",
     "topic": "Azure",
-    "tags": ["Azure", "Cloud", "Community", "Microsoft"],
+    "tags": [
+      "Azure",
+      "Cloud",
+      "Community",
+      "Microsoft"
+    ],
     "summary": "Delivered a comprehensive session on Cloud Computing and Microsoft Azure at the Azure Developer Day hosted by the MSA CIT Chapter in Bengaluru. The talk covered cloud fundamentals, Azure core services, and included a live demo — sparking strong engagement from students and aspiring cloud professionals.",
     "highlights": [
       "Delivered a session covering cloud fundamentals to Azure core services with a live demo",
@@ -98,14 +123,21 @@
     "images": [
       "/events/azure-developer-day-in-bengaluru-by-msa-cit-chapter/cover.jpg",
       "/events/azure-developer-day-in-bengaluru-by-msa-cit-chapter/photo-1.jpg"
-    ]
+    ],
+    "featured": true
   },
   "azure-devops-day": {
     "title": "Azure DevOps Day",
     "year": 2026,
     "format": "Organizer",
     "topic": "Azure",
-    "tags": ["Azure", "DevOps", "Cloud", "Community", "Microsoft"],
+    "tags": [
+      "Azure",
+      "DevOps",
+      "Cloud",
+      "Community",
+      "Microsoft"
+    ],
     "summary": "Co-organized Azure DevOps Day at Microsoft Ferns Bangalore office, drawing 120+ community members for a Saturday of hands-on learning. The event featured sessions on CI/CD pipelines, Azure DevOps best practices, and cloud-native workflows delivered by expert speakers.",
     "highlights": [
       "Co-organized the event at Microsoft Ferns Bangalore, attracting 120+ attendees on a weekend",
@@ -124,14 +156,21 @@
       "/events/azure-devops-day/photo-3.jpg",
       "/events/azure-devops-day/photo-4.jpg",
       "/events/azure-devops-day/photo-6.jpg"
-    ]
+    ],
+    "featured": true
   },
   "build-your-own-personal-brand-in-the-age-of-ai": {
     "title": "Build Your Personal Brand in the Age of AI",
     "year": 2026,
     "format": "Speaker",
     "topic": "Community",
-    "tags": ["AI", "Community", "Mentorship", "Microsoft", "Career"],
+    "tags": [
+      "AI",
+      "Community",
+      "Mentorship",
+      "Microsoft",
+      "Career"
+    ],
     "summary": "Delivered a keynote session on personal branding in the AI era as part of the Code; Without Barriers Circles India Cohort, organized by Azure Developer Community and Reskilll, and supported by Microsoft. The session explored how authenticity, consistency, and AI-powered tools can help professionals build a resonant personal brand.",
     "highlights": [
       "Delivered an invited keynote on personal branding strategy for the Code; Without Barriers cohort",
@@ -148,7 +187,12 @@
     "year": 2026,
     "format": "Mentor",
     "topic": "Community",
-    "tags": ["Azure", "Community", "Mentorship", "Microsoft"],
+    "tags": [
+      "Azure",
+      "Community",
+      "Mentorship",
+      "Microsoft"
+    ],
     "summary": "Served as a mentor in the Code; Without Barriers program run by Microsoft, Azure Developer Community, and Reskilll — an initiative focused on making technology more inclusive and accessible for women. Over 3 months, provided guidance to highly motivated women navigating cloud and AI career paths.",
     "highlights": [
       "Mentored women in tech across a 3-month program focused on Cloud and AI skilling",
@@ -167,7 +211,14 @@
     "year": 2026,
     "format": "Mentor",
     "topic": "Community",
-    "tags": ["Azure", "AI", "Cloud", "Community", "Mentorship", "Microsoft"],
+    "tags": [
+      "Azure",
+      "AI",
+      "Cloud",
+      "Community",
+      "Mentorship",
+      "Microsoft"
+    ],
     "summary": "Completed a 3-month mentorship journey as part of the Code; Without Barriers Mentorship Circle, guiding women passionate about Cloud and AI technologies. The cohort demonstrated exceptional curiosity and technical dedication, reinforcing the power of knowledge-sharing in building inclusive tech communities.",
     "highlights": [
       "Guided a cohort of women through 3 months of Cloud and AI mentorship sessions",
@@ -184,7 +235,13 @@
     "year": 2026,
     "format": "Speaker",
     "topic": "Azure",
-    "tags": ["Azure", "DevOps", "Cloud", "Community", "Microsoft"],
+    "tags": [
+      "Azure",
+      "DevOps",
+      "Cloud",
+      "Community",
+      "Microsoft"
+    ],
     "summary": "Delivered a free public session on CI/CD Pipelines in Azure DevOps via Whizlabs, covering the full DevOps workflow from fundamentals to live pipeline creation. The session included a hands-on demo building an application pipeline, along with a quiz and rewards for active participants.",
     "highlights": [
       "Delivered a free online session on CI/CD pipeline creation using Azure DevOps",
@@ -206,7 +263,13 @@
     "year": 2026,
     "format": "Mentor",
     "topic": "Generative AI",
-    "tags": ["AI", "Generative AI", "OpenAI", "Community", "Mentorship"],
+    "tags": [
+      "AI",
+      "Generative AI",
+      "OpenAI",
+      "Community",
+      "Mentorship"
+    ],
     "summary": "Mentored over 700 women in the #IncludeHer COHORT 4.0 program, a cohort dedicated to empowering women with Generative AI skills using tools from ChatGPT to Azure OpenAI. Conducted hands-on training sessions that combined conceptual learning with practical AI application development.",
     "highlights": [
       "Trained 700+ women on Generative AI using ChatGPT, Azure OpenAI, and industry tools",
@@ -232,7 +295,13 @@
     "year": 2026,
     "format": "Mentor",
     "topic": "Community",
-    "tags": ["Azure", "Community", "Mentorship", "Microsoft", "Hackathon"],
+    "tags": [
+      "Azure",
+      "Community",
+      "Mentorship",
+      "Microsoft",
+      "Hackathon"
+    ],
     "summary": "Served as a mentor at Microsoft's Fastest Coder First Hackathon, guiding participants through rapid prototyping challenges and technical problem-solving under time constraints. Witnessed exceptional talent and creativity from participants who demonstrated remarkable innovation and engineering acumen.",
     "highlights": [
       "Mentored hackathon participants on architecture, optimization, and solution design",
@@ -252,7 +321,14 @@
     "year": 2026,
     "format": "Speaker",
     "topic": "Generative AI",
-    "tags": ["Azure", "AI", "OpenAI", "GitHub Copilot", "Community", "Microsoft"],
+    "tags": [
+      "Azure",
+      "AI",
+      "OpenAI",
+      "GitHub Copilot",
+      "Community",
+      "Microsoft"
+    ],
     "summary": "Served as an invited expert at Microsoft AI Tour Bangalore, contributing to sessions on Azure OpenAI and GitHub Copilot. Helped participants navigate complex AI concepts and implementation questions, making the event a highly interactive and practically valuable experience for cloud engineers and AI practitioners.",
     "highlights": [
       "Invited as a subject matter expert for Azure OpenAI and GitHub Copilot sessions",
@@ -276,14 +352,20 @@
       "/events/microsoft-ai-tour-bangalore/photo-11.jpg",
       "/events/microsoft-ai-tour-bangalore/photo-12.jpg",
       "/events/microsoft-ai-tour-bangalore/photo-13.jpg"
-    ]
+    ],
+    "featured": true
   },
   "microsoft-azure-networking": {
     "title": "Azure Networking Fundamentals — Community Session",
     "year": 2026,
     "format": "Speaker",
     "topic": "Azure",
-    "tags": ["Azure", "Cloud", "Community", "Microsoft"],
+    "tags": [
+      "Azure",
+      "Cloud",
+      "Community",
+      "Microsoft"
+    ],
     "summary": "Delivered a community session on Azure Networking, covering virtual network fundamentals, subnets, security groups, and networking best practices on Azure. The session marked a return to active community contributions and was hosted through the Azure Developer Community platform.",
     "highlights": [
       "Delivered a focused session on Azure Networking fundamentals for community practitioners",
@@ -301,7 +383,12 @@
     "year": 2026,
     "format": "Attendee",
     "topic": "Community",
-    "tags": ["AI", "Cloud", "Community", "Microsoft"],
+    "tags": [
+      "AI",
+      "Cloud",
+      "Community",
+      "Microsoft"
+    ],
     "summary": "Attended the Microsoft Future Ready Technology Summit featuring a keynote by CEO Satya Nadella on AI's transformative potential and India's digital leadership. Also witnessed inspiring talks on India's growing role in the global developer economy and cutting-edge AI/ML developer demos.",
     "highlights": [
       "Attended Satya Nadella's keynote on AI's role in empowering individuals and organizations",
@@ -318,14 +405,19 @@
       "/events/microsoft-future-ready-technology-summit/photo-5.jpg",
       "/events/microsoft-future-ready-technology-summit/photo-6.jpg",
       "/events/microsoft-future-ready-technology-summit/photo-7.jpg"
-    ]
+    ],
+    "featured": true
   },
   "microsoft-india-town-hall-meet-mlsa-edition": {
     "title": "Microsoft India Town Hall — MLSA Edition",
     "year": 2026,
     "format": "Speaker",
     "topic": "Community",
-    "tags": ["Community", "MLSA", "Microsoft"],
+    "tags": [
+      "Community",
+      "MLSA",
+      "Microsoft"
+    ],
     "summary": "Invited as a guest speaker at the Microsoft India Town Hall — MLSA Edition, sharing insights on community building, personal branding, and the transformative impact of being part of technology communities. Celebrated the milestone of India becoming the largest MLSA Ambassador community globally.",
     "highlights": [
       "Delivered an invited talk on community building and personal branding for MLSA members",
@@ -341,14 +433,21 @@
     "images": [
       "/events/microsoft-india-town-hall-meet-mlsa-edition/photo-2.jpg",
       "/events/microsoft-india-town-hall-meet-mlsa-edition/photo-3.jpg"
-    ]
+    ],
+    "featured": true
   },
   "the-past-few-months-at-microsoft-have-been-nothing-short-of-incredible": {
     "title": "Microsoft Highlights — From Hackathon to Product",
     "year": 2026,
     "format": "Organizer",
     "topic": "Generative AI",
-    "tags": ["Azure", "AI", "Generative AI", "OpenAI", "Community"],
+    "tags": [
+      "Azure",
+      "AI",
+      "Generative AI",
+      "OpenAI",
+      "Community"
+    ],
     "summary": "Reflecting on a milestone period at Microsoft spanning product development, event hosting, and mentorship. A hackathon concept evolved into a production-grade Generative AI tool actively used by engineers, while simultaneously contributing to community programs and internal initiatives across the organization.",
     "highlights": [
       "Turned a hackathon idea into a production Generative AI tool actively used by Microsoft engineers",
@@ -365,7 +464,12 @@
     "year": 2026,
     "format": "Attendee",
     "topic": "Community",
-    "tags": ["AI", "Cloud", "Community", "Microsoft"],
+    "tags": [
+      "AI",
+      "Cloud",
+      "Community",
+      "Microsoft"
+    ],
     "summary": "Attended a talk exploring India's pivotal role in the global IT industry, touching on AI-driven development, the growing Indian developer community, and Microsoft's vision for India's technology leadership. Heard insights on how India is positioned to lead the next wave of global software innovation.",
     "highlights": [
       "Gained insights into India's trajectory in becoming the world's largest developer community",
@@ -382,7 +486,14 @@
     "year": 2025,
     "format": "Speaker",
     "topic": "Azure",
-    "tags": ["Azure", "AI", "Generative AI", "Cloud", "Community", "Microsoft"],
+    "tags": [
+      "Azure",
+      "AI",
+      "Generative AI",
+      "Cloud",
+      "Community",
+      "Microsoft"
+    ],
     "summary": "Co-presented at Azure Developer Day Bengaluru, delivering a session on using OpenAI's image generation models for real-world applications and exploring Model Context Protocol (MCP) for modern architecture. The full-day event at Microsoft Ferns Office focused on cloud innovation, GenAI, and meaningful developer connections.",
     "highlights": [
       "Co-presented a session on OpenAI image generation models and their real-world applications",
@@ -396,14 +507,22 @@
     "images": [
       "/events/azure-developer-day/cover.jpg",
       "/events/azure-developer-day/photo-2.jpg"
-    ]
+    ],
+    "featured": true
   },
   "building-your-own-copilot-using-azure-openai": {
     "title": "Building Your Own Copilot Using Azure OpenAI",
     "year": 2025,
     "format": "Speaker",
     "topic": "Generative AI",
-    "tags": ["Azure", "AI", "OpenAI", "Cloud", "Kubernetes", "Microsoft"],
+    "tags": [
+      "Azure",
+      "AI",
+      "OpenAI",
+      "Cloud",
+      "Kubernetes",
+      "Microsoft"
+    ],
     "summary": "Delivered the keynote at the KSUG.AI — KubeSmart & AI User Group India meetup, presenting on building custom Copilot solutions using Azure OpenAI. The full-day event at Microsoft India R&D in Bengaluru brought together Kubernetes, Cloud-Native, and AI practitioners for deep technical sessions.",
     "highlights": [
       "Delivered the keynote session on building enterprise Copilot applications with Azure OpenAI",
@@ -413,14 +532,22 @@
     ],
     "impact": [],
     "coverImage": "/events/building-your-own-copilot-using-azure-openai/cover.jpg",
-    "images": []
+    "images": [],
+    "featured": true
   },
   "enhancing-cloud-engineering-with-github-copilot": {
     "title": "Enhancing Cloud Engineering with GitHub Copilot",
     "year": 2025,
     "format": "Speaker",
     "topic": "Generative AI",
-    "tags": ["Azure", "AI", "GitHub Copilot", "Cloud", "Community", "Microsoft"],
+    "tags": [
+      "Azure",
+      "AI",
+      "GitHub Copilot",
+      "Cloud",
+      "Community",
+      "Microsoft"
+    ],
     "summary": "Spoke at Microsoft Reactor Bengaluru on how GitHub Copilot is reshaping cloud engineering workflows. The session provided practical strategies for using AI-assisted coding to improve productivity, write higher-quality infrastructure code, and accelerate cloud project delivery.",
     "highlights": [
       "Presented at Microsoft Reactor Bengaluru on AI-augmented cloud engineering practices",
@@ -430,14 +557,20 @@
     ],
     "impact": [],
     "coverImage": "/events/enhancing-cloud-engineering-with-github-copilot/cover.jpg",
-    "images": []
+    "images": [],
+    "featured": true
   },
   "microsoft-ai-skills-fest": {
     "title": "Microsoft AI Skills Fest — Guinness World Record",
     "year": 2025,
     "format": "Attendee",
     "topic": "AI & ML",
-    "tags": ["Azure", "AI", "Community", "Microsoft"],
+    "tags": [
+      "Azure",
+      "AI",
+      "Community",
+      "Microsoft"
+    ],
     "summary": "Participated in the Microsoft AI Skills Fest, contributing to a successful Guinness World Record attempt for the most users to complete an online multi-level AI lesson within 24 hours. The event on April 8, 2025, marked a historic moment in AI education at global scale.",
     "highlights": [
       "Participated in a Guinness World Records attempt for AI learning at global scale",
@@ -458,7 +591,13 @@
     "year": 2024,
     "format": "Speaker",
     "topic": "Azure",
-    "tags": ["Azure", "AI", "Generative AI", "OpenAI", "Community"],
+    "tags": [
+      "Azure",
+      "AI",
+      "Generative AI",
+      "OpenAI",
+      "Community"
+    ],
     "summary": "Delivered a spotlight session on Azure Generative AI at Azure Dev Day 2024, walking attendees through the evolution of AI, the mechanics of Generative AI, and a live demo of creating a custom Gen AI model using Azure OpenAI. The session connected theoretical AI concepts to practical Azure implementation.",
     "highlights": [
       "Delivered a Generative AI spotlight session featuring a live Azure OpenAI model demo",
@@ -480,7 +619,13 @@
     "year": 2024,
     "format": "Speaker",
     "topic": "Community",
-    "tags": ["Azure", "Cloud", "Community", "Microsoft", "Career"],
+    "tags": [
+      "Azure",
+      "Cloud",
+      "Community",
+      "Microsoft",
+      "Career"
+    ],
     "summary": "Shared the personal journey from learning cloud computing to joining Microsoft during an X Space session, covering the cloud career roadmap and lessons learned along the way. The community conversation offered actionable guidance for developers transitioning into cloud-focused roles.",
     "highlights": [
       "Shared the career roadmap for breaking into cloud computing and eventually joining Microsoft",
@@ -498,7 +643,13 @@
     "year": 2024,
     "format": "Speaker",
     "topic": "Azure",
-    "tags": ["Azure", "AI", "Generative AI", "Community", "Microsoft"],
+    "tags": [
+      "Azure",
+      "AI",
+      "Generative AI",
+      "Community",
+      "Microsoft"
+    ],
     "summary": "Closed out 2024 by speaking at Azure Dev Day Bangalore, delivering a session on Azure AI Services to an audience of 200+ participants. The talk spanned AI/ML fundamentals, Generative AI capabilities, Azure AI service provisioning, and key security and deployment considerations.",
     "highlights": [
       "Delivered a session on Azure AI Services to an audience of 200+ community members",
@@ -521,7 +672,13 @@
     "year": 2023,
     "format": "Speaker",
     "topic": "Generative AI",
-    "tags": ["Azure", "AI", "Generative AI", "OpenAI", "Microsoft"],
+    "tags": [
+      "Azure",
+      "AI",
+      "Generative AI",
+      "OpenAI",
+      "Microsoft"
+    ],
     "summary": "Delivered a session at Azure Generative AI Day in Bengaluru on building a personal Copilot using Azure OpenAI, guiding attendees through the architecture and hands-on steps to create their own AI assistant. The event at Microsoft Ferns Office explored the limitless possibilities of AI personalization on Azure.",
     "highlights": [
       "Delivered a session on building a personal AI Copilot using Azure OpenAI at Microsoft Ferns, Bengaluru",
@@ -539,7 +696,13 @@
     "year": 2023,
     "format": "Speaker",
     "topic": "Azure",
-    "tags": ["Azure", "AI", "Cloud", "Community", "Microsoft"],
+    "tags": [
+      "Azure",
+      "AI",
+      "Cloud",
+      "Community",
+      "Microsoft"
+    ],
     "summary": "Hosted an online session introducing cloud computing concepts to a broad audience of learners and aspiring cloud professionals. The session covered cloud fundamentals, service models, deployment options, Azure's core offerings, and how to get started on a cloud career journey.",
     "highlights": [
       "Delivered a structured introduction to cloud computing covering IaaS, PaaS, and SaaS models",
@@ -557,7 +720,14 @@
     "year": 2021,
     "format": "Mentor",
     "topic": "Community",
-    "tags": ["Azure", "AI", "Cloud", "Community", "Mentorship", "Microsoft"],
+    "tags": [
+      "Azure",
+      "AI",
+      "Cloud",
+      "Community",
+      "Mentorship",
+      "Microsoft"
+    ],
     "summary": "Contributed as a mentor to the Code; Without Barriers initiative launched by Satya Nadella during his India visit, focused on promoting diversity and inclusion in Cloud and AI fields. Supported mentees in developing technical skills and building careers in technology.",
     "highlights": [
       "Mentored participants in the Satya Nadella-launched Code Without Barriers initiative",
@@ -578,7 +748,12 @@
     "year": 2021,
     "format": "Speaker",
     "topic": "AWS",
-    "tags": ["AWS", "DevOps", "Cloud", "Community"],
+    "tags": [
+      "AWS",
+      "DevOps",
+      "Cloud",
+      "Community"
+    ],
     "summary": "Accepted into the AWS Community Builders program for the DevTools category — a selective program with a 10% acceptance rate. This recognition marked the beginning of active contributions to the AWS developer ecosystem through content creation, events, and community engagement.",
     "highlights": [
       "Accepted into AWS Community Builders program (DevTools) with a 10% acceptance rate",
@@ -597,7 +772,12 @@
     "year": 2020,
     "format": "Organizer",
     "topic": "AWS",
-    "tags": ["AWS", "AI", "Cloud", "Community"],
+    "tags": [
+      "AWS",
+      "AI",
+      "Cloud",
+      "Community"
+    ],
     "summary": "Co-organized the kickoff session for AWS User Group Dehradun, establishing the local AWS community for students and professionals. The inaugural event featured sessions on AWS community programs and an Introduction to Amazon Web Services delivered by Senior AWS Developer Advocates.",
     "highlights": [
       "Co-organized the founding kickoff of AWS User Group Dehradun",
@@ -617,7 +797,12 @@
     "year": 2020,
     "format": "Speaker",
     "topic": "AWS",
-    "tags": ["AWS", "AI", "Cloud", "Community"],
+    "tags": [
+      "AWS",
+      "AI",
+      "Cloud",
+      "Community"
+    ],
     "summary": "Participated in AWS Community Day India 2020, a flagship event organized by AWS User Groups across India to showcase success stories, cloud use cases, and industry insights. Contributed by submitting to the Call for Papers to share AWS cloud experiences with the broader Indian developer community.",
     "highlights": [
       "Participated in AWS Community Day India 2020, a major AWS event across Indian user groups",
@@ -636,7 +821,12 @@
     "year": 2020,
     "format": "Speaker",
     "topic": "AWS",
-    "tags": ["AWS", "AI", "Cloud", "Community"],
+    "tags": [
+      "AWS",
+      "AI",
+      "Cloud",
+      "Community"
+    ],
     "summary": "Selected as an AWS Educate Student Ambassador for the 2020–21 cohort, a recognition of dedication to cloud education and peer advocacy within the student developer community. The program provided deep access to AWS resources, mentorship from AWS advocates, and a platform to inspire fellow students.",
     "highlights": [
       "Selected as AWS Educate Student Ambassador for the 2020–21 program cohort",
