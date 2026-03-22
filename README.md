@@ -15,12 +15,15 @@
 - **Speaking & Events** — 32 speaking engagements with photo galleries and filters
 - **YouTube Talks** — 12 sessions with lazy-loaded embeds (thumbnail-first, iframe on click)
 - **Technical Blog** — MDX-powered blog with rich typography, syntax highlighting, and reading time
-- **Admin Panel** — Protected dashboard at `/admin` with authentication, managing blogs, case studies, and projects
+- **Admin Panel** — Protected dashboard at `/admin` with authentication, managing blogs, case studies, projects, talks, and events
 - **Blog Editor** — Medium-style MDX editor with live preview, image upload, and drag-and-drop media
 - **Case Study Editor** — MDX editor for case studies with metrics, timeline, role, and client fields
 - **Project Editor** — Form-based editor for projects with outcomes, tech stack, and category fields
+- **Talk Editor** — Form-based editor for YouTube talks with title, topic, description, and featured flag
+- **Event Editor** — Full editor for events with highlights, impact, image upload, and featured flag
+- **Multi-Select Categories** — All content types support multiple categories with custom category input
 - **Media Resize** — Inline image resize controls in the editor
-- **Azure Blob Storage** — Blog images stored in Azure Blob Storage with per-post folder hierarchy
+- **Azure Blob Storage** — Images stored in Azure Blob Storage with organized hierarchy (`blog/`, `events/`, `case-studies/`)
 - **Dark/Light Mode** — System-aware theme toggle with zero flash
 - **SEO** — JSON-LD schema, OpenGraph/Twitter cards, sitemap, robots.txt
 - **Responsive** — Mobile-first design with Framer Motion animations
@@ -70,7 +73,29 @@ npm run dev                   # http://localhost:3000
 
 ## Content Pipeline
 
-### Events (auto-generated)
+### Blog Posts (admin panel or manual)
+
+- **Via Admin Panel:** Login at `/admin`, create/edit posts with the visual editor. Images upload to Azure Blob Storage automatically under `blog/<slug>/`.
+- **Manual:** Create `.mdx` files in `content/blog/` with frontmatter (title, slug, description, date, category, tags, coverImage, status, featured).
+
+### Case Studies (admin panel or manual)
+
+- **Via Admin Panel:** Login at `/admin`, create/edit case studies with the MDX editor. Images upload to Azure Blob Storage under `case-studies/<slug>/`.
+- **Manual:** Create `.mdx` files in `content/case-studies/` with frontmatter (title, subtitle, slug, tags, category, timeline, role, client, featured, coverImage, metrics).
+
+### Projects (admin panel or manual)
+
+- **Via Admin Panel:** Login at `/admin`, create/edit projects with the form editor.
+- **Manual:** Edit `content/projects.json` directly.
+
+### Talks (admin panel or manual)
+
+- **Via Admin Panel:** Login at `/admin`, create/edit talks. Set featured to display on homepage.
+- **Manual:** Edit `content/talks.json` — add `{ "id": "VIDEO_ID", "title": "...", "topic": "...", "featured": true/false }`.
+
+### Events (admin panel or auto-generated)
+
+Events can be managed via the admin panel or auto-generated from DOCX files:
 
 ```
 My Events/          ← source DOCX files + photos (local only, not in repo)
@@ -81,16 +106,8 @@ content/events.json          ← committed to repo
 public/events/{slug}/*.jpg   ← committed to repo
 ```
 
-Use `content/events-overrides.json` for manual corrections — the generator merges overrides automatically.
-
-### Talks (manual)
-
-Edit `content/talks.json` — add `{ "id": "VIDEO_ID", "title": "...", "topic": "...", "featured": true/false }`. Push to deploy.
-
-### Blog Posts (admin panel or manual)
-
-- **Via Admin Panel:** Login at `/admin`, create/edit posts with the visual editor. Images upload to Azure Blob Storage automatically.
-- **Manual:** Create `.mdx` files in `content/blog/` with frontmatter (title, slug, description, date, category, tags, coverImage, status, featured).
+- **Via Admin Panel:** Login at `/admin`, create/edit events. Upload cover images and additional photos to Azure Blob Storage under `events/<slug>/`. Set featured to display on homepage.
+- **Overrides:** `content/events-overrides.json` stores manual corrections. The generator merges overrides automatically. Admin edits persist to both `events.json` (immediate effect) and `events-overrides.json` (survives DOCX regeneration).
 
 ---
 
@@ -120,10 +137,18 @@ portfolio/
 │   │   │   ├── page.tsx              # Case study list (admin)
 │   │   │   ├── new/page.tsx          # Create new case study
 │   │   │   └── [slug]/edit/page.tsx  # Edit existing case study
-│   │   └── projects/
-│   │       ├── page.tsx              # Project list (admin)
-│   │       ├── new/page.tsx          # Create new project
-│   │       └── [id]/edit/page.tsx    # Edit existing project
+│   │   ├── projects/
+│   │   │   ├── page.tsx              # Project list (admin)
+│   │   │   ├── new/page.tsx          # Create new project
+│   │   │   └── [id]/edit/page.tsx    # Edit existing project
+│   │   ├── talks/
+│   │   │   ├── page.tsx              # Talk list (admin)
+│   │   │   ├── new/page.tsx          # Create new talk
+│   │   │   └── [id]/edit/page.tsx    # Edit existing talk
+│   │   └── events/
+│   │       ├── page.tsx              # Event list (admin)
+│   │       ├── new/page.tsx          # Create new event
+│   │       └── [slug]/edit/page.tsx  # Edit existing event
 │   ├── api/
 │   │   ├── auth/[...nextauth]/route.ts  # NextAuth handler
 │   │   └── admin/
@@ -133,6 +158,10 @@ portfolio/
 │   │       ├── case-studies/[slug]/route.ts  # PUT/DELETE — update/delete case study
 │   │       ├── projects/route.ts     # POST — create project
 │   │       ├── projects/[id]/route.ts  # PUT/DELETE — update/delete project
+│   │       ├── talks/route.ts        # POST — create talk
+│   │       ├── talks/[id]/route.ts   # PUT/DELETE — update/delete talk
+│   │       ├── events/route.ts       # POST — create event
+│   │       ├── events/[slug]/route.ts  # PUT/DELETE — update/delete event
 │   │       └── upload/route.ts       # POST — image upload to Azure Blob
 │   ├── case-studies/
 │   │   ├── page.tsx                  # Case studies listing
@@ -147,7 +176,7 @@ portfolio/
 ├── components/
 │   ├── layout/                       # Navigation, Footer, LayoutShell
 │   ├── sections/                     # Homepage sections + BlogGrid, FeaturedBlogPosts
-│   ├── admin/                        # AdminSidebar, BlogEditor, CaseStudyEditor, ProjectEditor, MediaResizeBar, DeleteItemButton
+│   ├── admin/                        # AdminSidebar, BlogEditor, CaseStudyEditor, ProjectEditor, TalkEditor, EventEditor, CategoryMultiSelect, MediaResizeBar, DeleteItemButton
 │   ├── events/                       # EventGallery (lightbox)
 │   └── ui/                           # Primitives (Badge, Card, YouTubeEmbed, etc.)
 ├── content/
@@ -160,7 +189,7 @@ portfolio/
 │   └── blog/                         # MDX blog posts
 ├── lib/
 │   ├── content.ts                    # Data loading (profiles, blogs, events, talks)
-│   ├── admin.ts                      # Blog, Case Study, Project CRUD + image upload helpers
+│   ├── admin.ts                      # Blog, Case Study, Project, Talk, Event CRUD + image upload helpers
 │   ├── azure-storage.ts              # Azure Blob Storage client (uploadToBlob)
 │   ├── mdx-components.tsx            # Shared MDX component map
 │   └── utils.ts                      # cn(), formatDate(), etc.
@@ -199,6 +228,12 @@ portfolio/
 | `/admin/projects` | Project management |
 | `/admin/projects/new` | Create new project |
 | `/admin/projects/[id]/edit` | Edit existing project |
+| `/admin/talks` | Talk management |
+| `/admin/talks/new` | Create new talk |
+| `/admin/talks/[id]/edit` | Edit existing talk |
+| `/admin/events` | Event management |
+| `/admin/events/new` | Create new event |
+| `/admin/events/[slug]/edit` | Edit existing event |
 
 ---
 
@@ -217,7 +252,7 @@ CI/CD is fully automated via GitHub Actions. Every push to `main`:
 |---|---|
 | App Service | `saurav-portfolio.azurewebsites.net` |
 | Storage Account | `sauravportfoliomedia` |
-| Blob Container | `blog-images` (public access) |
+| Blob Container | `blog-images` (public access) — organized as `blog/`, `events/`, `case-studies/` subfolders |
 | Region | Central India |
 | Plan | F1 Free (Linux, Node 20) |
 
