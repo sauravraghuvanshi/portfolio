@@ -282,37 +282,42 @@ async function processEvent(docxFile, allJpgs) {
   const highlights = extractHighlights(rawText);
   const impact     = extractImpact(rawText);
 
-  const destDir = path.join(OUTPUT_IMGS, slug);
-  fs.mkdirSync(destDir, { recursive: true });
-
   const { cover, extras } = groupImages(allJpgs, basename);
   let coverImage = null;
   const images   = [];
 
-  if (cover) {
-    try {
-      fs.copyFileSync(path.join(EVENTS_SOURCE, cover), path.join(destDir, "cover.jpg"));
-      coverImage = `/events/${slug}/cover.jpg`;
-    } catch (e) {
-      console.warn(`[WARN] Could not copy cover "${cover}": ${e.message}`);
-    }
-  }
+  // If overrides already provide blob URLs for this event, skip copying images locally
+  const override = overrides[slug] ?? {};
+  const hasBlobImages = override.coverImage && override.coverImage.startsWith("https://");
 
-  for (let i = 0; i < extras.length; i++) {
-    try {
-      fs.copyFileSync(path.join(EVENTS_SOURCE, extras[i]), path.join(destDir, `photo-${i + 1}.jpg`));
-      images.push(`/events/${slug}/photo-${i + 1}.jpg`);
-    } catch (e) {
-      console.warn(`[WARN] Could not copy image "${extras[i]}": ${e.message}`);
-    }
-  }
+  if (!hasBlobImages) {
+    const destDir = path.join(OUTPUT_IMGS, slug);
+    fs.mkdirSync(destDir, { recursive: true });
 
-  if (!cover && extras.length === 0) {
-    console.warn(`[WARN] No images found for "${basename}"`);
+    if (cover) {
+      try {
+        fs.copyFileSync(path.join(EVENTS_SOURCE, cover), path.join(destDir, "cover.jpg"));
+        coverImage = `/events/${slug}/cover.jpg`;
+      } catch (e) {
+        console.warn(`[WARN] Could not copy cover "${cover}": ${e.message}`);
+      }
+    }
+
+    for (let i = 0; i < extras.length; i++) {
+      try {
+        fs.copyFileSync(path.join(EVENTS_SOURCE, extras[i]), path.join(destDir, `photo-${i + 1}.jpg`));
+        images.push(`/events/${slug}/photo-${i + 1}.jpg`);
+      } catch (e) {
+        console.warn(`[WARN] Could not copy image "${extras[i]}": ${e.message}`);
+      }
+    }
+
+    if (!cover && extras.length === 0) {
+      console.warn(`[WARN] No images found for "${basename}"`);
+    }
   }
 
   // Apply manual overrides — any field in events-overrides.json wins
-  const override = overrides[slug] ?? {};
   return { slug, title, year, format, topic, tags, summary, highlights, impact, coverImage, images, ...override };
 }
 
@@ -327,10 +332,15 @@ async function main() {
     process.exit(0);
   }
 
-  if (fs.existsSync(OUTPUT_IMGS)) {
-    fs.rmSync(OUTPUT_IMGS, { recursive: true, force: true });
+  // Clean public/events/ only if some events lack blob URL overrides
+  const needsLocalImages = Object.keys(overrides).length === 0 ||
+    Object.values(overrides).some((o) => !o.coverImage || !o.coverImage.startsWith("https://"));
+  if (needsLocalImages) {
+    if (fs.existsSync(OUTPUT_IMGS)) {
+      fs.rmSync(OUTPUT_IMGS, { recursive: true, force: true });
+    }
+    fs.mkdirSync(OUTPUT_IMGS, { recursive: true });
   }
-  fs.mkdirSync(OUTPUT_IMGS, { recursive: true });
 
   const allFiles = fs.readdirSync(EVENTS_SOURCE);
   const docxFiles = allFiles.filter((f) => /\.docx$/i.test(f) && !f.startsWith("~$"));

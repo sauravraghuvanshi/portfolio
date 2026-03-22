@@ -17,11 +17,11 @@
       "Brought together .NET enthusiasts for a full day of learning and collaboration"
     ],
     "impact": [],
-    "coverImage": "/events/net-day-bangalore/photo-2.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/net-day-bangalore/photo-2.jpg",
     "coverImagePosition": "center",
     "images": [
-      "/events/net-day-bangalore/photo-1.jpg",
-      "/events/net-day-bangalore/photo-3.jpg"
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/net-day-bangalore/photo-1.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/net-day-bangalore/photo-3.jpg"
     ]
   },
   "az-104-microsoft-azure-administrator-bootcamp": {
@@ -43,10 +43,10 @@
       "Collaborated with Azure Developer Community and Reskilll to reach students across India"
     ],
     "impact": [],
-    "coverImage": "/events/az-104-microsoft-azure-administrator-bootcamp/photo-1.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/az-104-microsoft-azure-administrator-bootcamp/photo-1.jpg",
     "images": [
-      "/events/az-104-microsoft-azure-administrator-bootcamp/photo-2.jpg",
-      "/events/az-104-microsoft-azure-administrator-bootcamp/photo-3.jpg"
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/az-104-microsoft-azure-administrator-bootcamp/photo-2.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/az-104-microsoft-azure-administrator-bootcamp/photo-3.jpg"
     ]
   },
   "azure-ai-engineer-associate-bootcamp-ai-102": {
@@ -69,7 +69,7 @@
       "Prepared learners for the AI-102: Azure AI Engineer Associate certification exam"
     ],
     "impact": [],
-    "coverImage": "/events/azure-ai-engineer-associate-bootcamp-ai-102/cover.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-ai-engineer-associate-bootcamp-ai-102/cover.jpg",
     "images": []
   },
   "azure-aiml-day": {
@@ -91,12 +91,12 @@
       "Explored real-world use cases leveraging Azure Machine Learning and Cognitive Services"
     ],
     "impact": [],
-    "coverImage": "/events/azure-aiml-day/cover.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-aiml-day/cover.jpg",
     "coverImagePosition": "center",
     "images": [
-      "/events/azure-aiml-day/photo-1.jpg",
-      "/events/azure-aiml-day/photo-2.jpg",
-      "/events/azure-aiml-day/photo-3.jpg"
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-aiml-day/photo-1.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-aiml-day/photo-2.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-aiml-day/photo-3.jpg"
     ]
   },
   "azure-developer-day-in-bengaluru-by-msa-cit-chapter": {
@@ -118,11 +118,11 @@
       "Inspired students to pursue cloud careers through a structured Azure learning roadmap"
     ],
     "impact": [],
-    "coverImage": "/events/azure-developer-day-in-bengaluru-by-msa-cit-chapter/photo-2.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-developer-day-in-bengaluru-by-msa-cit-chapter/photo-2.jpg",
     "coverImagePosition": "center",
     "images": [
-      "/events/azure-developer-day-in-bengaluru-by-msa-cit-chapter/cover.jpg",
-      "/events/azure-developer-day-in-bengaluru-by-msa-cit-chapter/photo-1.jpg"
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-developer-day-in-bengaluru-by-msa-cit-chapter/cover.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-developer-day-in-bengaluru-by-msa-cit-chapter/photo-1.jpg"
     ],
     "featured": true
   },
@@ -148,14 +148,14 @@
     "impact": [
       "Attracted 120+ community members demonstrating strong demand for DevOps skills in Bangalore"
     ],
-    "coverImage": "/events/azure-devops-day/photo-1.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-devops-day/photo-1.jpg",
     "coverImagePosition": "center",
     "images": [
-      "/events/azure-devops-day/photo-5.jpg",
-      "/events/azure-devops-day/photo-2.jpg",
-      "/events/azure-devops-day/photo-3.jpg",
-      "/events/azure-devops-day/photo-4.jpg",
-      "/events/azure-devops-day/photo-6.jpg"
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-devops-day/photo-5.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-devops-day/photo-2.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-devops-day/photo-3.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-devops-day/photo-4.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-devops-day/photo-6.jpg"
     ],
     "featured": true
   },
@@ -179,7 +179,7 @@
       "Shared frameworks for self-awareness and brand differentiation in a competitive tech landscape"
     ],
     "impact": [],
-    "coverImage": "/events/build-your-own-personal-brand-in-the-age-of-ai/cover.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/build-your-own-personal-brand-in-the-age-of-ai/cover.jpg",
     "images": []
   },
   "code-without-barriers": {
@@ -201,9 +201,9 @@
       "Contributed to building inclusive tech communities that elevate underrepresented voices"
     ],
     "impact": [],
-    "coverImage": "/events/code-without-barriers/cover.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/code-without-barriers/cover.jpg",
     "images": [
-      "/events/code-without-barriers/photo-1.jpg"
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/code-without-barriers/photo-1.jpg"
     ]
   },
   "code-without-barriers-mentorship-circle": {
@@ -227,7 +227,7 @@
       "Strengthened community bonds by connecting mentees with wider Azure Developer networks"
     ],
     "impact": [],
-    "coverImage": "/events/code-without-barriers-mentorship-circle/cover.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/code-without-barriers-mentorship-circle/cover.jpg",
     "images": []
   },
   "how-to-work-with-cicd-pipeline-in-azure-devops": {
@@ -250,12 +250,12 @@
       "Engaged attendees with an interactive quiz and rewards to reinforce learning"
     ],
     "impact": [],
-    "coverImage": "/events/how-to-work-with-cicd-pipeline-in-azure-devops/photo-2.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/how-to-work-with-cicd-pipeline-in-azure-devops/photo-2.jpg",
     "coverImagePosition": "center",
     "images": [
-      "/events/how-to-work-with-cicd-pipeline-in-azure-devops/photo-1.jpg",
-      "/events/how-to-work-with-cicd-pipeline-in-azure-devops/photo-3.jpg",
-      "/events/how-to-work-with-cicd-pipeline-in-azure-devops/photo-4.jpg"
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/how-to-work-with-cicd-pipeline-in-azure-devops/photo-1.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/how-to-work-with-cicd-pipeline-in-azure-devops/photo-3.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/how-to-work-with-cicd-pipeline-in-azure-devops/photo-4.jpg"
     ]
   },
   "mentor-at-hashtag-includeher-cohort-4-0-a-cohort-on-generative-ai": {
@@ -280,14 +280,14 @@
     "impact": [
       "Mentored 700+ women in Generative AI through the #IncludeHer COHORT 4.0 program"
     ],
-    "coverImage": "/events/mentor-at-hashtag-includeher-cohort-4-0-a-cohort-on-generative-ai/photo-1.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/mentor-at-hashtag-includeher-cohort-4-0-a-cohort-on-generative-ai/photo-1.jpg",
     "coverImagePosition": "center",
     "images": [
-      "/events/mentor-at-hashtag-includeher-cohort-4-0-a-cohort-on-generative-ai/photo-2.jpg",
-      "/events/mentor-at-hashtag-includeher-cohort-4-0-a-cohort-on-generative-ai/photo-3.jpg",
-      "/events/mentor-at-hashtag-includeher-cohort-4-0-a-cohort-on-generative-ai/photo-4.jpg",
-      "/events/mentor-at-hashtag-includeher-cohort-4-0-a-cohort-on-generative-ai/photo-5.jpg",
-      "/events/mentor-at-hashtag-includeher-cohort-4-0-a-cohort-on-generative-ai/photo-6.jpg"
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/mentor-at-hashtag-includeher-cohort-4-0-a-cohort-on-generative-ai/photo-2.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/mentor-at-hashtag-includeher-cohort-4-0-a-cohort-on-generative-ai/photo-3.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/mentor-at-hashtag-includeher-cohort-4-0-a-cohort-on-generative-ai/photo-4.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/mentor-at-hashtag-includeher-cohort-4-0-a-cohort-on-generative-ai/photo-5.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/mentor-at-hashtag-includeher-cohort-4-0-a-cohort-on-generative-ai/photo-6.jpg"
     ]
   },
   "mentor-for-the-highly-esteemed-fastest-coder-first-hackathon-organized-by-microsoft": {
@@ -310,10 +310,10 @@
       "Witnessed world-class talent building innovative solutions within tight timeframes"
     ],
     "impact": [],
-    "coverImage": "/events/mentor-for-the-highly-esteemed-fastest-coder-first-hackathon-organized-by-microsoft/cover.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/mentor-for-the-highly-esteemed-fastest-coder-first-hackathon-organized-by-microsoft/cover.jpg",
     "images": [
-      "/events/mentor-for-the-highly-esteemed-fastest-coder-first-hackathon-organized-by-microsoft/photo-1.jpg",
-      "/events/mentor-for-the-highly-esteemed-fastest-coder-first-hackathon-organized-by-microsoft/photo-2.jpg"
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/mentor-for-the-highly-esteemed-fastest-coder-first-hackathon-organized-by-microsoft/photo-1.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/mentor-for-the-highly-esteemed-fastest-coder-first-hackathon-organized-by-microsoft/photo-2.jpg"
     ]
   },
   "microsoft-ai-tour-bangalore": {
@@ -337,21 +337,21 @@
       "Connected with the Bangalore tech community around the latest in Microsoft AI innovation"
     ],
     "impact": [],
-    "coverImage": "/events/microsoft-ai-tour-bangalore/photo-12.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-ai-tour-bangalore/photo-12.jpg",
     "coverImagePosition": "center",
     "images": [
-      "/events/microsoft-ai-tour-bangalore/photo-2.jpg",
-      "/events/microsoft-ai-tour-bangalore/photo-1.jpg",
-      "/events/microsoft-ai-tour-bangalore/photo-3.jpg",
-      "/events/microsoft-ai-tour-bangalore/photo-4.jpg",
-      "/events/microsoft-ai-tour-bangalore/photo-5.jpg",
-      "/events/microsoft-ai-tour-bangalore/photo-6.jpg",
-      "/events/microsoft-ai-tour-bangalore/photo-7.jpg",
-      "/events/microsoft-ai-tour-bangalore/photo-8.jpg",
-      "/events/microsoft-ai-tour-bangalore/photo-10.jpg",
-      "/events/microsoft-ai-tour-bangalore/photo-11.jpg",
-      "/events/microsoft-ai-tour-bangalore/photo-12.jpg",
-      "/events/microsoft-ai-tour-bangalore/photo-13.jpg"
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-ai-tour-bangalore/photo-2.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-ai-tour-bangalore/photo-1.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-ai-tour-bangalore/photo-3.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-ai-tour-bangalore/photo-4.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-ai-tour-bangalore/photo-5.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-ai-tour-bangalore/photo-6.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-ai-tour-bangalore/photo-7.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-ai-tour-bangalore/photo-8.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-ai-tour-bangalore/photo-10.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-ai-tour-bangalore/photo-11.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-ai-tour-bangalore/photo-12.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-ai-tour-bangalore/photo-13.jpg"
     ],
     "featured": true
   },
@@ -374,7 +374,7 @@
       "Reconnected with the Azure Developer Community after a brief hiatus from public speaking"
     ],
     "impact": [],
-    "coverImage": "/events/microsoft-azure-networking/cover.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-azure-networking/cover.jpg",
     "coverImagePosition": "bottom",
     "images": []
   },
@@ -397,14 +397,14 @@
       "Connected with technology leaders shaping Microsoft's vision for India's digital future"
     ],
     "impact": [],
-    "coverImage": "/events/microsoft-future-ready-technology-summit/photo-1.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-future-ready-technology-summit/photo-1.jpg",
     "images": [
-      "/events/microsoft-future-ready-technology-summit/photo-2.jpg",
-      "/events/microsoft-future-ready-technology-summit/photo-3.jpg",
-      "/events/microsoft-future-ready-technology-summit/photo-4.jpg",
-      "/events/microsoft-future-ready-technology-summit/photo-5.jpg",
-      "/events/microsoft-future-ready-technology-summit/photo-6.jpg",
-      "/events/microsoft-future-ready-technology-summit/photo-7.jpg"
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-future-ready-technology-summit/photo-2.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-future-ready-technology-summit/photo-3.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-future-ready-technology-summit/photo-4.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-future-ready-technology-summit/photo-5.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-future-ready-technology-summit/photo-6.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-future-ready-technology-summit/photo-7.jpg"
     ],
     "featured": true
   },
@@ -429,10 +429,10 @@
       "India now has 1,000+ MLSAs, making it the largest MLSA Ambassador community in the program",
       "Female participation in the MLSA program reached 32%, marking significant progress in inclusion"
     ],
-    "coverImage": "/events/microsoft-india-town-hall-meet-mlsa-edition/photo-1.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-india-town-hall-meet-mlsa-edition/photo-1.jpg",
     "images": [
-      "/events/microsoft-india-town-hall-meet-mlsa-edition/photo-2.jpg",
-      "/events/microsoft-india-town-hall-meet-mlsa-edition/photo-3.jpg"
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-india-town-hall-meet-mlsa-edition/photo-2.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-india-town-hall-meet-mlsa-edition/photo-3.jpg"
     ],
     "featured": true
   },
@@ -456,7 +456,7 @@
       "Mentored peers and community members while pushing product innovation forward simultaneously"
     ],
     "impact": [],
-    "coverImage": "/events/the-past-few-months-at-microsoft-have-been-nothing-short-of-incredible/cover.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/the-past-few-months-at-microsoft-have-been-nothing-short-of-incredible/cover.jpg",
     "images": []
   },
   "the-present-and-future-of-it-industry": {
@@ -478,7 +478,7 @@
       "Reflected on pathways for young Indian engineers to contribute to global technology leadership"
     ],
     "impact": [],
-    "coverImage": "/events/the-present-and-future-of-it-industry/cover.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/the-present-and-future-of-it-industry/cover.jpg",
     "images": []
   },
   "azure-developer-day": {
@@ -502,11 +502,11 @@
       "Facilitated networking between Bengaluru's cloud and AI developer community"
     ],
     "impact": [],
-    "coverImage": "/events/azure-developer-day/photo-1.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-developer-day/photo-1.jpg",
     "coverImagePosition": "center",
     "images": [
-      "/events/azure-developer-day/cover.jpg",
-      "/events/azure-developer-day/photo-2.jpg"
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-developer-day/cover.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-developer-day/photo-2.jpg"
     ],
     "featured": true
   },
@@ -531,7 +531,7 @@
       "Connected with the KubeSmart & AI community at Microsoft India R&D, Bengaluru"
     ],
     "impact": [],
-    "coverImage": "/events/building-your-own-copilot-using-azure-openai/cover.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/building-your-own-copilot-using-azure-openai/cover.jpg",
     "images": [],
     "featured": true
   },
@@ -556,7 +556,7 @@
       "Covered best practices for integrating GitHub Copilot into daily cloud development workflows"
     ],
     "impact": [],
-    "coverImage": "/events/enhancing-cloud-engineering-with-github-copilot/cover.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/enhancing-cloud-engineering-with-github-copilot/cover.jpg",
     "images": [],
     "featured": true
   },
@@ -581,9 +581,9 @@
     "impact": [
       "Microsoft AI Skills Fest set a Guinness World Record for the most users completing an online AI lesson in 24 hours"
     ],
-    "coverImage": "/events/microsoft-ai-skills-fest/cover.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-ai-skills-fest/cover.jpg",
     "images": [
-      "/events/microsoft-ai-skills-fest/photo-1.jpg"
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-ai-skills-fest/photo-1.jpg"
     ]
   },
   "azure-dev-day-2024-recap-a-journey-into-azure-generative-ai": {
@@ -606,12 +606,12 @@
       "Engaged an enthusiastic audience passionate about the intersection of Azure and AI innovation"
     ],
     "impact": [],
-    "coverImage": "/events/azure-dev-day-2024-recap-a-journey-into-azure-generative-ai/photo-2.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-dev-day-2024-recap-a-journey-into-azure-generative-ai/photo-2.jpg",
     "coverImagePosition": "center",
     "images": [
-      "/events/azure-dev-day-2024-recap-a-journey-into-azure-generative-ai/photo-1.jpg",
-      "/events/azure-dev-day-2024-recap-a-journey-into-azure-generative-ai/photo-3.jpg",
-      "/events/azure-dev-day-2024-recap-a-journey-into-azure-generative-ai/photo-4.jpg"
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-dev-day-2024-recap-a-journey-into-azure-generative-ai/photo-1.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-dev-day-2024-recap-a-journey-into-azure-generative-ai/photo-3.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-dev-day-2024-recap-a-journey-into-azure-generative-ai/photo-4.jpg"
     ]
   },
   "cloud-computing-as-a-career-and-journey-to-microsoft": {
@@ -634,7 +634,7 @@
       "Engaged directly with the community via X Space for an intimate, conversational session format"
     ],
     "impact": [],
-    "coverImage": "/events/cloud-computing-as-a-career-and-journey-to-microsoft/cover.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/cloud-computing-as-a-career-and-journey-to-microsoft/cover.jpg",
     "coverImagePosition": "bottom",
     "images": []
   },
@@ -660,11 +660,11 @@
     "impact": [
       "Delivered to an audience of 200+ passionate participants at the year-end Azure Dev Day Bangalore"
     ],
-    "coverImage": "/events/wrapping-up-2024-with-azure-devday-bangalore/photo-1.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/wrapping-up-2024-with-azure-devday-bangalore/photo-1.jpg",
     "coverImagePosition": "center",
     "images": [
-      "/events/wrapping-up-2024-with-azure-devday-bangalore/cover.jpg",
-      "/events/wrapping-up-2024-with-azure-devday-bangalore/photo-2.jpg"
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/wrapping-up-2024-with-azure-devday-bangalore/cover.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/wrapping-up-2024-with-azure-devday-bangalore/photo-2.jpg"
     ]
   },
   "azure-generative-ai-day": {
@@ -687,7 +687,7 @@
       "Sparked community enthusiasm around the emerging ecosystem of Azure Generative AI tools"
     ],
     "impact": [],
-    "coverImage": "/events/azure-generative-ai-day/cover.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-generative-ai-day/cover.jpg",
     "coverImagePosition": "bottom",
     "images": []
   },
@@ -711,7 +711,7 @@
       "Engaged a live online audience with Q&A on cloud adoption and certification pathways"
     ],
     "impact": [],
-    "coverImage": "/events/introduction-to-cloud-computing/cover.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/introduction-to-cloud-computing/cover.jpg",
     "coverImagePosition": "bottom",
     "images": []
   },
@@ -738,9 +738,9 @@
     "impact": [
       "Program achieved 30% developer diversity, up from 12% in 2021, creating real industry-level change"
     ],
-    "coverImage": "/events/code-without-barriers-initiative-as-a-mentor/cover.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/code-without-barriers-initiative-as-a-mentor/cover.jpg",
     "images": [
-      "/events/code-without-barriers-initiative-as-a-mentor/photo-1.jpg"
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/code-without-barriers-initiative-as-a-mentor/photo-1.jpg"
     ]
   },
   "aws-community-builders": {
@@ -764,7 +764,7 @@
     "impact": [
       "Selected among the top 10% of applicants into the AWS Community Builders DevTools category"
     ],
-    "coverImage": "/events/aws-community-builders/cover.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/aws-community-builders/cover.jpg",
     "images": []
   },
   "aws-user-group-dehradun": {
@@ -786,10 +786,10 @@
       "Established a local AWS learning community connecting students and developers in Dehradun"
     ],
     "impact": [],
-    "coverImage": "/events/aws-user-group-dehradun/cover.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/aws-user-group-dehradun/cover.jpg",
     "images": [
-      "/events/aws-user-group-dehradun/photo-1.jpg",
-      "/events/aws-user-group-dehradun/photo-2.jpg"
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/aws-user-group-dehradun/photo-1.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/aws-user-group-dehradun/photo-2.jpg"
     ]
   },
   "aws-community-day-india-2020": {
@@ -811,9 +811,9 @@
       "Represented Dehradun's growing AWS community on a national platform"
     ],
     "impact": [],
-    "coverImage": "/events/aws-community-day-india-2020/photo-1.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/aws-community-day-india-2020/photo-1.jpg",
     "images": [
-      "/events/aws-community-day-india-2020/photo-2.jpg"
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/aws-community-day-india-2020/photo-2.jpg"
     ]
   },
   "aws-educate-student-ambassador": {
@@ -837,9 +837,9 @@
     "impact": [
       "Selected for the AWS Educate Student Ambassador program, recognizing commitment to cloud education"
     ],
-    "coverImage": "/events/aws-educate-student-ambassador/cover.jpg",
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/aws-educate-student-ambassador/cover.jpg",
     "images": [
-      "/events/aws-educate-student-ambassador/photo-1.jpg"
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/aws-educate-student-ambassador/photo-1.jpg"
     ]
   }
 }
