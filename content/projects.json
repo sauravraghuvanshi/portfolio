@@ -8,9 +8,20 @@
       "Improved support engineer efficiency by 14%",
       "Delivered measurable operational and customer experience improvements"
     ],
-    "tags": ["Generative AI", "Azure OpenAI", "Automation", "Support Engineering"],
+    "tags": [
+      "Generative AI",
+      "Azure OpenAI",
+      "Automation",
+      "Support Engineering"
+    ],
     "category": "AI",
-    "techStack": ["Azure OpenAI", "Azure AI Foundry", "Python", "Azure Functions", "Azure Logic Apps"],
+    "techStack": [
+      "Azure OpenAI",
+      "Azure AI Foundry",
+      "Python",
+      "Azure Functions",
+      "Azure Logic Apps"
+    ],
     "githubUrl": "#",
     "liveUrl": "#",
     "featured": true,
@@ -25,9 +36,19 @@
       "Scaled cloud learning to thousands of engineers",
       "Built reusable lab content now used across multiple cohorts"
     ],
-    "tags": ["Azure", "Developer Education", "Cloud Skilling", "Curriculum Design"],
+    "tags": [
+      "Azure",
+      "Developer Education",
+      "Cloud Skilling",
+      "Curriculum Design"
+    ],
     "category": "Azure",
-    "techStack": ["Microsoft Azure", "Azure Labs", "GitHub", "Hands-on Learning"],
+    "techStack": [
+      "Microsoft Azure",
+      "Azure Labs",
+      "GitHub",
+      "Hands-on Learning"
+    ],
     "githubUrl": "#",
     "liveUrl": "#",
     "featured": true,
@@ -42,9 +63,22 @@
       "Mean time to recovery reduced from hours to minutes",
       "Infrastructure costs reduced by 40%"
     ],
-    "tags": ["AKS", "Kubernetes", "Microservices", "Azure", "DevOps"],
+    "tags": [
+      "AKS",
+      "Kubernetes",
+      "Microservices",
+      "Azure",
+      "DevOps"
+    ],
     "category": "Azure",
-    "techStack": ["AKS", "Docker", "Terraform", "GitHub Actions", "Azure Monitor", "Helm"],
+    "techStack": [
+      "AKS",
+      "Docker",
+      "Terraform",
+      "GitHub Actions",
+      "Azure Monitor",
+      "Helm"
+    ],
     "githubUrl": "#",
     "liveUrl": "#",
     "featured": false,
@@ -59,9 +93,20 @@
       "Reduced processing time by 80% on targeted workflows",
       "Zero human intervention required for standard workflow execution"
     ],
-    "tags": ["Agentic AI", "Azure AI Foundry", "Semantic Kernel", "Automation"],
+    "tags": [
+      "Agentic AI",
+      "Azure AI Foundry",
+      "Semantic Kernel",
+      "Automation"
+    ],
     "category": "AI",
-    "techStack": ["Azure AI Foundry", "Semantic Kernel", "Azure OpenAI", "Python", "Azure Service Bus"],
+    "techStack": [
+      "Azure AI Foundry",
+      "Semantic Kernel",
+      "Azure OpenAI",
+      "Python",
+      "Azure Service Bus"
+    ],
     "githubUrl": "#",
     "liveUrl": "#",
     "featured": false,
@@ -76,9 +121,21 @@
       "Security baseline achieved from day one",
       "Passed investor due diligence cloud security review"
     ],
-    "tags": ["Landing Zone", "Azure", "Governance", "Startups", "Terraform"],
+    "tags": [
+      "Landing Zone",
+      "Azure",
+      "Governance",
+      "Startups",
+      "Terraform"
+    ],
     "category": "Azure",
-    "techStack": ["Azure", "Terraform", "Azure Policy", "Entra ID", "GitHub Actions"],
+    "techStack": [
+      "Azure",
+      "Terraform",
+      "Azure Policy",
+      "Entra ID",
+      "GitHub Actions"
+    ],
     "githubUrl": "#",
     "liveUrl": "#",
     "featured": false,
@@ -93,9 +150,21 @@
       "CI/CD pipeline adoption increased to 100% of teams",
       "Deployment lead time reduced by 65%"
     ],
-    "tags": ["DevOps", "Platform Engineering", "CI/CD", "Azure", "IaC"],
+    "tags": [
+      "DevOps",
+      "Platform Engineering",
+      "CI/CD",
+      "Azure",
+      "IaC"
+    ],
     "category": "DevOps",
-    "techStack": ["Azure DevOps", "Terraform", "GitHub Actions", "Azure Monitor", "Bicep"],
+    "techStack": [
+      "Azure DevOps",
+      "Terraform",
+      "GitHub Actions",
+      "Azure Monitor",
+      "Bicep"
+    ],
     "githubUrl": "#",
     "liveUrl": "#",
     "featured": false,
