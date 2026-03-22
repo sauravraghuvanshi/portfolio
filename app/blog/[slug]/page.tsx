@@ -67,7 +67,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         {/* Article header */}
         <header className="mb-12">
           <div className="flex flex-wrap gap-2 mb-4">
-            <Badge variant="blue">{post.category}</Badge>
+            {post.category.map((cat) => (
+              <Badge key={cat} variant="blue">{cat}</Badge>
+            ))}
             {post.tags.slice(0, 4).map((tag) => (
               <Badge key={tag} variant="default">{tag}</Badge>
             ))}

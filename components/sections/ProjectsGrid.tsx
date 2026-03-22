@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Github, ExternalLink, TrendingUp } from "lucide-react";
+import Link from "next/link";
+import { Github, ExternalLink, TrendingUp, ArrowRight } from "lucide-react";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Badge } from "@/components/ui/Badge";
 import type { Project } from "@/lib/content";
@@ -22,11 +23,11 @@ const categoryColors: Record<string, "blue" | "green" | "purple" | "orange" | "r
 };
 
 export default function ProjectsGrid({ projects, showFilters = true, limit }: ProjectsGridProps) {
-  const categories = ["All", ...Array.from(new Set(projects.map((p) => p.category)))];
+  const categories = ["All", ...Array.from(new Set(projects.flatMap((p) => p.category)))];
   const [activeCategory, setActiveCategory] = useState("All");
 
   const filtered = projects.filter(
-    (p) => activeCategory === "All" || p.category === activeCategory
+    (p) => activeCategory === "All" || p.category.includes(activeCategory)
   );
   const displayed = limit ? filtered.slice(0, limit) : filtered;
 
@@ -76,7 +77,11 @@ export default function ProjectsGrid({ projects, showFilters = true, limit }: Pr
                 aria-label={project.title}
               >
                 <div className="flex items-start justify-between gap-3 mb-4">
-                  <Badge variant={categoryColors[project.category] || "default"}>{project.category}</Badge>
+                  <div className="flex flex-wrap gap-1">
+                    {project.category.map((cat) => (
+                      <Badge key={cat} variant={categoryColors[cat] || "default"}>{cat}</Badge>
+                    ))}
+                  </div>
                   <div className="flex gap-2">
                     {project.githubUrl && project.githubUrl !== "#" && (
                       <a
@@ -109,7 +114,7 @@ export default function ProjectsGrid({ projects, showFilters = true, limit }: Pr
                 {/* Outcomes */}
                 {project.outcomes && project.outcomes.length > 0 && (
                   <div className="mb-4 space-y-1">
-                    {project.outcomes.slice(0, 2).map((outcome) => (
+                    {project.outcomes.map((outcome) => (
                       <div key={outcome} className="flex items-start gap-2 text-xs text-accent-700 dark:text-accent-400">
                         <TrendingUp className="w-3 h-3 mt-0.5 flex-shrink-0" aria-hidden="true" />
                         <span>{outcome}</span>
@@ -131,6 +136,24 @@ export default function ProjectsGrid({ projects, showFilters = true, limit }: Pr
             ))}
           </motion.div>
         </AnimatePresence>
+
+        {limit && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4 }}
+            className="mt-10 text-center"
+          >
+            <Link
+              href="/projects"
+              className="inline-flex items-center gap-2 px-6 py-3 border border-slate-300 dark:border-slate-700 hover:border-brand-500 dark:hover:border-brand-500 text-slate-700 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium rounded-xl transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 group"
+            >
+              View All Projects
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+            </Link>
+          </motion.div>
+        )}
       </div>
     </section>
   );

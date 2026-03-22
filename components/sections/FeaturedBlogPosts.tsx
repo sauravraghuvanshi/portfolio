@@ -61,7 +61,11 @@ export default function FeaturedBlogPosts({ posts }: FeaturedBlogPostsProps) {
                 </div>
 
                 <div className="p-5">
-                  <Badge variant="blue" className="mb-3">{post.category}</Badge>
+                  <div className="flex flex-wrap gap-1 mb-3">
+                    {post.category.map((cat) => (
+                      <Badge key={cat} variant="blue">{cat}</Badge>
+                    ))}
+                  </div>
                   <h3 className="font-bold text-slate-900 dark:text-white mb-2 line-clamp-2 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
                     {post.title}
                   </h3>

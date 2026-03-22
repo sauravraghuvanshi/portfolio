@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { saveBlogPost } from "@/lib/admin";
-import { getBlogPost } from "@/lib/content";
+import { getBlogPost, normalizeCategory } from "@/lib/content";
 import { slugify } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import type { BlogPostMeta } from "@/lib/content";
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
       slug,
       description: description || "",
       date: new Date().toISOString().split("T")[0],
-      category: category || "General",
+      category: normalizeCategory(category).length > 0 ? normalizeCategory(category) : ["General"],
       tags: tags || [],
       coverImage: coverImage || undefined,
       featured: featured || false,

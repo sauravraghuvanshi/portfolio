@@ -47,7 +47,7 @@ export default function AdminProjectsListPage() {
                   <td className="max-w-xs truncate px-5 py-3 font-medium text-white">
                     {project.title}
                   </td>
-                  <td className="px-5 py-3">{project.category}</td>
+                  <td className="px-5 py-3">{project.category.join(", ")}</td>
                   <td className="px-5 py-3 text-slate-400">{project.year}</td>
                   <td className="px-5 py-3">
                     {project.featured && (

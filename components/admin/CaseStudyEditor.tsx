@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import CategoryMultiSelect from "./CategoryMultiSelect";
 import {
   Save,
   Eye,
@@ -59,7 +60,7 @@ export default function CaseStudyEditor({ mode, initialData }: CaseStudyEditorPr
 
   const [title, setTitle] = useState(initialData?.title ?? "");
   const [subtitle, setSubtitle] = useState(initialData?.subtitle ?? "");
-  const [category, setCategory] = useState(initialData?.category ?? "Cloud Architecture");
+  const [category, setCategory] = useState<string[]>(initialData?.category ?? ["Cloud Architecture"]);
   const [tags, setTags] = useState(initialData?.tags?.join(", ") ?? "");
   const [timeline, setTimeline] = useState(initialData?.timeline ?? "");
   const [role, setRole] = useState(initialData?.role ?? "");
@@ -226,7 +227,7 @@ export default function CaseStudyEditor({ mode, initialData }: CaseStudyEditorPr
       timeline,
       role,
       client,
-      coverImage: coverImage || undefined,
+      coverImage,
       featured,
       metrics: metrics.filter((m) => m.value || m.label),
       content,
@@ -423,22 +424,11 @@ export default function CaseStudyEditor({ mode, initialData }: CaseStudyEditorPr
             />
           </div>
 
-          <div>
-            <label className="mb-1 block text-xs font-medium uppercase text-slate-400">
-              Category
-            </label>
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full rounded-lg border border-slate-700 bg-surface-dark-2 px-3 py-2.5 text-sm text-white outline-none transition focus:border-brand-500"
-            >
-              {categories.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-          </div>
+          <CategoryMultiSelect
+              presets={categories}
+              selected={category}
+              onChange={setCategory}
+            />
 
           <div>
             <label className="mb-1 block text-xs font-medium uppercase text-slate-400">

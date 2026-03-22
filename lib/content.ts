@@ -4,12 +4,18 @@ import matter from "gray-matter";
 
 const contentDir = path.join(process.cwd(), "content");
 
+export function normalizeCategory(cat: unknown): string[] {
+  if (Array.isArray(cat)) return cat.filter((c): c is string => typeof c === "string");
+  if (typeof cat === "string" && cat.trim()) return [cat.trim()];
+  return [];
+}
+
 export interface CaseStudyMeta {
   title: string;
   subtitle: string;
   slug: string;
   tags: string[];
-  category: string;
+  category: string[];
   timeline: string;
   role: string;
   client: string;
@@ -36,7 +42,7 @@ export function getCaseStudy(slug: string): CaseStudy | null {
   if (!fs.existsSync(filePath)) return null;
   const raw = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(raw);
-  return { ...(data as CaseStudyMeta), content };
+  return { ...(data as CaseStudyMeta), category: normalizeCategory(data.category), content };
 }
 
 export function getAllCaseStudies(): CaseStudy[] {
@@ -63,7 +69,7 @@ export interface Project {
   description: string;
   outcomes: string[];
   tags: string[];
-  category: string;
+  category: string[];
   techStack: string[];
   githubUrl: string;
   liveUrl: string;
@@ -74,7 +80,10 @@ export interface Project {
 export function getProjects(): Project[] {
   const filePath = path.join(contentDir, "projects.json");
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
-  return JSON.parse(raw);
+  return (JSON.parse(raw) as Project[]).map((p) => ({
+    ...p,
+    category: normalizeCategory(p.category),
+  }));
 }
 
 export function getFeaturedProjects(): Project[] {
@@ -142,7 +151,7 @@ export interface BlogPostMeta {
   description: string;
   date: string;
   updated?: string;
-  category: string;
+  category: string[];
   tags: string[];
   coverImage?: string;
   featured: boolean;
@@ -177,6 +186,7 @@ export function getBlogPost(slug: string): BlogPost | null {
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
   const { data, content } = matter(raw);
   const meta = data as BlogPostMeta;
+  meta.category = normalizeCategory(meta.category);
   if (!meta.readingTime) {
     meta.readingTime = computeReadingTime(content);
   }

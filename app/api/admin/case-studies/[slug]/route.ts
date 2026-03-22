@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { saveCaseStudy, deleteCaseStudy } from "@/lib/admin";
-import { getCaseStudy } from "@/lib/content";
+import { getCaseStudy, normalizeCategory } from "@/lib/content";
 import { revalidatePath } from "next/cache";
 import type { CaseStudyMeta } from "@/lib/content";
 
@@ -28,7 +28,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       subtitle: body.subtitle ?? existing.subtitle,
       slug,
       tags: body.tags ?? existing.tags,
-      category: body.category ?? existing.category,
+      category: normalizeCategory(body.category ?? existing.category),
       timeline: body.timeline ?? existing.timeline,
       role: body.role ?? existing.role,
       client: body.client ?? existing.client,

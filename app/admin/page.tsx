@@ -93,7 +93,7 @@ export default function AdminDashboard() {
                     {post.title}
                   </p>
                   <p className="text-xs text-slate-400">
-                    {formatDate(post.date)} &middot; {post.category}
+                    {formatDate(post.date)} &middot; {post.category.join(", ")}
                   </p>
                 </div>
                 <div className="ml-4 flex items-center gap-2">
@@ -146,7 +146,7 @@ export default function AdminDashboard() {
                     {cs.title}
                   </p>
                   <p className="text-xs text-slate-400">
-                    {cs.category} &middot; {cs.timeline}
+                    {cs.category.join(", ")} &middot; {cs.timeline}
                   </p>
                 </div>
                 <div className="ml-4 flex items-center gap-2">
@@ -195,7 +195,7 @@ export default function AdminDashboard() {
                     {project.title}
                   </p>
                   <p className="text-xs text-slate-400">
-                    {project.category} &middot; {project.year}
+                    {project.category.join(", ")} &middot; {project.year}
                   </p>
                 </div>
                 <div className="ml-4 flex items-center gap-2">

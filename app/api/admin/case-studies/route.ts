@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { saveCaseStudy } from "@/lib/admin";
-import { getCaseStudy } from "@/lib/content";
+import { getCaseStudy, normalizeCategory } from "@/lib/content";
 import { slugify } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import type { CaseStudyMeta } from "@/lib/content";
@@ -28,16 +28,16 @@ export async function POST(request: NextRequest) {
 
     const meta: CaseStudyMeta = {
       title,
-      subtitle: subtitle || "",
+      subtitle: subtitle ?? "",
       slug,
-      tags: tags || [],
-      category: category || "Cloud Architecture",
-      timeline: timeline || "",
-      role: role || "",
-      client: client || "",
-      featured: featured || false,
-      coverImage: coverImage || "",
-      metrics: metrics || [],
+      tags: tags ?? [],
+      category: normalizeCategory(category).length > 0 ? normalizeCategory(category) : ["Cloud Architecture"],
+      timeline: timeline ?? "",
+      role: role ?? "",
+      client: client ?? "",
+      featured: featured ?? false,
+      coverImage: coverImage ?? "",
+      metrics: metrics ?? [],
     };
 
     saveCaseStudy(meta, content || "");

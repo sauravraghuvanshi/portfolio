@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Save, Loader2, Plus, X } from "lucide-react";
 import type { Project } from "@/lib/content";
+import CategoryMultiSelect from "./CategoryMultiSelect";
 
 interface ProjectEditorProps {
   mode: "create" | "edit";
@@ -17,7 +18,7 @@ export default function ProjectEditor({ mode, initialData }: ProjectEditorProps)
 
   const [title, setTitle] = useState(initialData?.title ?? "");
   const [description, setDescription] = useState(initialData?.description ?? "");
-  const [category, setCategory] = useState(initialData?.category ?? "Azure");
+  const [category, setCategory] = useState<string[]>(initialData?.category ?? ["Azure"]);
   const [tags, setTags] = useState(initialData?.tags?.join(", ") ?? "");
   const [techStack, setTechStack] = useState(initialData?.techStack?.join(", ") ?? "");
   const [outcomes, setOutcomes] = useState<string[]>(
@@ -168,22 +169,11 @@ export default function ProjectEditor({ mode, initialData }: ProjectEditorProps)
           />
         </div>
 
-        <div>
-          <label className="mb-1 block text-xs font-medium uppercase text-slate-400">
-            Category
-          </label>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className={inputClass}
-          >
-            {categories.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
-        </div>
+        <CategoryMultiSelect
+          presets={categories}
+          selected={category}
+          onChange={setCategory}
+        />
 
         <div>
           <label className="mb-1 block text-xs font-medium uppercase text-slate-400">

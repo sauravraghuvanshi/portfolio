@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import CategoryMultiSelect from "./CategoryMultiSelect";
 import {
   Save,
   Eye,
@@ -63,7 +64,7 @@ export default function BlogEditor({ mode, initialData }: BlogEditorProps) {
 
   const [title, setTitle] = useState(initialData?.title ?? "");
   const [description, setDescription] = useState(initialData?.description ?? "");
-  const [category, setCategory] = useState(initialData?.category ?? "General");
+  const [category, setCategory] = useState<string[]>(initialData?.category ?? ["General"]);
   const [tags, setTags] = useState(initialData?.tags?.join(", ") ?? "");
   const [coverImage, setCoverImage] = useState(initialData?.coverImage ?? "");
   const [featured, setFeatured] = useState(initialData?.featured ?? false);
@@ -417,22 +418,11 @@ export default function BlogEditor({ mode, initialData }: BlogEditorProps) {
             />
           </div>
 
-          <div>
-            <label className="mb-1 block text-xs font-medium uppercase text-slate-400">
-              Category
-            </label>
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full rounded-lg border border-slate-700 bg-surface-dark-2 px-3 py-2.5 text-sm text-white outline-none transition focus:border-brand-500"
-            >
-              {categories.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-          </div>
+          <CategoryMultiSelect
+              presets={categories}
+              selected={category}
+              onChange={setCategory}
+            />
 
           <div>
             <label className="mb-1 block text-xs font-medium uppercase text-slate-400">

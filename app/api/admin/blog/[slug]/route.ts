@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { saveBlogPost, deleteBlogPost } from "@/lib/admin";
-import { getBlogPost } from "@/lib/content";
+import { getBlogPost, normalizeCategory } from "@/lib/content";
 import { revalidatePath } from "next/cache";
 import type { BlogPostMeta } from "@/lib/content";
 
@@ -29,7 +29,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       description: body.description ?? existing.description,
       date: existing.date,
       updated: new Date().toISOString().split("T")[0],
-      category: body.category ?? existing.category,
+      category: normalizeCategory(body.category ?? existing.category),
       tags: body.tags ?? existing.tags,
       coverImage: body.coverImage ?? existing.coverImage,
       featured: body.featured ?? existing.featured,

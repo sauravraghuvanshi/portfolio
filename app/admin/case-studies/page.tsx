@@ -47,7 +47,7 @@ export default function AdminCaseStudiesListPage() {
                   <td className="max-w-xs truncate px-5 py-3 font-medium text-white">
                     {cs.title}
                   </td>
-                  <td className="px-5 py-3">{cs.category}</td>
+                  <td className="px-5 py-3">{cs.category.join(", ")}</td>
                   <td className="px-5 py-3 text-slate-400">{cs.timeline}</td>
                   <td className="px-5 py-3">
                     {cs.featured && (

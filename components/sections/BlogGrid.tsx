@@ -26,14 +26,14 @@ export default function BlogGrid({ posts }: BlogGridProps) {
   const [search, setSearch] = useState("");
 
   const categories = useMemo(
-    () => ["All", ...Array.from(new Set(posts.map((p) => p.category))).sort()],
+    () => ["All", ...Array.from(new Set(posts.flatMap((p) => p.category))).sort()],
     [posts],
   );
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
     return posts.filter((p) => {
-      if (activeCategory !== "All" && p.category !== activeCategory) return false;
+      if (activeCategory !== "All" && !p.category.includes(activeCategory)) return false;
       if (
         q &&
         !p.title.toLowerCase().includes(q) &&
@@ -133,9 +133,11 @@ export default function BlogGrid({ posts }: BlogGridProps) {
                 {/* Content */}
                 <div className="p-5">
                   <div className="flex items-center gap-2 mb-3">
-                    <Badge variant={categoryVariant[post.category] || "default"}>
-                      {post.category}
-                    </Badge>
+                    {post.category.map((cat) => (
+                      <Badge key={cat} variant={categoryVariant[cat] || "default"}>
+                        {cat}
+                      </Badge>
+                    ))}
                   </div>
 
                   <h2 className="font-bold text-slate-900 dark:text-white mb-2 line-clamp-2 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">

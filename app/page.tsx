@@ -1,4 +1,4 @@
-import { getProfile, getFeaturedCaseStudies, getProjects, getEvents, getTalks, getFeaturedBlogPosts } from "@/lib/content";
+import { getProfile, getFeaturedCaseStudies, getFeaturedProjects, getEvents, getTalks, getFeaturedBlogPosts } from "@/lib/content";
 import Hero from "@/components/sections/Hero";
 import CredibilityBar from "@/components/sections/CredibilityBar";
 import About from "@/components/sections/About";
@@ -34,7 +34,7 @@ const SPEAKING_SLUGS = [
 export default function HomePage() {
   const profile = getProfile();
   const caseStudies = getFeaturedCaseStudies();
-  const projects = getProjects();
+  const projects = getFeaturedProjects();
   const allEvents = getEvents();
   const talks = getTalks().filter((t) => t.featured);
   const blogPosts = getFeaturedBlogPosts();

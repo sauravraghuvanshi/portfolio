@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { saveProject, deleteProject } from "@/lib/admin";
-import { getProjects } from "@/lib/content";
+import { getProjects, normalizeCategory } from "@/lib/content";
 import { revalidatePath } from "next/cache";
 import type { Project } from "@/lib/content";
 
@@ -29,7 +29,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       description: body.description ?? existing.description,
       outcomes: body.outcomes ?? existing.outcomes,
       tags: body.tags ?? existing.tags,
-      category: body.category ?? existing.category,
+      category: normalizeCategory(body.category ?? existing.category),
       techStack: body.techStack ?? existing.techStack,
       githubUrl: body.githubUrl ?? existing.githubUrl,
       liveUrl: body.liveUrl ?? existing.liveUrl,

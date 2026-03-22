@@ -39,7 +39,9 @@ export default function CaseStudiesPage() {
               >
                 <div className="p-8">
                   <div className="flex flex-wrap gap-2 mb-4">
-                    <Badge variant="blue">{cs.category}</Badge>
+                    {cs.category.map((cat) => (
+                      <Badge key={cat} variant="blue">{cat}</Badge>
+                    ))}
                     {cs.tags.slice(0, 4).map((tag) => (
                       <Badge key={tag} variant="default">{tag}</Badge>
                     ))}

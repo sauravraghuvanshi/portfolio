@@ -51,7 +51,7 @@ export default function AdminBlogListPage() {
                       <ExternalLink className="ml-1.5 inline h-3 w-3 text-slate-500" />
                     )}
                   </td>
-                  <td className="px-5 py-3">{post.category}</td>
+                  <td className="px-5 py-3">{post.category.join(", ")}</td>
                   <td className="px-5 py-3 text-slate-400">
                     {formatDate(post.date)}
                   </td>

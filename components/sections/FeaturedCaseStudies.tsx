@@ -40,7 +40,9 @@ export default function FeaturedCaseStudies({ caseStudies }: FeaturedCaseStudies
                     {/* Left: content */}
                     <div className="flex-1">
                       <div className="flex flex-wrap gap-2 mb-4">
-                        <Badge variant="blue">{cs.category}</Badge>
+                        {cs.category.map((cat) => (
+                          <Badge key={cat} variant="blue">{cat}</Badge>
+                        ))}
                         {cs.tags.slice(0, 3).map((tag) => (
                           <Badge key={tag} variant="default">{tag}</Badge>
                         ))}
@@ -97,10 +99,10 @@ export default function FeaturedCaseStudies({ caseStudies }: FeaturedCaseStudies
           className="mt-10 text-center"
         >
           <Link
-            href="/projects"
+            href="/case-studies"
             className="inline-flex items-center gap-2 px-6 py-3 border border-slate-300 dark:border-slate-700 hover:border-brand-500 dark:hover:border-brand-500 text-slate-700 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium rounded-xl transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 group"
           >
-            View All Projects
+            View All Case Studies
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
           </Link>
         </motion.div>

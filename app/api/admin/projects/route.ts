@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { saveProject } from "@/lib/admin";
-import { getProjects } from "@/lib/content";
+import { getProjects, normalizeCategory } from "@/lib/content";
 import { slugify } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import type { Project } from "@/lib/content";
@@ -30,15 +30,15 @@ export async function POST(request: NextRequest) {
     const project: Project = {
       id,
       title,
-      description: description || "",
-      outcomes: outcomes || [],
-      tags: tags || [],
-      category: category || "Azure",
-      techStack: techStack || [],
-      githubUrl: githubUrl || "#",
-      liveUrl: liveUrl || "#",
-      featured: featured || false,
-      year: year || new Date().getFullYear(),
+      description: description ?? "",
+      outcomes: outcomes ?? [],
+      tags: tags ?? [],
+      category: normalizeCategory(category).length > 0 ? normalizeCategory(category) : ["Azure"],
+      techStack: techStack ?? [],
+      githubUrl: githubUrl ?? "#",
+      liveUrl: liveUrl ?? "#",
+      featured: featured ?? false,
+      year: year ?? new Date().getFullYear(),
     };
 
     saveProject(project);
