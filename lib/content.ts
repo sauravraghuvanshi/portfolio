@@ -91,6 +91,27 @@ export function getFeaturedProjects(): Project[] {
 }
 
 // ---------------------------------------------------------------------------
+// Certifications
+// ---------------------------------------------------------------------------
+
+export interface Certification {
+  code: string;
+  name: string;
+  issuer: string;
+  year: number;
+  verifyUrl: string;
+  badge: string;
+  color: string;
+}
+
+export function getCertifications(): Certification[] {
+  const filePath = path.join(contentDir, "certifications.json");
+  if (!fs.existsSync(filePath)) return [];
+  const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
+  return JSON.parse(raw) as Certification[];
+}
+
+// ---------------------------------------------------------------------------
 // Events
 // ---------------------------------------------------------------------------
 

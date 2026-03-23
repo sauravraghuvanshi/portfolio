@@ -3,15 +3,7 @@
 import { motion } from "framer-motion";
 import { ExternalLink, Award } from "lucide-react";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-
-interface Certification {
-  name: string;
-  code: string;
-  issuer: string;
-  year: number;
-  verifyUrl: string;
-  color: string;
-}
+import type { Certification } from "@/lib/content";
 
 interface CertificationsProps {
   certifications: Certification[];
@@ -21,6 +13,7 @@ const colorMap: Record<string, string> = {
   blue: "from-brand-600 to-brand-800",
   purple: "from-purple-600 to-purple-800",
   green: "from-accent-600 to-accent-800",
+  orange: "from-orange-600 to-orange-800",
 };
 
 export default function Certifications({ certifications }: CertificationsProps) {

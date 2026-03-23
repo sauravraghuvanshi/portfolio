@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import type { BlogPostMeta, CaseStudyMeta, Project, Talk, EventMeta } from "./content";
+import type { BlogPostMeta, CaseStudyMeta, Project, Talk, EventMeta, Certification } from "./content";
 import { uploadToBlob } from "./azure-storage";
 
 const contentDir = path.join(process.cwd(), "content");
@@ -11,6 +11,7 @@ const projectsFile = path.join(contentDir, "projects.json");
 const talksFile = path.join(contentDir, "talks.json");
 const eventsFile = path.join(contentDir, "events.json");
 const eventsOverridesFile = path.join(contentDir, "events-overrides.json");
+const certificationsFile = path.join(contentDir, "certifications.json");
 
 function ensureDirs() {
   if (!fs.existsSync(blogDir)) fs.mkdirSync(blogDir, { recursive: true });
@@ -174,6 +175,37 @@ export function deleteEvent(slug: string): boolean {
   delete overrides[slug];
   writeOverrides(overrides);
 
+  return true;
+}
+
+// --- Certifications ---
+
+function readCertifications(): Certification[] {
+  if (!fs.existsSync(certificationsFile)) return [];
+  const raw = fs.readFileSync(certificationsFile, "utf-8").replace(/^\uFEFF/, "");
+  return JSON.parse(raw) as Certification[];
+}
+
+function writeCertifications(certs: Certification[]): void {
+  fs.writeFileSync(certificationsFile, JSON.stringify(certs, null, 2), "utf-8");
+}
+
+export function saveCertification(cert: Certification): void {
+  const certs = readCertifications();
+  const idx = certs.findIndex((c) => c.code === cert.code);
+  if (idx >= 0) {
+    certs[idx] = cert;
+  } else {
+    certs.push(cert);
+  }
+  writeCertifications(certs);
+}
+
+export function deleteCertification(code: string): boolean {
+  const certs = readCertifications();
+  const filtered = certs.filter((c) => c.code !== code);
+  if (filtered.length === certs.length) return false;
+  writeCertifications(filtered);
   return true;
 }
 

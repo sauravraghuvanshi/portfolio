@@ -12,6 +12,7 @@ import {
   FolderKanban,
   Video,
   Calendar,
+  Award,
   Plus,
   LogOut,
 } from "lucide-react";
@@ -55,6 +56,13 @@ const navSections = [
     items: [
       { label: "Events", href: "/admin/events", icon: Calendar },
       { label: "New Event", href: "/admin/events/new", icon: Plus },
+    ],
+  },
+  {
+    title: "Certifications",
+    items: [
+      { label: "Certifications", href: "/admin/certifications", icon: Award },
+      { label: "New Certification", href: "/admin/certifications/new", icon: Plus },
     ],
   },
 ];

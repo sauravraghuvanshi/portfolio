@@ -1,4 +1,4 @@
-import { getProfile, getFeaturedCaseStudies, getFeaturedProjects, getEvents, getTalks, getFeaturedBlogPosts } from "@/lib/content";
+import { getProfile, getFeaturedCaseStudies, getFeaturedProjects, getEvents, getTalks, getFeaturedBlogPosts, getCertifications } from "@/lib/content";
 import Hero from "@/components/sections/Hero";
 import CredibilityBar from "@/components/sections/CredibilityBar";
 import About from "@/components/sections/About";
@@ -27,6 +27,7 @@ export default function HomePage() {
   const allEvents = getEvents();
   const talks = getTalks().filter((t) => t.featured);
   const blogPosts = getFeaturedBlogPosts();
+  const certifications = getCertifications();
   const speakingEvents = allEvents.filter((e) => e.featured);
 
   return (
@@ -40,7 +41,7 @@ export default function HomePage() {
       <FeaturedTalks talks={talks} />
       <FeaturedBlogPosts posts={blogPosts} />
       <Speaking events={speakingEvents} />
-      <Certifications certifications={profile.certifications} />
+      <Certifications certifications={certifications} />
       <Contact
         email={profile.email}
         availability={profile.availability}

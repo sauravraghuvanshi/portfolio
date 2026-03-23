@@ -1,7 +1,8 @@
-﻿import { getProfile, getAllCaseStudies } from "@/lib/content";
+﻿import { getProfile, getAllCaseStudies, getCertifications } from "@/lib/content";
 
 export function PersonSchema() {
   const profile = getProfile();
+  const certifications = getCertifications();
 
   const schema = {
     "@context": "https://schema.org",
@@ -36,8 +37,8 @@ export function PersonSchema() {
       "Platform Engineering",
       "Startup Scaling",
     ],
-    hasCredential: profile.certifications.map(
-      (cert: { name: string; issuer: string; year: number }) => ({
+    hasCredential: certifications.map(
+      (cert) => ({
         "@type": "EducationalOccupationalCredential",
         name: cert.name,
         recognizedBy: { "@type": "Organization", name: cert.issuer },

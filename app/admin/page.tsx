@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { getAllBlogPosts, getAllCaseStudies, getProjects, getTalks, getEvents } from "@/lib/content";
+import { getAllBlogPosts, getAllCaseStudies, getProjects, getTalks, getEvents, getCertifications } from "@/lib/content";
 import { formatDate } from "@/lib/utils";
-import { FileText, Eye, PenSquare, Plus, BookOpen, FolderKanban, Video, Calendar } from "lucide-react";
+import { FileText, Eye, PenSquare, Plus, BookOpen, FolderKanban, Video, Calendar, Award } from "lucide-react";
 
 export default function AdminDashboard() {
   const allPosts = getAllBlogPosts(true);
@@ -11,8 +11,9 @@ export default function AdminDashboard() {
   const projects = getProjects();
   const talks = getTalks();
   const events = getEvents();
+  const certifications = getCertifications();
 
-  const totalPublished = publishedPosts.length + caseStudies.length + projects.length + talks.length + events.length;
+  const totalPublished = publishedPosts.length + caseStudies.length + projects.length + talks.length + events.length + certifications.length;
 
   const stats = [
     { label: "Blog Posts", value: allPosts.length, icon: FileText },
@@ -20,6 +21,7 @@ export default function AdminDashboard() {
     { label: "Projects", value: projects.length, icon: FolderKanban },
     { label: "Talks", value: talks.length, icon: Video },
     { label: "Events", value: events.length, icon: Calendar },
+    { label: "Certifications", value: certifications.length, icon: Award },
     { label: "Published", value: totalPublished, icon: Eye },
     { label: "Drafts", value: drafts.length, icon: PenSquare },
   ];
@@ -64,10 +66,17 @@ export default function AdminDashboard() {
             <Plus className="h-4 w-4" />
             New Event
           </Link>
+          <Link
+            href="/admin/certifications/new"
+            className="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-surface-dark px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800"
+          >
+            <Plus className="h-4 w-4" />
+            New Cert
+          </Link>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8">
         {stats.map((stat) => (
           <div
             key={stat.label}
@@ -322,6 +331,50 @@ export default function AdminDashboard() {
                   )}
                   <Link
                     href={`/admin/events/${event.slug}/edit`}
+                    className="rounded-md p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-white"
+                  >
+                    <PenSquare className="h-4 w-4" />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Certifications */}
+      <div className="rounded-xl border border-slate-800 bg-surface-dark">
+        <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
+          <h2 className="font-semibold text-white">Certifications</h2>
+          <Link href="/admin/certifications" className="text-xs text-brand-400 hover:underline">
+            View all
+          </Link>
+        </div>
+        {certifications.length === 0 ? (
+          <div className="px-5 py-12 text-center text-slate-400">
+            No certifications yet.{" "}
+            <Link href="/admin/certifications/new" className="text-brand-400 hover:underline">
+              Add your first certification
+            </Link>
+          </div>
+        ) : (
+          <div className="divide-y divide-slate-800">
+            {certifications.slice(0, 5).map((cert) => (
+              <div
+                key={cert.code}
+                className="flex items-center justify-between px-5 py-3"
+              >
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-white">
+                    {cert.name}
+                  </p>
+                  <p className="text-xs text-slate-400">
+                    {cert.issuer} &middot; {cert.year} &middot; <span className="font-mono">{cert.code}</span>
+                  </p>
+                </div>
+                <div className="ml-4 flex items-center gap-2">
+                  <Link
+                    href={`/admin/certifications/${cert.code}/edit`}
                     className="rounded-md p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-white"
                   >
                     <PenSquare className="h-4 w-4" />

@@ -1,4 +1,4 @@
-import { getProfile } from "@/lib/content";
+import { getProfile, getCertifications } from "@/lib/content";
 import { Download, MapPin, Mail, Linkedin, Github, CheckCircle2, Briefcase, GraduationCap } from "lucide-react";
 import type { Metadata } from "next";
 
@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 
 export default function ResumePage() {
   const profile = getProfile();
+  const certifications = getCertifications();
 
   return (
     <div className="py-16 section-padding">
@@ -107,8 +108,8 @@ export default function ResumePage() {
             Certifications
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {profile.certifications.map(
-              (cert: { name: string; code: string; issuer: string; year: number }) => (
+            {certifications.map(
+              (cert) => (
                 <div key={cert.code} className="flex items-center gap-3 p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm">
                   <span className="font-mono text-xs bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 px-2 py-1 rounded font-medium">{cert.code}</span>
                   <span className="text-slate-700 dark:text-slate-300 flex-1">{cert.name}</span>
