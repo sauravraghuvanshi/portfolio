@@ -5,21 +5,23 @@ import { FileText, Eye, PenSquare, Plus, BookOpen, FolderKanban, Video, Calendar
 
 export default function AdminDashboard() {
   const allPosts = getAllBlogPosts(true);
-  const published = allPosts.filter((p) => p.status === "published");
+  const publishedPosts = allPosts.filter((p) => p.status === "published");
   const drafts = allPosts.filter((p) => p.status === "draft");
   const caseStudies = getAllCaseStudies();
   const projects = getProjects();
   const talks = getTalks();
   const events = getEvents();
 
+  const totalPublished = publishedPosts.length + caseStudies.length + projects.length + talks.length + events.length;
+
   const stats = [
     { label: "Blog Posts", value: allPosts.length, icon: FileText },
-    { label: "Published", value: published.length, icon: Eye },
-    { label: "Drafts", value: drafts.length, icon: PenSquare },
     { label: "Case Studies", value: caseStudies.length, icon: BookOpen },
     { label: "Projects", value: projects.length, icon: FolderKanban },
     { label: "Talks", value: talks.length, icon: Video },
     { label: "Events", value: events.length, icon: Calendar },
+    { label: "Published", value: totalPublished, icon: Eye },
+    { label: "Drafts", value: drafts.length, icon: PenSquare },
   ];
 
   return (
