@@ -12,7 +12,7 @@ import Certifications from "@/components/sections/Certifications";
 import Contact from "@/components/sections/Contact";
 import type { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Saurav Raghuvanshi — Digital Cloud Solution Architect @ Microsoft",

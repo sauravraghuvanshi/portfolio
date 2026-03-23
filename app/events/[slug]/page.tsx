@@ -68,7 +68,7 @@ export default async function EventPage({ params }: EventPageProps) {
 
   const allImages = [
     ...(event.coverImage ? [event.coverImage] : []),
-    ...event.images,
+    ...(event.images || []),
   ];
 
   return (

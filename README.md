@@ -15,15 +15,16 @@
 - **Speaking & Events** — 32 speaking engagements with photo galleries and filters
 - **YouTube Talks** — 12 sessions with lazy-loaded embeds (thumbnail-first, iframe on click)
 - **Technical Blog** — MDX-powered blog with rich typography, syntax highlighting, and reading time
-- **Admin Panel** — Protected dashboard at `/admin` with authentication, managing blogs, case studies, projects, talks, and events
+- **Admin Panel** — Protected dashboard at `/admin` with authentication, managing blogs, case studies, projects, talks, events, and certifications
 - **Blog Editor** — Medium-style MDX editor with live preview, image upload, and drag-and-drop media
 - **Case Study Editor** — MDX editor for case studies with metrics, timeline, role, and client fields
 - **Project Editor** — Form-based editor for projects with outcomes, tech stack, and category fields
 - **Talk Editor** — Form-based editor for YouTube talks with title, topic, description, and featured flag
 - **Event Editor** — Full editor for events with highlights, impact, image upload, and featured flag
+- **Certification Editor** — Form-based editor for certifications with badge image upload, color picker, and verification URL
 - **Multi-Select Categories** — All content types support multiple categories with custom category input
 - **Media Resize** — Inline image resize controls in the editor
-- **Azure Blob Storage** — Images stored in Azure Blob Storage with organized hierarchy (`blog/`, `events/`, `case-studies/`)
+- **Azure Blob Storage** — Images stored in Azure Blob Storage with organized hierarchy (`blog/`, `events/`, `case-studies/`, `certifications/`)
 - **Dark/Light Mode** — System-aware theme toggle with zero flash
 - **SEO** — JSON-LD schema, OpenGraph/Twitter cards, sitemap, robots.txt
 - **Responsive** — Mobile-first design with Framer Motion animations
@@ -109,6 +110,11 @@ public/events/{slug}/*.jpg   ← committed to repo
 - **Via Admin Panel:** Login at `/admin`, create/edit events. Upload cover images and additional photos to Azure Blob Storage under `events/<slug>/`. Set featured to display on homepage.
 - **Overrides:** `content/events-overrides.json` stores manual corrections. The generator merges overrides automatically. Admin edits persist to both `events.json` (immediate effect) and `events-overrides.json` (survives DOCX regeneration).
 
+### Certifications (admin panel or manual)
+
+- **Via Admin Panel:** Login at `/admin`, create/edit certifications. Upload badge images to Azure Blob Storage under `certifications/<code>/`.
+- **Manual:** Edit `content/certifications.json` — each entry has `code` (unique key), `name`, `issuer`, `year`, `verifyUrl`, `badge`, `color`.
+
 ---
 
 ## Architecture
@@ -145,10 +151,14 @@ portfolio/
 │   │   │   ├── page.tsx              # Talk list (admin)
 │   │   │   ├── new/page.tsx          # Create new talk
 │   │   │   └── [id]/edit/page.tsx    # Edit existing talk
-│   │   └── events/
-│   │       ├── page.tsx              # Event list (admin)
-│   │       ├── new/page.tsx          # Create new event
-│   │       └── [slug]/edit/page.tsx  # Edit existing event
+│   │   ├── events/
+│   │   │   ├── page.tsx              # Event list (admin)
+│   │   │   ├── new/page.tsx          # Create new event
+│   │   │   └── [slug]/edit/page.tsx  # Edit existing event
+│   │   └── certifications/
+│   │       ├── page.tsx              # Certification list (admin)
+│   │       ├── new/page.tsx          # Create new certification
+│   │       └── [code]/edit/page.tsx  # Edit existing certification
 │   ├── api/
 │   │   ├── auth/[...nextauth]/route.ts  # NextAuth handler
 │   │   └── admin/
@@ -162,6 +172,8 @@ portfolio/
 │   │       ├── talks/[id]/route.ts   # PUT/DELETE — update/delete talk
 │   │       ├── events/route.ts       # POST — create event
 │   │       ├── events/[slug]/route.ts  # PUT/DELETE — update/delete event
+│   │       ├── certifications/route.ts  # POST — create certification
+│   │       ├── certifications/[code]/route.ts  # PUT/DELETE — update/delete certification
 │   │       └── upload/route.ts       # POST — image upload to Azure Blob
 │   ├── case-studies/
 │   │   ├── page.tsx                  # Case studies listing
@@ -176,11 +188,12 @@ portfolio/
 ├── components/
 │   ├── layout/                       # Navigation, Footer, LayoutShell
 │   ├── sections/                     # Homepage sections + BlogGrid, FeaturedBlogPosts
-│   ├── admin/                        # AdminSidebar, BlogEditor, CaseStudyEditor, ProjectEditor, TalkEditor, EventEditor, CategoryMultiSelect, MediaResizeBar, DeleteItemButton
+│   ├── admin/                        # AdminSidebar, BlogEditor, CaseStudyEditor, ProjectEditor, TalkEditor, EventEditor, CertificationEditor, CategoryMultiSelect, MediaResizeBar, DeleteItemButton
 │   ├── events/                       # EventGallery (lightbox)
 │   └── ui/                           # Primitives (Badge, Card, YouTubeEmbed, etc.)
 ├── content/
-│   ├── profile.json                  # Personal info, skills, certs, experience
+│   ├── profile.json                  # Personal info, skills, experience
+│   ├── certifications.json           # 8 certifications (standalone, managed via admin)
 │   ├── events.json                   # Generated — 32 speaking events
 │   ├── events-overrides.json         # Manual overrides merged at build time
 │   ├── projects.json                 # Project gallery data
@@ -189,7 +202,7 @@ portfolio/
 │   └── blog/                         # MDX blog posts
 ├── lib/
 │   ├── content.ts                    # Data loading (profiles, blogs, events, talks)
-│   ├── admin.ts                      # Blog, Case Study, Project, Talk, Event CRUD + image upload helpers
+│   ├── admin.ts                      # Blog, Case Study, Project, Talk, Event, Certification CRUD + image upload helpers
 │   ├── azure-storage.ts              # Azure Blob Storage client (uploadToBlob)
 │   ├── mdx-components.tsx            # Shared MDX component map
 │   └── utils.ts                      # cn(), formatDate(), etc.
@@ -234,6 +247,9 @@ portfolio/
 | `/admin/events` | Event management |
 | `/admin/events/new` | Create new event |
 | `/admin/events/[slug]/edit` | Edit existing event |
+| `/admin/certifications` | Certification management |
+| `/admin/certifications/new` | Create new certification |
+| `/admin/certifications/[code]/edit` | Edit existing certification |
 
 ---
 
@@ -252,7 +268,7 @@ CI/CD is fully automated via GitHub Actions. Every push to `main`:
 |---|---|
 | App Service | `saurav-portfolio.azurewebsites.net` |
 | Storage Account | `sauravportfoliomedia` |
-| Blob Container | `blog-images` (public access) — organized as `blog/`, `events/`, `case-studies/` subfolders |
+| Blob Container | `blog-images` (public access) — organized as `blog/`, `events/`, `case-studies/`, `certifications/` subfolders |
 | Region | Central India |
 | Plan | F1 Free (Linux, Node 20) |
 

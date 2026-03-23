@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { cache } from "react";
 
 const contentDir = path.join(process.cwd(), "content");
 
@@ -45,23 +46,24 @@ export function getCaseStudy(slug: string): CaseStudy | null {
   return { ...(data as CaseStudyMeta), category: normalizeCategory(data.category), content };
 }
 
-export function getAllCaseStudies(): CaseStudy[] {
+export const getAllCaseStudies = cache(function getAllCaseStudies(): CaseStudy[] {
   const slugs = getCaseStudySlugs();
   return slugs
     .map((slug) => getCaseStudy(slug))
     .filter((cs): cs is CaseStudy => cs !== null)
     .sort((a, b) => (a.featured === b.featured ? 0 : a.featured ? -1 : 1));
-}
+});
 
 export function getFeaturedCaseStudies(): CaseStudy[] {
   return getAllCaseStudies().filter((cs) => cs.featured);
 }
 
-export function getProfile() {
+export const getProfile = cache(function getProfile() {
   const filePath = path.join(contentDir, "profile.json");
+  if (!fs.existsSync(filePath)) return { name: "", title: "", summary: "", social: {}, skills: [], experience: [] };
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
   return JSON.parse(raw);
-}
+});
 
 export interface Project {
   id: string;
@@ -77,14 +79,15 @@ export interface Project {
   year: number;
 }
 
-export function getProjects(): Project[] {
+export const getProjects = cache(function getProjects(): Project[] {
   const filePath = path.join(contentDir, "projects.json");
+  if (!fs.existsSync(filePath)) return [];
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
   return (JSON.parse(raw) as Project[]).map((p) => ({
     ...p,
     category: normalizeCategory(p.category),
   }));
-}
+});
 
 export function getFeaturedProjects(): Project[] {
   return getProjects().filter((p) => p.featured);
@@ -104,12 +107,12 @@ export interface Certification {
   color: string;
 }
 
-export function getCertifications(): Certification[] {
+export const getCertifications = cache(function getCertifications(): Certification[] {
   const filePath = path.join(contentDir, "certifications.json");
   if (!fs.existsSync(filePath)) return [];
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
   return JSON.parse(raw) as Certification[];
-}
+});
 
 // ---------------------------------------------------------------------------
 // Events
@@ -133,12 +136,12 @@ export interface EventMeta {
 
 export type Event = EventMeta;
 
-export function getEvents(): Event[] {
+export const getEvents = cache(function getEvents(): Event[] {
   const filePath = path.join(contentDir, "events.json");
   if (!fs.existsSync(filePath)) return [];
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
   return JSON.parse(raw) as Event[];
-}
+});
 
 export function getEvent(slug: string): Event | null {
   return getEvents().find((e) => e.slug === slug) ?? null;
@@ -156,12 +159,12 @@ export interface Talk {
   featured: boolean;
 }
 
-export function getTalks(): Talk[] {
+export const getTalks = cache(function getTalks(): Talk[] {
   const filePath = path.join(contentDir, "talks.json");
   if (!fs.existsSync(filePath)) return [];
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
   return JSON.parse(raw) as Talk[];
-}
+});
 
 // ---------------------------------------------------------------------------
 // Blog
@@ -215,7 +218,7 @@ export function getBlogPost(slug: string): BlogPost | null {
   return { ...meta, content };
 }
 
-export function getAllBlogPosts(includeDrafts = false): BlogPost[] {
+export const getAllBlogPosts = cache(function getAllBlogPosts(includeDrafts = false): BlogPost[] {
   const slugs = getBlogSlugs();
   return slugs
     .map((slug) => getBlogPost(slug))
@@ -224,8 +227,11 @@ export function getAllBlogPosts(includeDrafts = false): BlogPost[] {
       if (!includeDrafts && post.status === "draft") return false;
       return true;
     })
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-}
+    .sort((a, b) => {
+      const diff = new Date(b.date).getTime() - new Date(a.date).getTime();
+      return diff !== 0 ? diff : a.slug.localeCompare(b.slug);
+    });
+});
 
 export function getFeaturedBlogPosts(): BlogPost[] {
   return getAllBlogPosts().filter((post) => post.featured).slice(0, 3);

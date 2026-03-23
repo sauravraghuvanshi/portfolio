@@ -6,6 +6,20 @@ import { uploadToBlob } from "./azure-storage";
 
 const contentDir = path.join(process.cwd(), "content");
 const blogDir = path.join(contentDir, "blog");
+
+/** Reject slugs/identifiers that could escape the content directory. */
+function sanitizeSlug(value: string): string {
+  if (
+    !value ||
+    value.includes("..") ||
+    value.includes("/") ||
+    value.includes("\\") ||
+    value.includes("\0")
+  ) {
+    throw new Error(`Invalid identifier: "${value}"`);
+  }
+  return value;
+}
 const caseStudiesDir = path.join(contentDir, "case-studies");
 const projectsFile = path.join(contentDir, "projects.json");
 const talksFile = path.join(contentDir, "talks.json");
@@ -34,12 +48,14 @@ function cleanUndefined(obj: Record<string, unknown>): Record<string, unknown> {
 // --- Blog ---
 
 export function saveBlogPost(meta: BlogPostMeta, content: string): void {
+  sanitizeSlug(meta.slug);
   ensureDirs();
   const frontmatter = matter.stringify(content, cleanUndefined(meta as unknown as Record<string, unknown>));
   fs.writeFileSync(path.join(blogDir, `${meta.slug}.mdx`), frontmatter, "utf-8");
 }
 
 export function deleteBlogPost(slug: string): boolean {
+  sanitizeSlug(slug);
   const filePath = path.join(blogDir, `${slug}.mdx`);
   if (!fs.existsSync(filePath)) return false;
   fs.unlinkSync(filePath);
@@ -49,12 +65,14 @@ export function deleteBlogPost(slug: string): boolean {
 // --- Case Studies ---
 
 export function saveCaseStudy(meta: CaseStudyMeta, content: string): void {
+  sanitizeSlug(meta.slug);
   ensureCaseStudiesDir();
   const frontmatter = matter.stringify(content, cleanUndefined(meta as unknown as Record<string, unknown>));
   fs.writeFileSync(path.join(caseStudiesDir, `${meta.slug}.mdx`), frontmatter, "utf-8");
 }
 
 export function deleteCaseStudy(slug: string): boolean {
+  sanitizeSlug(slug);
   const filePath = path.join(caseStudiesDir, `${slug}.mdx`);
   if (!fs.existsSync(filePath)) return false;
   fs.unlinkSync(filePath);
@@ -74,6 +92,7 @@ function writeProjects(projects: Project[]): void {
 }
 
 export function saveProject(project: Project): void {
+  sanitizeSlug(project.id);
   const projects = readProjects();
   const idx = projects.findIndex((p) => p.id === project.id);
   if (idx >= 0) {
@@ -85,6 +104,7 @@ export function saveProject(project: Project): void {
 }
 
 export function deleteProject(id: string): boolean {
+  sanitizeSlug(id);
   const projects = readProjects();
   const filtered = projects.filter((p) => p.id !== id);
   if (filtered.length === projects.length) return false;
@@ -105,6 +125,7 @@ function writeTalks(talks: Talk[]): void {
 }
 
 export function saveTalk(talk: Talk): void {
+  sanitizeSlug(talk.id);
   const talks = readTalks();
   const idx = talks.findIndex((t) => t.id === talk.id);
   if (idx >= 0) {
@@ -116,6 +137,7 @@ export function saveTalk(talk: Talk): void {
 }
 
 export function deleteTalk(id: string): boolean {
+  sanitizeSlug(id);
   const talks = readTalks();
   const filtered = talks.filter((t) => t.id !== id);
   if (filtered.length === talks.length) return false;
@@ -146,6 +168,7 @@ function writeOverrides(overrides: Record<string, Partial<EventMeta>>): void {
 }
 
 export function saveEvent(event: EventMeta): void {
+  sanitizeSlug(event.slug);
   // Update events.json for immediate effect
   const events = readEvents();
   const idx = events.findIndex((e) => e.slug === event.slug);
@@ -164,6 +187,7 @@ export function saveEvent(event: EventMeta): void {
 }
 
 export function deleteEvent(slug: string): boolean {
+  sanitizeSlug(slug);
   // Remove from events.json
   const events = readEvents();
   const filtered = events.filter((e) => e.slug !== slug);
@@ -191,6 +215,7 @@ function writeCertifications(certs: Certification[]): void {
 }
 
 export function saveCertification(cert: Certification): void {
+  sanitizeSlug(cert.code);
   const certs = readCertifications();
   const idx = certs.findIndex((c) => c.code === cert.code);
   if (idx >= 0) {
@@ -202,6 +227,7 @@ export function saveCertification(cert: Certification): void {
 }
 
 export function deleteCertification(code: string): boolean {
+  sanitizeSlug(code);
   const certs = readCertifications();
   const filtered = certs.filter((c) => c.code !== code);
   if (filtered.length === certs.length) return false;

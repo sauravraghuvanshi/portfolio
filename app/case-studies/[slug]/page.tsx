@@ -8,7 +8,7 @@ import { ArrowLeft, ArrowRight, Clock, User, Building2 } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import type { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 interface CaseStudyPageProps {
   params: Promise<{ slug: string }>;
@@ -21,6 +21,7 @@ export async function generateMetadata({ params }: CaseStudyPageProps): Promise<
   return {
     title: caseStudy.title,
     description: caseStudy.subtitle,
+    alternates: { canonical: `/case-studies/${slug}` },
     openGraph: {
       title: caseStudy.title,
       description: caseStudy.subtitle,
@@ -40,16 +41,22 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
   const prevCaseStudy = currentIndex > 0 ? allCaseStudies[currentIndex - 1] : null;
   const nextCaseStudy = currentIndex < allCaseStudies.length - 1 ? allCaseStudies[currentIndex + 1] : null;
 
-  const { content } = await compileMDX({
-    source: caseStudy.content,
-    options: {
-      parseFrontmatter: false,
-      mdxOptions: {
-        remarkPlugins: [remarkGfm],
+  let content;
+  try {
+    ({ content } = await compileMDX({
+      source: caseStudy.content,
+      options: {
+        parseFrontmatter: false,
+        mdxOptions: {
+          remarkPlugins: [remarkGfm],
+        },
       },
-    },
-    components: sharedMDXComponents,
-  });
+      components: sharedMDXComponents,
+    }));
+  } catch (err) {
+    console.error("MDX compilation error:", err);
+    content = <p className="text-red-500">Error rendering content. The markdown may contain invalid syntax.</p>;
+  }
 
   return (
     <div className="py-16 section-padding">

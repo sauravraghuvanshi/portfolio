@@ -1,8 +1,9 @@
 import { MetadataRoute } from "next";
 import { getCaseStudySlugs, getAllBlogPosts } from "@/lib/content";
+import { SITE_URL } from "@/lib/constants";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://sauravraghuvanshi.dev";
+  const baseUrl = SITE_URL;
   const slugs = getCaseStudySlugs();
   const blogPosts = getAllBlogPosts();
 

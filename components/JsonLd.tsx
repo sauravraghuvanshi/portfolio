@@ -1,4 +1,5 @@
 ﻿import { getProfile, getAllCaseStudies, getCertifications } from "@/lib/content";
+import { SITE_URL } from "@/lib/constants";
 
 export function PersonSchema() {
   const profile = getProfile();
@@ -7,11 +8,11 @@ export function PersonSchema() {
   const schema = {
     "@context": "https://schema.org",
     "@type": "Person",
-    "@id": "https://sauravraghuvanshi.dev/#person",
+    "@id": `${SITE_URL}/#person`,
     name: profile.name,
     jobTitle: profile.title,
     description: profile.summary,
-    url: "https://sauravraghuvanshi.dev",
+    url: SITE_URL,
     email: "sauravraghuvanshi24@gmail.com",
     address: {
       "@type": "PostalAddress",
@@ -59,19 +60,19 @@ export function WebSiteSchema() {
   const schema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "@id": "https://sauravraghuvanshi.dev/#website",
-    url: "https://sauravraghuvanshi.dev",
+    "@id": `${SITE_URL}/#website`,
+    url: SITE_URL,
     name: "Saurav Raghuvanshi — Digital Cloud Solution Architect @ Microsoft",
     description:
       "Portfolio and case studies of Saurav Raghuvanshi, Digital Cloud Solution Architect at Microsoft",
     publisher: {
-      "@id": "https://sauravraghuvanshi.dev/#person",
+      "@id": `${SITE_URL}/#person`,
     },
     potentialAction: {
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: "https://sauravraghuvanshi.dev/projects?q={search_term_string}",
+        urlTemplate: `${SITE_URL}/projects?q={search_term_string}`,
       },
       "query-input": "required name=search_term_string",
     },
@@ -92,21 +93,23 @@ interface BlogPostSchemaProps {
   tags: string[];
   datePublished: string;
   dateModified: string;
+  coverImage?: string;
 }
 
-export function BlogPostSchema({ title, description, slug, tags, datePublished, dateModified }: BlogPostSchemaProps) {
+export function BlogPostSchema({ title, description, slug, tags, datePublished, dateModified, coverImage }: BlogPostSchemaProps) {
   const schema = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "@id": `https://sauravraghuvanshi.dev/blog/${slug}`,
+    "@id": `${SITE_URL}/blog/${slug}`,
     headline: title,
     description,
-    url: `https://sauravraghuvanshi.dev/blog/${slug}`,
+    url: `${SITE_URL}/blog/${slug}`,
     keywords: tags.join(", "),
     datePublished,
     dateModified,
-    author: { "@id": "https://sauravraghuvanshi.dev/#person" },
-    publisher: { "@id": "https://sauravraghuvanshi.dev/#person" },
+    ...(coverImage ? { image: coverImage } : {}),
+    author: { "@id": `${SITE_URL}/#person` },
+    publisher: { "@id": `${SITE_URL}/#person` },
   };
 
   return (
@@ -129,17 +132,17 @@ export function CaseStudySchema({ title, description, slug, tags, datePublished 
   const schema = {
     "@context": "https://schema.org",
     "@type": "CreativeWork",
-    "@id": `https://sauravraghuvanshi.dev/case-studies/${slug}`,
+    "@id": `${SITE_URL}/case-studies/${slug}`,
     name: title,
     description,
-    url: `https://sauravraghuvanshi.dev/case-studies/${slug}`,
+    url: `${SITE_URL}/case-studies/${slug}`,
     keywords: tags.join(", "),
     datePublished: datePublished || "2024-01-01",
     author: {
-      "@id": "https://sauravraghuvanshi.dev/#person",
+      "@id": `${SITE_URL}/#person`,
     },
     publisher: {
-      "@id": "https://sauravraghuvanshi.dev/#person",
+      "@id": `${SITE_URL}/#person`,
     },
     about: {
       "@type": "Thing",

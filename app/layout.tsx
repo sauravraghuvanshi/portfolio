@@ -5,10 +5,11 @@ import Navigation from "@/components/layout/Navigation";
 import Footer from "@/components/layout/Footer";
 import LayoutShell from "@/components/layout/LayoutShell";
 import { PersonSchema, WebSiteSchema } from "@/components/JsonLd";
+import { SITE_URL } from "@/lib/constants";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://sauravraghuvanshi.dev"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Saurav Raghuvanshi — Digital Cloud Solution Architect @ Microsoft",
     template: "%s | Saurav Raghuvanshi",
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://sauravraghuvanshi.dev",
+    url: SITE_URL,
     siteName: "Saurav Raghuvanshi — Digital Cloud Solution Architect @ Microsoft",
     title: "Saurav Raghuvanshi — Digital Cloud Solution Architect @ Microsoft",
     description:
@@ -63,6 +64,9 @@ export const metadata: Metadata = {
       "max-image-preview": "large",
       "max-snippet": -1,
     },
+  },
+  alternates: {
+    canonical: "/",
   },
 };
 

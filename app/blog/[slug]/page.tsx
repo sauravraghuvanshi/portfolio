@@ -6,10 +6,11 @@ import remarkGfm from "remark-gfm";
 import { sharedMDXComponents } from "@/lib/mdx-components";
 import { ArrowLeft, ArrowRight, Calendar, Clock, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
+import { BlogPostSchema } from "@/components/JsonLd";
 import { formatDate } from "@/lib/utils";
 import type { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -22,6 +23,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   return {
     title: post.title,
     description: post.description,
+    alternates: { canonical: `/blog/${slug}` },
     openGraph: {
       title: post.title,
       description: post.description,
@@ -43,16 +45,32 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const prevPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
   const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
 
-  const { content } = await compileMDX({
-    source: post.content,
-    options: {
-      parseFrontmatter: false,
-      mdxOptions: { remarkPlugins: [remarkGfm] },
-    },
-    components: sharedMDXComponents,
-  });
+  let content;
+  try {
+    ({ content } = await compileMDX({
+      source: post.content,
+      options: {
+        parseFrontmatter: false,
+        mdxOptions: { remarkPlugins: [remarkGfm] },
+      },
+      components: sharedMDXComponents,
+    }));
+  } catch (err) {
+    console.error("MDX compilation error:", err);
+    content = <p className="text-red-500">Error rendering content. The markdown may contain invalid syntax.</p>;
+  }
 
   return (
+    <>
+      <BlogPostSchema
+        title={post.title}
+        description={post.description}
+        slug={post.slug}
+        tags={post.tags}
+        datePublished={post.date}
+        dateModified={post.updated || post.date}
+        coverImage={post.coverImage}
+      />
     <div className="pt-24 pb-16 section-padding">
       <div className="max-w-3xl mx-auto">
         {/* Back navigation */}
@@ -180,5 +198,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
       </div>
     </div>
+    </>
   );
 }

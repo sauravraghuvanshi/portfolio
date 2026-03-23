@@ -3,6 +3,7 @@ import path from "path";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  poweredByHeader: false,
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
   serverExternalPackages: ["@azure/storage-blob"],
   images: {
@@ -37,6 +38,10 @@ const nextConfig: NextConfig = {
         {
           key: "Permissions-Policy",
           value: "camera=(), microphone=(), geolocation=()",
+        },
+        {
+          key: "Strict-Transport-Security",
+          value: "max-age=63072000; includeSubDomains; preload",
         },
       ],
     },
