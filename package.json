@@ -9,7 +9,8 @@
     "postbuild": "node scripts/postbuild.mjs",
     "start": "node .next/standalone/server.js",
     "lint": "eslint",
-    "generate-events": "node scripts/generate-events.mjs"
+    "generate-events": "node scripts/generate-events.mjs",
+    "audit": "node scripts/audit.mjs"
   },
   "dependencies": {
     "@azure/storage-blob": "^12.31.0",
