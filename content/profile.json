@@ -30,7 +30,7 @@
     { "value": "80+", "label": "Startups & Unicorns Empowered" },
     { "value": "30K+", "label": "Engineers & Customers Trained" },
     { "value": "70+", "label": "Azure & AI Sessions Delivered" },
-    { "value": "500+", "label": "Production Issues Resolved" }
+    { "value": "700+", "label": "Production Issues Resolved" }
   ],
   "skills": {
     "Cloud & Architecture": {
@@ -145,7 +145,7 @@
       "role": "Azure Developer Support Engineer",
       "period": "Previous",
       "highlights": [
-        "Resolved 500+ production Azure issues across PaaS and cloud services",
+        "Resolved 700+ production Azure issues across PaaS and cloud services",
         "Delivered 70+ sessions on Azure and AI, training 30,000+ engineers and customers",
         "Collaborated with product engineering on APIM Workspace and Copilot features",
         "Achieved consistent 5/5 customer satisfaction ratings",

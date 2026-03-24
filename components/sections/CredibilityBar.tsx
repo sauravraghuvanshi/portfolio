@@ -1,6 +1,13 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import {
+  motion,
+  useInView,
+  useMotionValue,
+  useSpring,
+  useReducedMotion,
+} from "framer-motion";
 
 interface CredibilityStat {
   value: string;
@@ -9,6 +16,56 @@ interface CredibilityStat {
 
 interface CredibilityBarProps {
   stats: CredibilityStat[];
+}
+
+/** Parse "30K+" → { num: 30, suffix: "K+" } or "700+" → { num: 700, suffix: "+" } */
+function parseStatValue(value: string): { num: number; suffix: string } {
+  const match = value.match(/^(\d+)(.*)/);
+  if (!match) return { num: 0, suffix: value };
+  return { num: parseInt(match[1], 10), suffix: match[2] };
+}
+
+function AnimatedCounter({
+  value,
+  delay,
+}: {
+  value: string;
+  delay: number;
+}) {
+  const { num, suffix } = parseStatValue(value);
+  const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-40px" });
+  const prefersReducedMotion = useReducedMotion();
+
+  const motionVal = useMotionValue(0);
+  const springVal = useSpring(motionVal, {
+    stiffness: 60,
+    damping: 20,
+    duration: 1.5,
+  });
+
+  useEffect(() => {
+    if (isInView) {
+      const timeout = setTimeout(() => motionVal.set(num), delay * 1000);
+      return () => clearTimeout(timeout);
+    }
+  }, [isInView, num, delay, motionVal]);
+
+  useEffect(() => {
+    const unsubscribe = springVal.on("change", (latest) => {
+      if (ref.current) {
+        ref.current.textContent = Math.round(latest) + suffix;
+      }
+    });
+    return unsubscribe;
+  }, [springVal, suffix]);
+
+  // Skip animation for reduced motion — show final value immediately
+  if (prefersReducedMotion) {
+    return <span>{value}</span>;
+  }
+
+  return <span ref={ref}>0{suffix}</span>;
 }
 
 const domains = [
@@ -37,7 +94,9 @@ export default function CredibilityBar({ stats }: CredibilityBarProps) {
               transition={{ duration: 0.4, delay: i * 0.08 }}
               className="text-center"
             >
-              <p className="text-3xl sm:text-4xl font-bold gradient-text">{stat.value}</p>
+              <p className="text-3xl sm:text-4xl font-bold gradient-text">
+                <AnimatedCounter value={stat.value} delay={i * 0.1} />
+              </p>
               <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{stat.label}</p>
             </motion.div>
           ))}
