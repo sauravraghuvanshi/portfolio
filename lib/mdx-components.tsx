@@ -1,4 +1,5 @@
 import YouTubeEmbed from "@/components/ui/YouTubeEmbed";
+import CodeBlock from "@/components/ui/CodeBlock";
 import type { MDXComponents } from "mdx/types";
 
 export const sharedMDXComponents: MDXComponents = {
@@ -96,14 +97,7 @@ export const sharedMDXComponents: MDXComponents = {
       </code>
     );
   },
-  pre: ({ children, ...props }) => (
-    <pre
-      className="bg-slate-900 dark:bg-slate-950 rounded-xl overflow-x-auto my-6 p-0"
-      {...props}
-    >
-      {children}
-    </pre>
-  ),
+  pre: CodeBlock,
   table: ({ children, ...props }) => (
     <div className="overflow-x-auto my-8 rounded-xl border border-slate-200 dark:border-slate-800">
       <table className="w-full text-sm" {...props}>

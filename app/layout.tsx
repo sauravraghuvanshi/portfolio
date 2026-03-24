@@ -91,6 +91,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        <link rel="alternate" type="application/rss+xml" title="Blog RSS Feed" href="/feed.xml" />
         <script
           dangerouslySetInnerHTML={{
             __html: `

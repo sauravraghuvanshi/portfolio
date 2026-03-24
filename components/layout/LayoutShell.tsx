@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { MotionConfig } from "framer-motion";
 import type { ReactNode } from "react";
 
 interface LayoutShellProps {
@@ -14,12 +15,12 @@ export default function LayoutShell({ children, navigation, footer }: LayoutShel
   const isAdmin = pathname.startsWith("/admin");
 
   return (
-    <>
+    <MotionConfig reducedMotion="user">
       {!isAdmin && navigation}
       <main id="main-content" className={isAdmin ? "" : "flex-1 pt-16"}>
         {children}
       </main>
       {!isAdmin && footer}
-    </>
+    </MotionConfig>
   );
 }

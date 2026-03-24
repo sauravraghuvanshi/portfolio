@@ -7,6 +7,9 @@ import { sharedMDXComponents } from "@/lib/mdx-components";
 import { ArrowLeft, ArrowRight, Calendar, Clock, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { BlogPostSchema } from "@/components/JsonLd";
+import ScrollProgress from "@/components/ui/ScrollProgress";
+import TableOfContents from "@/components/ui/TableOfContents";
+import ShareButtons from "@/components/ui/ShareButtons";
 import { formatDate } from "@/lib/utils";
 import type { Metadata } from "next";
 
@@ -62,6 +65,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <>
+      <ScrollProgress />
       <BlogPostSchema
         title={post.title}
         description={post.description}
@@ -72,7 +76,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         coverImage={post.coverImage}
       />
     <div className="pt-24 pb-16 section-padding">
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-7xl mx-auto">
+        {/* Grid: content + ToC sidebar */}
+        <div className="xl:grid xl:grid-cols-[1fr_220px] xl:gap-12">
+        <div className="max-w-3xl">
         {/* Back navigation */}
         <Link
           href="/blog"
@@ -100,8 +107,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             {post.description}
           </p>
 
-          {/* Meta row */}
-          <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500 pb-8 border-b border-slate-200 dark:border-slate-800">
+          {/* Meta row + share */}
+          <div className="flex flex-wrap items-center justify-between gap-4 text-sm text-slate-500 pb-8 border-b border-slate-200 dark:border-slate-800">
+            <div className="flex flex-wrap items-center gap-4">
             <span className="flex items-center gap-2">
               <Calendar className="w-4 h-4" />
               {formatDate(post.date)}
@@ -121,6 +129,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 Originally on {post.externalSource || "External"}
               </a>
             )}
+            </div>
+            <ShareButtons title={post.title} url={`/blog/${post.slug}`} />
           </div>
 
           {/* Cover image */}
@@ -140,8 +150,14 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {content}
         </article>
 
+        {/* Bottom share */}
+        <div className="mt-10 pt-6 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+          <p className="text-sm text-slate-500">Enjoyed this post?</p>
+          <ShareButtons title={post.title} url={`/blog/${post.slug}`} />
+        </div>
+
         {/* Prev / Next navigation */}
-        <nav className="mt-16 pt-8 border-t border-slate-200 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <nav className="mt-10 pt-8 border-t border-slate-200 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {prevPost ? (
             <Link
               href={`/blog/${prevPost.slug}`}
@@ -195,6 +211,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               More Posts
             </Link>
           </div>
+        </div>
+        </div>
+        {/* ToC sidebar — xl only */}
+        <TableOfContents />
         </div>
       </div>
     </div>

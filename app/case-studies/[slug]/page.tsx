@@ -6,6 +6,7 @@ import remarkGfm from "remark-gfm";
 import { sharedMDXComponents } from "@/lib/mdx-components";
 import { ArrowLeft, ArrowRight, Clock, User, Building2 } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
+import ScrollProgress from "@/components/ui/ScrollProgress";
 import type { Metadata } from "next";
 
 export const revalidate = 60;
@@ -59,6 +60,8 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
   }
 
   return (
+    <>
+    <ScrollProgress />
     <div className="py-16 section-padding">
       <div className="max-w-4xl mx-auto">
         {/* Back navigation */}
@@ -195,5 +198,6 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         </div>
       </div>
     </div>
+    </>
   );
 }
