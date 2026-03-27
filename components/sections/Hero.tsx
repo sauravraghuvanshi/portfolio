@@ -1,8 +1,18 @@
 ﻿"use client";
 
-import { motion, type Variants } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, Download, Mail, Github, Linkedin, Twitter, Calendar } from "lucide-react";
+
+const ROTATING_PHRASES = [
+  "Harness the Power of Cloud & AI",
+  "Build Scalable Cloud-Native Platforms",
+  "Accelerate with Agentic AI",
+  "Ship Faster with DevOps & Azure",
+];
+
+const ROTATE_INTERVAL = 3000;
 
 const socialLinks = [
   { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/sauravraghuvanshi/" },
@@ -22,6 +32,15 @@ const itemVariants: Variants = {
 };
 
 export default function Hero() {
+  const [phraseIndex, setPhraseIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setPhraseIndex((i) => (i + 1) % ROTATING_PHRASES.length);
+    }, ROTATE_INTERVAL);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <section
       aria-label="Introduction"
@@ -53,7 +72,24 @@ export default function Hero() {
           <motion.h1 variants={itemVariants} className="heading-xl text-slate-900 dark:text-white mb-6">
             Helping Startups and Unicorns{" "}
             <br />
-            <span className="gradient-text">Harness the Power of Cloud &amp; AI</span>
+            <span className="relative grid overflow-y-clip">
+              {/* All phrases in same grid cell — container height = tallest phrase */}
+              {ROTATING_PHRASES.map((phrase) => (
+                <span key={phrase} className="invisible [grid-area:1/1] whitespace-nowrap" aria-hidden="true">{phrase}</span>
+              ))}
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={phraseIndex}
+                  className="gradient-text [grid-area:1/1] whitespace-nowrap"
+                  initial={{ y: "100%", opacity: 0 }}
+                  animate={{ y: "0%", opacity: 1 }}
+                  exit={{ y: "-100%", opacity: 0 }}
+                  transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
+                >
+                  {ROTATING_PHRASES[phraseIndex]}
+                </motion.span>
+              </AnimatePresence>
+            </span>
           </motion.h1>
 
           {/* Sub-headline */}
