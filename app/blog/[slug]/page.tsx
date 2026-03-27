@@ -48,6 +48,19 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const prevPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
   const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
 
+  // Related posts: same category, excluding current post, max 3
+  const relatedPosts = allPosts
+    .filter((p) => p.slug !== slug && p.category.some((c) => post.category.includes(c)))
+    .slice(0, 3);
+  // If fewer than 3 category matches, fill with recent posts
+  if (relatedPosts.length < 3) {
+    const slugsUsed = new Set([slug, ...relatedPosts.map((p) => p.slug)]);
+    for (const p of allPosts) {
+      if (relatedPosts.length >= 3) break;
+      if (!slugsUsed.has(p.slug)) relatedPosts.push(p);
+    }
+  }
+
   let content;
   try {
     ({ content } = await compileMDX({
@@ -193,6 +206,28 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <div />
           )}
         </nav>
+
+        {/* Related posts */}
+        {relatedPosts.length > 0 && (
+          <section className="mt-10 pt-8 border-t border-slate-200 dark:border-slate-800">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-5">Related Posts</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {relatedPosts.map((rp) => (
+                <Link
+                  key={rp.slug}
+                  href={`/blog/${rp.slug}`}
+                  className="group p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl hover:border-brand-300 dark:hover:border-brand-700 hover:shadow-sm transition-all duration-200"
+                >
+                  <p className="text-xs text-slate-500 mb-1.5">{formatDate(rp.date)}</p>
+                  <h3 className="font-semibold text-sm text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors line-clamp-2">
+                    {rp.title}
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-2 line-clamp-2">{rp.description}</p>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* CTA */}
         <div className="mt-10 p-8 bg-gradient-to-r from-brand-50 to-accent-50 dark:from-brand-950/30 dark:to-accent-950/30 border border-brand-200/50 dark:border-brand-800/50 rounded-2xl text-center">
