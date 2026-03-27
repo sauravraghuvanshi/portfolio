@@ -1,4 +1,5 @@
 import { getTalks } from "@/lib/content";
+import { BreadcrumbListSchema } from "@/components/JsonLd";
 import TalksGrid from "@/components/sections/TalksGrid";
 import type { Metadata } from "next";
 
@@ -12,7 +13,12 @@ export default function TalksPage() {
   const talks = getTalks();
 
   return (
-    <main id="main-content" className="pt-24 pb-16 section-padding">
+    <>
+      <BreadcrumbListSchema items={[
+        { name: "Home", url: "/" },
+        { name: "Talks", url: "/talks" },
+      ]} />
+      <main id="main-content" className="pt-24 pb-16 section-padding">
       <div className="section-container">
         <div className="mb-12">
           <p className="text-brand-600 dark:text-brand-400 text-sm font-semibold tracking-wider uppercase mb-3">
@@ -30,5 +36,6 @@ export default function TalksPage() {
         <TalksGrid talks={talks} />
       </div>
     </main>
+    </>
   );
 }

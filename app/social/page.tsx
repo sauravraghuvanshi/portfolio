@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { BreadcrumbListSchema } from "@/components/JsonLd";
 import { Linkedin, Twitter, Github, Mail } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -64,7 +65,12 @@ const profiles = [
 
 export default function SocialPage() {
   return (
-    <div className="py-16 section-padding">
+    <>
+      <BreadcrumbListSchema items={[
+        { name: "Home", url: "/" },
+        { name: "Social", url: "/social" },
+      ]} />
+      <div className="py-16 section-padding">
       <div className="section-container max-w-3xl">
         {/* Header */}
         <div className="mb-12 text-center">
@@ -108,5 +114,6 @@ export default function SocialPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

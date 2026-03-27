@@ -157,3 +157,66 @@ export function CaseStudySchema({ title, description, slug, tags, datePublished 
     />
   );
 }
+
+// --- BreadcrumbList Schema ---
+
+interface BreadcrumbItem {
+  name: string;
+  url: string;
+}
+
+export function BreadcrumbListSchema({ items }: { items: BreadcrumbItem[] }) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: item.url.startsWith("http") ? item.url : `${SITE_URL}${item.url}`,
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+// --- SpeakingEvent Schema ---
+
+interface SpeakingEventSchemaProps {
+  title: string;
+  slug: string;
+  year: number;
+  format: string;
+  topic: string;
+  summary: string;
+  coverImage: string | null;
+}
+
+export function SpeakingEventSchema({ title, slug, year, format, topic, summary, coverImage }: SpeakingEventSchemaProps) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "@id": `${SITE_URL}/events/${slug}`,
+    name: title,
+    description: summary,
+    url: `${SITE_URL}/events/${slug}`,
+    startDate: year.toString(),
+    about: { "@type": "Thing", name: topic },
+    performer: { "@id": `${SITE_URL}/#person` },
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    ...(coverImage ? { image: coverImage } : {}),
+    ...(format === "Organizer" ? { organizer: { "@id": `${SITE_URL}/#person` } } : {}),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}

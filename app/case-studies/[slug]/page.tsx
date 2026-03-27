@@ -6,6 +6,7 @@ import remarkGfm from "remark-gfm";
 import { sharedMDXComponents } from "@/lib/mdx-components";
 import { ArrowLeft, ArrowRight, Clock, User, Building2 } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
+import { CaseStudySchema, BreadcrumbListSchema } from "@/components/JsonLd";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import type { Metadata } from "next";
 
@@ -61,6 +62,17 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
 
   return (
     <>
+    <CaseStudySchema
+      title={caseStudy.title}
+      description={caseStudy.subtitle}
+      slug={caseStudy.slug}
+      tags={caseStudy.tags}
+    />
+    <BreadcrumbListSchema items={[
+      { name: "Home", url: "/" },
+      { name: "Case Studies", url: "/case-studies" },
+      { name: caseStudy.title, url: `/case-studies/${slug}` },
+    ]} />
     <ScrollProgress />
     <div className="py-16 section-padding">
       <div className="max-w-4xl mx-auto">

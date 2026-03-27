@@ -1,4 +1,5 @@
 import { getEvents } from "@/lib/content";
+import { BreadcrumbListSchema } from "@/components/JsonLd";
 import EventsGrid from "@/components/sections/EventsGrid";
 import type { Metadata } from "next";
 
@@ -12,7 +13,12 @@ export default function EventsPage() {
   const events = getEvents();
 
   return (
-    <div className="py-20 section-padding">
+    <>
+      <BreadcrumbListSchema items={[
+        { name: "Home", url: "/" },
+        { name: "Events", url: "/events" },
+      ]} />
+      <div className="py-20 section-padding">
       <div className="section-container">
         {/* Hero */}
         <div className="text-center max-w-2xl mx-auto mb-16">
@@ -33,5 +39,6 @@ export default function EventsPage() {
         <EventsGrid events={events} />
       </div>
     </div>
+    </>
   );
 }

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getAllCaseStudies } from "@/lib/content";
+import { BreadcrumbListSchema } from "@/components/JsonLd";
 import { ArrowRight, Clock, Tag, Building2 } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import type { Metadata } from "next";
@@ -16,7 +17,12 @@ export default function CaseStudiesPage() {
   const caseStudies = getAllCaseStudies();
 
   return (
-    <div className="py-16 section-padding">
+    <>
+      <BreadcrumbListSchema items={[
+        { name: "Home", url: "/" },
+        { name: "Case Studies", url: "/case-studies" },
+      ]} />
+      <div className="py-16 section-padding">
       <div className="section-container">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <p className="text-sm font-semibold text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-3">
@@ -89,5 +95,6 @@ export default function CaseStudiesPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

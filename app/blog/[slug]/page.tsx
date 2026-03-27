@@ -6,7 +6,7 @@ import remarkGfm from "remark-gfm";
 import { sharedMDXComponents } from "@/lib/mdx-components";
 import { ArrowLeft, ArrowRight, Calendar, Clock, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
-import { BlogPostSchema } from "@/components/JsonLd";
+import { BlogPostSchema, BreadcrumbListSchema } from "@/components/JsonLd";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import TableOfContents from "@/components/ui/TableOfContents";
 import ShareButtons from "@/components/ui/ShareButtons";
@@ -75,6 +75,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         dateModified={post.updated || post.date}
         coverImage={post.coverImage}
       />
+      <BreadcrumbListSchema items={[
+        { name: "Home", url: "/" },
+        { name: "Blog", url: "/blog" },
+        { name: post.title, url: `/blog/${post.slug}` },
+      ]} />
     <div className="pt-24 pb-16 section-padding">
       <div className="max-w-7xl mx-auto">
         {/* Grid: content + ToC sidebar */}

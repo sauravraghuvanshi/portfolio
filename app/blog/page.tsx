@@ -1,4 +1,5 @@
 import { getAllBlogPosts } from "@/lib/content";
+import { BreadcrumbListSchema } from "@/components/JsonLd";
 import BlogGrid from "@/components/sections/BlogGrid";
 import type { Metadata } from "next";
 
@@ -14,7 +15,12 @@ export default function BlogPage() {
   const posts = getAllBlogPosts();
 
   return (
-    <div className="pt-24 pb-16 section-padding">
+    <>
+      <BreadcrumbListSchema items={[
+        { name: "Home", url: "/" },
+        { name: "Blog", url: "/blog" },
+      ]} />
+      <div className="pt-24 pb-16 section-padding">
       <div className="section-container">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <p className="text-sm font-semibold text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-3">
@@ -32,5 +38,6 @@ export default function BlogPage() {
         <BlogGrid posts={posts} />
       </div>
     </div>
+    </>
   );
 }

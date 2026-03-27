@@ -1,4 +1,5 @@
 import { getProjects } from "@/lib/content";
+import { BreadcrumbListSchema } from "@/components/JsonLd";
 import ProjectsGrid from "@/components/sections/ProjectsGrid";
 import type { Metadata } from "next";
 
@@ -14,7 +15,12 @@ export default function ProjectsPage() {
   const projects = getProjects();
 
   return (
-    <div className="py-16">
+    <>
+      <BreadcrumbListSchema items={[
+        { name: "Home", url: "/" },
+        { name: "Projects", url: "/projects" },
+      ]} />
+      <div className="py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-4">
           <p className="text-sm font-semibold text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-3">
@@ -28,5 +34,6 @@ export default function ProjectsPage() {
       </div>
       <ProjectsGrid projects={projects} showFilters={true} />
     </div>
+    </>
   );
 }

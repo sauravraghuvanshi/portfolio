@@ -4,6 +4,7 @@ import Image from "next/image";
 import { getEvent, getEvents } from "@/lib/content";
 import { ArrowLeft, ArrowRight, Tag, Users } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
+import { SpeakingEventSchema, BreadcrumbListSchema } from "@/components/JsonLd";
 import EventGallery from "@/components/events/EventGallery";
 import type { Metadata } from "next";
 
@@ -72,7 +73,22 @@ export default async function EventPage({ params }: EventPageProps) {
   ];
 
   return (
-    <div className="py-16 section-padding">
+    <>
+      <SpeakingEventSchema
+        title={event.title}
+        slug={event.slug}
+        year={event.year}
+        format={event.format}
+        topic={event.topic}
+        summary={event.summary}
+        coverImage={event.coverImage}
+      />
+      <BreadcrumbListSchema items={[
+        { name: "Home", url: "/" },
+        { name: "Events", url: "/events" },
+        { name: event.title, url: `/events/${slug}` },
+      ]} />
+      <div className="py-16 section-padding">
       <div className="max-w-4xl mx-auto">
 
         {/* Back */}
@@ -209,5 +225,6 @@ export default async function EventPage({ params }: EventPageProps) {
         </nav>
       </div>
     </div>
+    </>
   );
 }
