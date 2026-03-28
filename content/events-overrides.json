@@ -22,7 +22,13 @@
     "images": [
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/net-day-bangalore/photo-1.jpg",
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/net-day-bangalore/photo-3.jpg"
-    ]
+    ],
+    "location": {
+      "city": "Bengaluru",
+      "country": "India",
+      "lat": 12.9716,
+      "lng": 77.5946
+    }
   },
   "az-104-microsoft-azure-administrator-bootcamp": {
     "title": "AZ-104: Microsoft Azure Administrator Bootcamp",
@@ -47,7 +53,13 @@
     "images": [
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/az-104-microsoft-azure-administrator-bootcamp/photo-2.jpg",
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/az-104-microsoft-azure-administrator-bootcamp/photo-3.jpg"
-    ]
+    ],
+    "location": {
+      "city": "Bengaluru",
+      "country": "India",
+      "lat": 12.9716,
+      "lng": 77.5946
+    }
   },
   "azure-ai-engineer-associate-bootcamp-ai-102": {
     "title": "Azure AI Engineer Associate Bootcamp (AI-102)",
@@ -70,7 +82,8 @@
     ],
     "impact": [],
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-ai-engineer-associate-bootcamp-ai-102/cover.jpg",
-    "images": []
+    "images": [],
+    "location": null
   },
   "azure-aiml-day": {
     "title": "Azure AI/ML Day",
@@ -97,7 +110,13 @@
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-aiml-day/photo-1.jpg",
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-aiml-day/photo-2.jpg",
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-aiml-day/photo-3.jpg"
-    ]
+    ],
+    "location": {
+      "city": "Bengaluru",
+      "country": "India",
+      "lat": 12.9716,
+      "lng": 77.5946
+    }
   },
   "azure-developer-day-in-bengaluru-by-msa-cit-chapter": {
     "title": "Azure Developer Day — Bengaluru (MSA CIT Chapter)",
@@ -124,7 +143,13 @@
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-developer-day-in-bengaluru-by-msa-cit-chapter/cover.jpg",
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-developer-day-in-bengaluru-by-msa-cit-chapter/photo-1.jpg"
     ],
-    "featured": true
+    "featured": true,
+    "location": {
+      "city": "Bengaluru",
+      "country": "India",
+      "lat": 12.9716,
+      "lng": 77.5946
+    }
   },
   "azure-devops-day": {
     "title": "Azure DevOps Day",
@@ -157,7 +182,13 @@
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-devops-day/photo-4.jpg",
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-devops-day/photo-6.jpg"
     ],
-    "featured": true
+    "featured": true,
+    "location": {
+      "city": "Bengaluru",
+      "country": "India",
+      "lat": 12.9716,
+      "lng": 77.5946
+    }
   },
   "build-your-own-personal-brand-in-the-age-of-ai": {
     "title": "Build Your Personal Brand in the Age of AI",
@@ -180,7 +211,8 @@
     ],
     "impact": [],
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/build-your-own-personal-brand-in-the-age-of-ai/cover.jpg",
-    "images": []
+    "images": [],
+    "location": null
   },
   "code-without-barriers": {
     "title": "Code; Without Barriers — Mentorship Program",
@@ -204,7 +236,8 @@
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/code-without-barriers/cover.jpg",
     "images": [
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/code-without-barriers/photo-1.jpg"
-    ]
+    ],
+    "location": null
   },
   "code-without-barriers-mentorship-circle": {
     "title": "Code; Without Barriers — Mentorship Circle",
@@ -228,7 +261,8 @@
     ],
     "impact": [],
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/code-without-barriers-mentorship-circle/cover.jpg",
-    "images": []
+    "images": [],
+    "location": null
   },
   "how-to-work-with-cicd-pipeline-in-azure-devops": {
     "title": "How to Work with CI/CD Pipelines in Azure DevOps",
@@ -256,7 +290,14 @@
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/how-to-work-with-cicd-pipeline-in-azure-devops/photo-1.jpg",
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/how-to-work-with-cicd-pipeline-in-azure-devops/photo-3.jpg",
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/how-to-work-with-cicd-pipeline-in-azure-devops/photo-4.jpg"
-    ]
+    ],
+    "featured": false,
+    "location": {
+      "city": "Tamil Nadu",
+      "country": "India",
+      "lat": 11.059821,
+      "lng": 78.387451
+    }
   },
   "mentor-at-hashtag-includeher-cohort-4-0-a-cohort-on-generative-ai": {
     "title": "Mentor at #IncludeHer COHORT 4.0 — Generative AI",
@@ -288,7 +329,14 @@
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/mentor-at-hashtag-includeher-cohort-4-0-a-cohort-on-generative-ai/photo-4.jpg",
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/mentor-at-hashtag-includeher-cohort-4-0-a-cohort-on-generative-ai/photo-5.jpg",
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/mentor-at-hashtag-includeher-cohort-4-0-a-cohort-on-generative-ai/photo-6.jpg"
-    ]
+    ],
+    "featured": false,
+    "location": {
+      "city": "Delhi",
+      "country": "India",
+      "lat": 28.6139,
+      "lng": 77.209
+    }
   },
   "mentor-for-the-highly-esteemed-fastest-coder-first-hackathon-organized-by-microsoft": {
     "title": "Mentor — Microsoft Fastest Coder First Hackathon",
@@ -314,7 +362,13 @@
     "images": [
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/mentor-for-the-highly-esteemed-fastest-coder-first-hackathon-organized-by-microsoft/photo-1.jpg",
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/mentor-for-the-highly-esteemed-fastest-coder-first-hackathon-organized-by-microsoft/photo-2.jpg"
-    ]
+    ],
+    "location": {
+      "city": "Bengaluru",
+      "country": "India",
+      "lat": 12.9716,
+      "lng": 77.5946
+    }
   },
   "microsoft-ai-tour-bangalore": {
     "title": "Microsoft AI Tour — Bangalore",
@@ -353,7 +407,13 @@
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-ai-tour-bangalore/photo-12.jpg",
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-ai-tour-bangalore/photo-13.jpg"
     ],
-    "featured": true
+    "featured": true,
+    "location": {
+      "city": "Bengaluru",
+      "country": "India",
+      "lat": 12.9716,
+      "lng": 77.5946
+    }
   },
   "microsoft-azure-networking": {
     "title": "Azure Networking Fundamentals — Community Session",
@@ -376,7 +436,8 @@
     "impact": [],
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-azure-networking/cover.jpg",
     "coverImagePosition": "bottom",
-    "images": []
+    "images": [],
+    "location": null
   },
   "microsoft-future-ready-technology-summit": {
     "title": "Microsoft Future Ready Technology Summit",
@@ -406,7 +467,13 @@
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-future-ready-technology-summit/photo-6.jpg",
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-future-ready-technology-summit/photo-7.jpg"
     ],
-    "featured": true
+    "featured": true,
+    "location": {
+      "city": "Bengaluru",
+      "country": "India",
+      "lat": 12.9716,
+      "lng": 77.5946
+    }
   },
   "microsoft-india-town-hall-meet-mlsa-edition": {
     "title": "Microsoft India Town Hall — MLSA Edition",
@@ -434,7 +501,13 @@
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-india-town-hall-meet-mlsa-edition/photo-2.jpg",
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-india-town-hall-meet-mlsa-edition/photo-3.jpg"
     ],
-    "featured": true
+    "featured": true,
+    "location": {
+      "city": "Bengaluru",
+      "country": "India",
+      "lat": 12.9716,
+      "lng": 77.5946
+    }
   },
   "the-past-few-months-at-microsoft-have-been-nothing-short-of-incredible": {
     "title": "Microsoft Highlights — From Hackathon to Product",
@@ -457,7 +530,8 @@
     ],
     "impact": [],
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/the-past-few-months-at-microsoft-have-been-nothing-short-of-incredible/cover.jpg",
-    "images": []
+    "images": [],
+    "location": null
   },
   "the-present-and-future-of-it-industry": {
     "title": "India: The Present and Future of IT",
@@ -479,7 +553,8 @@
     ],
     "impact": [],
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/the-present-and-future-of-it-industry/cover.jpg",
-    "images": []
+    "images": [],
+    "location": null
   },
   "azure-developer-day": {
     "title": "Azure Developer Day — Bengaluru 2025",
@@ -508,7 +583,13 @@
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-developer-day/cover.jpg",
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-developer-day/photo-2.jpg"
     ],
-    "featured": true
+    "featured": true,
+    "location": {
+      "city": "Bengaluru",
+      "country": "India",
+      "lat": 12.9716,
+      "lng": 77.5946
+    }
   },
   "building-your-own-copilot-using-azure-openai": {
     "title": "Building Your Own Copilot Using Azure OpenAI",
@@ -533,7 +614,13 @@
     "impact": [],
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/building-your-own-copilot-using-azure-openai/cover.jpg",
     "images": [],
-    "featured": true
+    "featured": true,
+    "location": {
+      "city": "Bengaluru",
+      "country": "India",
+      "lat": 12.9716,
+      "lng": 77.5946
+    }
   },
   "enhancing-cloud-engineering-with-github-copilot": {
     "title": "Enhancing Cloud Engineering with GitHub Copilot",
@@ -558,7 +645,13 @@
     "impact": [],
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/enhancing-cloud-engineering-with-github-copilot/cover.jpg",
     "images": [],
-    "featured": true
+    "featured": true,
+    "location": {
+      "city": "Bengaluru",
+      "country": "India",
+      "lat": 12.9716,
+      "lng": 77.5946
+    }
   },
   "microsoft-ai-skills-fest": {
     "title": "Microsoft AI Skills Fest — Guinness World Record",
@@ -584,7 +677,13 @@
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-ai-skills-fest/cover.jpg",
     "images": [
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-ai-skills-fest/photo-1.jpg"
-    ]
+    ],
+    "location": {
+      "city": "Bengaluru",
+      "country": "India",
+      "lat": 12.9716,
+      "lng": 77.5946
+    }
   },
   "azure-dev-day-2024-recap-a-journey-into-azure-generative-ai": {
     "title": "Azure Dev Day 2024 — Journey into Azure Generative AI",
@@ -612,7 +711,13 @@
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-dev-day-2024-recap-a-journey-into-azure-generative-ai/photo-1.jpg",
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-dev-day-2024-recap-a-journey-into-azure-generative-ai/photo-3.jpg",
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-dev-day-2024-recap-a-journey-into-azure-generative-ai/photo-4.jpg"
-    ]
+    ],
+    "location": {
+      "city": "Bengaluru",
+      "country": "India",
+      "lat": 12.9716,
+      "lng": 77.5946
+    }
   },
   "cloud-computing-as-a-career-and-journey-to-microsoft": {
     "title": "Cloud Computing as a Career — Journey to Microsoft",
@@ -636,7 +741,8 @@
     "impact": [],
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/cloud-computing-as-a-career-and-journey-to-microsoft/cover.jpg",
     "coverImagePosition": "bottom",
-    "images": []
+    "images": [],
+    "location": null
   },
   "wrapping-up-2024-with-azure-devday-bangalore": {
     "title": "Azure Dev Day Bangalore — End of Year 2024",
@@ -665,7 +771,13 @@
     "images": [
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/wrapping-up-2024-with-azure-devday-bangalore/cover.jpg",
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/wrapping-up-2024-with-azure-devday-bangalore/photo-2.jpg"
-    ]
+    ],
+    "location": {
+      "city": "Bengaluru",
+      "country": "India",
+      "lat": 12.9716,
+      "lng": 77.5946
+    }
   },
   "azure-generative-ai-day": {
     "title": "Azure Generative AI Day — Personal Copilot with Azure OpenAI",
@@ -689,7 +801,13 @@
     "impact": [],
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-generative-ai-day/cover.jpg",
     "coverImagePosition": "bottom",
-    "images": []
+    "images": [],
+    "location": {
+      "city": "Bengaluru",
+      "country": "India",
+      "lat": 12.9716,
+      "lng": 77.5946
+    }
   },
   "introduction-to-cloud-computing": {
     "title": "Introduction to Cloud Computing",
@@ -713,7 +831,8 @@
     "impact": [],
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/introduction-to-cloud-computing/cover.jpg",
     "coverImagePosition": "bottom",
-    "images": []
+    "images": [],
+    "location": null
   },
   "code-without-barriers-initiative-as-a-mentor": {
     "title": "Code; Without Barriers — Inclusion in Cloud & AI",
@@ -739,9 +858,17 @@
       "Program achieved 30% developer diversity, up from 12% in 2021, creating real industry-level change"
     ],
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/code-without-barriers-initiative-as-a-mentor/cover.jpg",
+    "coverImagePosition": "center",
     "images": [
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/code-without-barriers-initiative-as-a-mentor/photo-1.jpg"
-    ]
+    ],
+    "featured": false,
+    "location": {
+      "city": "Delhi",
+      "country": "India",
+      "lat": 28.6139,
+      "lng": 77.209
+    }
   },
   "aws-community-builders": {
     "title": "AWS Community Builder — DevTools",
@@ -765,7 +892,8 @@
       "Selected among the top 10% of applicants into the AWS Community Builders DevTools category"
     ],
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/aws-community-builders/cover.jpg",
-    "images": []
+    "images": [],
+    "location": null
   },
   "aws-user-group-dehradun": {
     "title": "AWS User Group Dehradun — Kickoff",
@@ -787,10 +915,18 @@
     ],
     "impact": [],
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/aws-user-group-dehradun/cover.jpg",
+    "coverImagePosition": "center",
     "images": [
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/aws-user-group-dehradun/photo-1.jpg",
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/aws-user-group-dehradun/photo-2.jpg"
-    ]
+    ],
+    "featured": false,
+    "location": {
+      "city": "Dehradun",
+      "country": "India",
+      "lat": 30.3165,
+      "lng": 78.0322
+    }
   },
   "aws-community-day-india-2020": {
     "title": "AWS Community Day India 2020",
@@ -812,9 +948,17 @@
     ],
     "impact": [],
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/aws-community-day-india-2020/photo-1.jpg",
+    "coverImagePosition": "center",
     "images": [
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/aws-community-day-india-2020/photo-2.jpg"
-    ]
+    ],
+    "featured": false,
+    "location": {
+      "city": "Delhi",
+      "country": "India",
+      "lat": 28.6139,
+      "lng": 77.209
+    }
   },
   "aws-educate-student-ambassador": {
     "title": "AWS Educate Student Ambassador (2020–21)",
@@ -838,8 +982,16 @@
       "Selected for the AWS Educate Student Ambassador program, recognizing commitment to cloud education"
     ],
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/aws-educate-student-ambassador/cover.jpg",
+    "coverImagePosition": "center",
     "images": [
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/aws-educate-student-ambassador/photo-1.jpg"
-    ]
+    ],
+    "featured": false,
+    "location": {
+      "city": "Delhi",
+      "country": "India",
+      "lat": 28.6139,
+      "lng": 77.209
+    }
   }
 }

@@ -1,6 +1,6 @@
-import { getEvents } from "@/lib/content";
+import { getEvents, getEventClusters } from "@/lib/content";
 import { BreadcrumbListSchema } from "@/components/JsonLd";
-import EventsGrid from "@/components/sections/EventsGrid";
+import EventsPageClient from "@/components/sections/EventsPageClient";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -11,6 +11,8 @@ export const metadata: Metadata = {
 
 export default function EventsPage() {
   const events = getEvents();
+  const clusters = getEventClusters(events);
+  const virtualCount = events.filter((e) => !e.location).length;
 
   return (
     <>
@@ -36,7 +38,11 @@ export default function EventsPage() {
           </p>
         </div>
 
-        <EventsGrid events={events} />
+        <EventsPageClient
+          events={events}
+          clusters={clusters}
+          virtualCount={virtualCount}
+        />
       </div>
     </div>
     </>

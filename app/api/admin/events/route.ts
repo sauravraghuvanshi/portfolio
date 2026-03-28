@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { title, year, format, topic, tags, summary, highlights, impact, coverImage, coverImagePosition, images, featured } = body;
+    const { title, year, format, topic, tags, summary, highlights, impact, coverImage, coverImagePosition, images, featured, location } = body;
 
     if (!title) {
       return NextResponse.json({ error: "Title is required" }, { status: 400 });
@@ -41,6 +41,7 @@ export async function POST(request: NextRequest) {
       coverImagePosition: coverImagePosition ?? undefined,
       images: images ?? [],
       featured: featured ?? false,
+      location: location ?? null,
     };
 
     saveEvent(event);

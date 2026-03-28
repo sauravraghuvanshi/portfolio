@@ -4,12 +4,14 @@ import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Search, X } from "lucide-react";
+import { ArrowRight, MapPin, Search, X } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import type { Event } from "@/lib/content";
 
 interface EventsGridProps {
   events: Event[];
+  cityFilter?: string | null;
+  onClearCity?: () => void;
 }
 
 const topicVariant: Record<string, "blue" | "green" | "purple" | "orange" | "red"> = {
@@ -29,7 +31,7 @@ const coverPos: Record<string, string> = {
   bottom: "object-bottom",
 };
 
-export default function EventsGrid({ events }: EventsGridProps) {
+export default function EventsGrid({ events, cityFilter, onClearCity }: EventsGridProps) {
   const [activeFormat, setActiveFormat] = useState("All");
   const [activeTopic,  setActiveTopic]  = useState("All");
   const [search,       setSearch]       = useState("");
@@ -46,6 +48,8 @@ export default function EventsGrid({ events }: EventsGridProps) {
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
     return events.filter((e) => {
+      if (cityFilter === "virtual" && e.location) return false;
+      if (cityFilter && cityFilter !== "virtual" && e.location?.city !== cityFilter) return false;
       if (activeFormat !== "All" && e.format !== activeFormat) return false;
       if (activeTopic  !== "All" && e.topic !== activeTopic) return false;
       if (q && !e.title.toLowerCase().includes(q) &&
@@ -53,18 +57,35 @@ export default function EventsGrid({ events }: EventsGridProps) {
                !e.summary.toLowerCase().includes(q)) return false;
       return true;
     });
-  }, [events, activeFormat, activeTopic, search]);
+  }, [events, activeFormat, activeTopic, search, cityFilter]);
 
-  const hasActiveFilters = activeFormat !== "All" || activeTopic !== "All" || search !== "";
+  const hasActiveFilters = activeFormat !== "All" || activeTopic !== "All" || search !== "" || !!cityFilter;
 
   function resetFilters() {
     setActiveFormat("All");
     setActiveTopic("All");
     setSearch("");
+    onClearCity?.();
   }
 
   return (
     <div>
+      {/* City filter chip */}
+      {cityFilter && (
+        <div className="flex justify-center mb-6">
+          <span className="inline-flex items-center gap-2 px-4 py-2 bg-brand-50 dark:bg-brand-950/30 border border-brand-200 dark:border-brand-800 rounded-full text-sm text-brand-700 dark:text-brand-300">
+            <MapPin className="w-3.5 h-3.5" />
+            Showing {cityFilter === "virtual" ? "virtual" : cityFilter} events
+            <button
+              onClick={onClearCity}
+              className="ml-1 p-0.5 rounded-full hover:bg-brand-200 dark:hover:bg-brand-800 transition-colors"
+              aria-label="Clear city filter"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </span>
+        </div>
+      )}
       {/* Search */}
       <div className="relative max-w-md mx-auto mb-8">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" aria-hidden="true" />

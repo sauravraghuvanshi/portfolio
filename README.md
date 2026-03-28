@@ -12,9 +12,18 @@
 ## Features
 
 - **Portfolio & Resume** — Skills, certifications, projects, case studies, downloadable PDF resume
-- **Speaking & Events** — 32 speaking engagements with photo galleries and filters
+- **Interactive Career Timeline** — Vertical timeline with expanding cards, animated stat counters, tech badges, milestone icons, and "Present" pulse badge
+- **Command Palette** — Spotlight-style search (Cmd+K / Ctrl+K) across blogs, case studies, projects, talks, events, and pages with fuzzy matching
+- **Speaking & Events** — 32 speaking engagements with photo galleries, filters, and interactive speaking footprint map
+- **Speaking Events Map** — India-centered interactive SVG map with glowing pins, image-rich popups, city filtering, and dark-mode glow effects (`react-simple-maps`)
 - **YouTube Talks** — 12 sessions with lazy-loaded embeds (thumbnail-first, iframe on click)
-- **Technical Blog** — MDX-powered blog with rich typography, syntax highlighting, and reading time
+- **Technical Blog** — MDX-powered blog with rich typography, syntax highlighting, reading time, Table of Contents with scroll-spy, and related posts
+- **Social Sharing** — LinkedIn (copies post text + opens composer), X/Twitter, and copy link on blog posts
+- **RSS Feed** — Auto-generated RSS feed at `/feed.xml` with link auto-discovery
+- **Hero Animations** — Smooth rotating subtitle phrases with AnimatePresence transitions
+- **Scroll Progress** — Reading progress bar on blog and case study detail pages
+- **Code Copy Button** — Hover-to-reveal copy button on all MDX code blocks
+- **Noise Texture** — Subtle SVG noise overlay for visual depth
 - **Admin Panel** — Protected dashboard at `/admin` with authentication, managing blogs, case studies, projects, talks, events, and certifications
 - **Blog Editor** — Medium-style MDX editor with live preview, image upload, and drag-and-drop media
 - **Case Study Editor** — MDX editor for case studies with metrics, timeline, role, and client fields
@@ -26,7 +35,8 @@
 - **Media Resize** — Inline image resize controls in the editor
 - **Azure Blob Storage** — Images stored in Azure Blob Storage with organized hierarchy (`blog/`, `events/`, `case-studies/`, `certifications/`)
 - **Dark/Light Mode** — System-aware theme toggle with zero flash
-- **SEO** — JSON-LD schema, OpenGraph/Twitter cards, sitemap, robots.txt
+- **SEO** — JSON-LD schema (Person, WebSite, BreadcrumbList, SpeakingEvent, CaseStudy), OpenGraph/Twitter cards, sitemap, robots.txt
+- **Reduced Motion** — Global `MotionConfig reducedMotion="user"` respects `prefers-reduced-motion`
 - **Responsive** — Mobile-first design with Framer Motion animations
 
 ---
@@ -187,13 +197,14 @@ portfolio/
 │   └── talks/page.tsx                # YouTube talks with topic filters
 ├── components/
 │   ├── layout/                       # Navigation, Footer, LayoutShell
-│   ├── sections/                     # Homepage sections + BlogGrid, FeaturedBlogPosts
+│   ├── sections/                     # Homepage sections + BlogGrid, FeaturedBlogPosts, CareerTimeline, SpeakingMap
+│   ├── timeline/                     # TimelineCard, StatCounter (career timeline)
 │   ├── admin/                        # AdminSidebar, BlogEditor, CaseStudyEditor, ProjectEditor, TalkEditor, EventEditor, CertificationEditor, CategoryMultiSelect, MediaResizeBar, DeleteItemButton
 │   ├── events/                       # EventGallery (lightbox)
-│   └── ui/                           # Primitives (Badge, Card, YouTubeEmbed, etc.)
+│   └── ui/                           # Primitives (Badge, Card, YouTubeEmbed, CommandPalette, ShareButtons, ScrollProgress, CodeBlock, TableOfContents, etc.)
 ├── content/
 │   ├── profile.json                  # Personal info, skills, experience
-│   ├── certifications.json           # 8 certifications (standalone, managed via admin)
+│   ├── certifications.json           # 10 certifications (standalone, managed via admin)
 │   ├── events.json                   # Generated — 32 speaking events
 │   ├── events-overrides.json         # Manual overrides merged at build time
 │   ├── projects.json                 # Project gallery data
@@ -229,8 +240,9 @@ portfolio/
 | `/case-studies` | Architecture case studies |
 | `/case-studies/[slug]` | Individual case study (MDX) |
 | `/projects` | Full project gallery with filters |
-| `/resume` | HTML resume + PDF download |
+| `/resume` | HTML resume with interactive career timeline + PDF download |
 | `/social` | Social links hub |
+| `/feed.xml` | RSS feed (auto-generated) |
 | `/admin` | Admin dashboard (protected) |
 | `/admin/blog` | Blog post management |
 | `/admin/blog/new` | Create new blog post |
@@ -294,7 +306,7 @@ See [`AZURE-DEPLOY.md`](../AZURE-DEPLOY.md) for manual deployment steps and trou
 - [x] Semantic HTML + ARIA labels
 - [x] Keyboard navigation + skip-to-content
 - [x] Dark/light mode with zero flash
-- [x] JSON-LD schema (Person, WebSite, CreativeWork)
+- [x] JSON-LD schema (Person, WebSite, CreativeWork, BreadcrumbList, SpeakingEvent, CaseStudy)
 - [x] `sitemap.xml` + `robots.txt`
 - [x] OpenGraph + Twitter card metadata per page
 - [x] Admin routes protected by NextAuth middleware

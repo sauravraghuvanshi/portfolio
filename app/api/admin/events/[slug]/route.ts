@@ -37,6 +37,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       coverImagePosition: body.coverImagePosition ?? existing.coverImagePosition,
       images: body.images ?? existing.images,
       featured: body.featured ?? existing.featured ?? false,
+      location: body.location !== undefined ? body.location : existing.location,
     };
 
     saveEvent(event);

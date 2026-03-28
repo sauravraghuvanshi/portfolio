@@ -118,6 +118,13 @@ export const getCertifications = cache(function getCertifications(): Certificati
 // Events
 // ---------------------------------------------------------------------------
 
+export interface EventLocation {
+  city: string;
+  country: string;
+  lat: number;
+  lng: number;
+}
+
 export interface EventMeta {
   slug: string;
   title: string;
@@ -132,9 +139,37 @@ export interface EventMeta {
   coverImagePosition?: "top" | "center" | "bottom";
   images: string[];
   featured?: boolean;
+  location?: EventLocation | null;
 }
 
 export type Event = EventMeta;
+
+export interface CityCluster {
+  city: string;
+  country: string;
+  lat: number;
+  lng: number;
+  events: Event[];
+}
+
+export function getEventClusters(events: Event[]): CityCluster[] {
+  const map = new Map<string, CityCluster>();
+  for (const e of events) {
+    if (!e.location) continue;
+    const key = `${e.location.city}|${e.location.country}`;
+    if (!map.has(key)) {
+      map.set(key, {
+        city: e.location.city,
+        country: e.location.country,
+        lat: e.location.lat,
+        lng: e.location.lng,
+        events: [],
+      });
+    }
+    map.get(key)!.events.push(e);
+  }
+  return Array.from(map.values());
+}
 
 export const getEvents = cache(function getEvents(): Event[] {
   const filePath = path.join(contentDir, "events.json");
