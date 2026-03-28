@@ -1,5 +1,6 @@
 import { getProfile, getCertifications } from "@/lib/content";
-import { Download, MapPin, Mail, Linkedin, Github, CheckCircle2, Briefcase, GraduationCap } from "lucide-react";
+import { Download, MapPin, Mail, Linkedin, Github, GraduationCap, BookOpen, Users, Award } from "lucide-react";
+import CareerTimeline from "@/components/sections/CareerTimeline";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -73,34 +74,12 @@ export default function ResumePage() {
           </h2>
           <p className="body-md">{profile.summary}</p>
         </section>
+      </div>
 
-        {/* Experience */}
-        <section aria-labelledby="resume-experience" className="mb-10">
-          <h2 id="resume-experience" className="text-lg font-semibold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-            <Briefcase className="w-5 h-5 text-brand-600 dark:text-brand-400" aria-hidden="true" />
-            Experience
-          </h2>
-          <div className="space-y-8">
-            {profile.experience.map(
-              (job: { company: string; role: string; period: string; highlights: string[] }, i: number) => (
-                <article key={i} className="pl-4 border-l-2 border-slate-200 dark:border-slate-800">
-                  <h3 className="font-semibold text-slate-900 dark:text-white">{job.role}</h3>
-                  <p className="text-brand-600 dark:text-brand-400 text-sm font-medium">{job.company}</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-500 mb-3">{job.period}</p>
-                  <ul className="space-y-2" role="list">
-                    {job.highlights.map((h: string, j: number) => (
-                      <li key={j} className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-400">
-                        <CheckCircle2 className="w-4 h-4 text-accent-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                        {h}
-                      </li>
-                    ))}
-                  </ul>
-                </article>
-              )
-            )}
-          </div>
-        </section>
+      {/* Experience — Career Timeline (breaks out of max-w-4xl) */}
+      <CareerTimeline experience={profile.experience} />
 
+      <div className="section-container max-w-4xl">
         {/* Certifications */}
         <section aria-labelledby="resume-certs" className="mb-10">
           <h2 id="resume-certs" className="text-lg font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
@@ -119,6 +98,43 @@ export default function ResumePage() {
             )}
           </div>
         </section>
+
+        {/* Research Work */}
+        {profile.research && profile.research.length > 0 && (
+          <section aria-labelledby="resume-research" className="mb-10">
+            <h2 id="resume-research" className="text-lg font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+              <BookOpen className="w-5 h-5 text-brand-600 dark:text-brand-400" aria-hidden="true" />
+              Research Work
+            </h2>
+            <div className="space-y-3">
+              {profile.research.map((r: { title: string; publisher: string; year: number }) => (
+                <div key={r.title} className="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm">
+                  <p className="font-medium text-slate-900 dark:text-white">{r.title}</p>
+                  <p className="text-slate-500 dark:text-slate-400 text-xs mt-1">{r.publisher} &bull; {r.year}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Extra Curricular Achievements */}
+        {profile.extracurricular && profile.extracurricular.length > 0 && (
+          <section aria-labelledby="resume-extra" className="mb-10">
+            <h2 id="resume-extra" className="text-lg font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+              <Users className="w-5 h-5 text-brand-600 dark:text-brand-400" aria-hidden="true" />
+              Extra Curricular Achievements
+            </h2>
+            <div className="space-y-3">
+              {profile.extracurricular.map((e: { role: string; org: string; period: string }) => (
+                <div key={`${e.role}-${e.org}`} className="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm">
+                  <p className="font-medium text-slate-900 dark:text-white">{e.role}</p>
+                  <p className="text-brand-600 dark:text-brand-400 text-xs font-medium">{e.org}</p>
+                  <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">{e.period}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Skills summary */}
         <section aria-labelledby="resume-skills">

@@ -186,6 +186,15 @@
     margin-inline: auto;
   }
 
+  /* Timeline horizontal scroll */
+  .timeline-scroll-container {
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .timeline-scroll-container::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Gradient text */
   .gradient-text {
     background: linear-gradient(135deg, var(--color-brand-600), var(--color-brand-500), var(--color-accent-500));

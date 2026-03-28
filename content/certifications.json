@@ -1,30 +1,39 @@
 [
   {
-    "name": "Azure Administrator Associate",
-    "code": "AZ-104",
-    "issuer": "Microsoft",
-    "year": 2023,
+    "name": "Azure Generative AI Nanodegree",
+    "code": "ND0013",
+    "issuer": "Udacity",
+    "year": 2025,
     "verifyUrl": "#",
-    "badge": "/images/certs/az-104.png",
-    "color": "blue"
+    "badge": "/images/certs/udacity.png",
+    "color": "purple"
   },
   {
     "name": "Azure AI Fundamentals",
     "code": "AI-900",
     "issuer": "Microsoft",
-    "year": 2023,
+    "year": 2024,
     "verifyUrl": "#",
     "badge": "/images/certs/ai-900.png",
     "color": "blue"
   },
   {
-    "name": "DevOps Engineer Expert",
-    "code": "AZ-400",
-    "issuer": "Microsoft",
-    "year": 2023,
+    "name": "Product Manager Nanodegree",
+    "code": "NDPM",
+    "issuer": "Udacity",
+    "year": 2025,
     "verifyUrl": "#",
-    "badge": "/images/certs/az-400.png",
-    "color": "blue"
+    "badge": "/images/certs/udacity.png",
+    "color": "purple"
+  },
+  {
+    "name": "Azure Cloud Architect Nanodegree",
+    "code": "ND081",
+    "issuer": "Udacity",
+    "year": 2024,
+    "verifyUrl": "#",
+    "badge": "/images/certs/udacity.png",
+    "color": "purple"
   },
   {
     "name": "AWS Certified Solutions Architect",
@@ -36,37 +45,46 @@
     "color": "orange"
   },
   {
+    "name": "DevOps Engineer Expert",
+    "code": "AZ-400",
+    "issuer": "Microsoft",
+    "year": 2022,
+    "verifyUrl": "#",
+    "badge": "/images/certs/az-400.png",
+    "color": "blue"
+  },
+  {
+    "name": "Azure Administrator Associate",
+    "code": "AZ-104",
+    "issuer": "Microsoft",
+    "year": 2021,
+    "verifyUrl": "#",
+    "badge": "/images/certs/az-104.png",
+    "color": "blue"
+  },
+  {
     "name": "AWS Certified Cloud Practitioner",
     "code": "CLF-C02",
     "issuer": "Amazon Web Services",
-    "year": 2022,
+    "year": 2021,
     "verifyUrl": "#",
     "badge": "/images/certs/aws-cp.png",
     "color": "orange"
   },
   {
-    "name": "Azure Cloud Architect Nanodegree",
-    "code": "ND081",
-    "issuer": "Udacity",
-    "year": 2022,
+    "name": "Azure Fundamentals",
+    "code": "AZ-900",
+    "issuer": "Microsoft",
+    "year": 2020,
     "verifyUrl": "#",
-    "badge": "/images/certs/udacity.png",
-    "color": "purple"
-  },
-  {
-    "name": "Azure Generative AI Nanodegree",
-    "code": "ND0013",
-    "issuer": "Udacity",
-    "year": 2023,
-    "verifyUrl": "#",
-    "badge": "/images/certs/udacity.png",
-    "color": "purple"
+    "badge": "/images/certs/az-900.png",
+    "color": "blue"
   },
   {
     "name": "Computer Vision Nanodegree",
     "code": "ND898",
     "issuer": "Udacity",
-    "year": 2022,
+    "year": 2020,
     "verifyUrl": "#",
     "badge": "/images/certs/udacity.png",
     "color": "purple"

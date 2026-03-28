@@ -133,6 +133,15 @@
       "company": "Microsoft",
       "role": "Digital Cloud Solution Architect",
       "period": "Current",
+      "startDate": "2025-11",
+      "endDate": null,
+      "icon": "rocket",
+      "summary": "Partnering with startups & unicorns to architect scalable, AI-powered cloud-native platforms on Azure.",
+      "technologies": ["Azure", "Kubernetes", "Terraform", "AI Foundry", "Generative AI"],
+      "stats": [
+        { "value": "80+", "label": "Startups Empowered" },
+        { "value": "3x", "label": "Avg Cloud ROI" }
+      ],
       "highlights": [
         "Architect and modernize cloud-native platforms for high-growth startups and digital natives",
         "Design secure, scalable Azure solutions aligned to measurable business outcomes",
@@ -143,14 +152,92 @@
     {
       "company": "Microsoft",
       "role": "Azure Developer Support Engineer",
-      "period": "Previous",
+      "period": "Sep 2022 – Oct 2025",
+      "startDate": "2022-09",
+      "endDate": "2025-10",
+      "icon": "headset",
+      "summary": "Resolved 500+ Azure production issues, trained 30,000+ engineers, and shipped product features with engineering teams.",
+      "technologies": ["Azure PaaS", "APIM", "App Service", "Azure Functions", "Dynamics 365"],
+      "stats": [
+        { "value": "500+", "label": "Issues Resolved" },
+        { "value": "30K+", "label": "Engineers Trained" },
+        { "value": "5/5", "label": "CSAT Score" },
+        { "value": "30%", "label": "Faster Resolution" }
+      ],
       "highlights": [
-        "Resolved 700+ production Azure issues across PaaS and cloud services",
-        "Delivered 70+ sessions on Azure and AI, training 30,000+ engineers and customers",
-        "Collaborated with product engineering on APIM Workspace and Copilot features",
-        "Achieved consistent 5/5 customer satisfaction ratings",
-        "Served as SME for Microsoft Startups Hub, mentoring early-stage startups"
+        "Resolved 500+ Azure technical issues, providing end-to-end support to help clients deploy, troubleshoot, and optimize cloud solutions in production",
+        "Trained 30,000+ tech enthusiasts by delivering 70+ sessions on Azure and AI services",
+        "Collaborated with engineering teams to ship APIM Workspace feature, M365 Copilot Integration with Dynamics, and Case Prioritization in DFM Copilot",
+        "Achieved 5/5 Customer Satisfaction Score, consistently delivering highest KPIs within the Microsoft DAS team",
+        "Contributed as SME for Microsoft Startups Hub Network, mentoring early-stage startups on Azure onboarding and PaaS design",
+        "Developed troubleshooting guides that reduced average resolution time by 30%"
       ]
+    },
+    {
+      "company": "Microsoft",
+      "role": "Support Engineer Intern",
+      "period": "Apr 2022 – Aug 2022",
+      "startDate": "2022-04",
+      "endDate": "2022-08",
+      "icon": "graduation-cap",
+      "summary": "Intensive Azure training program building deep expertise across compute, storage, networking, and cloud troubleshooting.",
+      "technologies": ["Azure Compute", "Azure Storage", "Azure Networking", "Cloud Architecture"],
+      "stats": [
+        { "value": "2nd", "label": "Aspireathon Rank" },
+        { "value": "3mo", "label": "Training Program" }
+      ],
+      "highlights": [
+        "Completed intensive 3-month Azure training program, building deep expertise in Azure services, networking fundamentals, and cloud troubleshooting",
+        "Designed Azure-based healthcare solution during Microsoft's Aspireathon hackathon — secured 2nd place",
+        "Presented Azure architecture solution to stakeholders, illustrating full-stack cloud design and business impact"
+      ]
+    },
+    {
+      "company": "Whizlabs Software Pvt Ltd",
+      "role": "Cloud Products Associate",
+      "period": "Feb 2021 – Mar 2022",
+      "startDate": "2021-02",
+      "endDate": "2022-03",
+      "icon": "layers",
+      "summary": "Built the Azure Labs Platform driving 210% increase in course sales and architected 300+ custom lab environments.",
+      "technologies": ["Azure", "Azure Well-Architected Framework", "Cloud Labs", "Product Management"],
+      "stats": [
+        { "value": "210%", "label": "Sales Increase" },
+        { "value": "300+", "label": "Labs Architected" },
+        { "value": "4.8/5", "label": "User Satisfaction" },
+        { "value": "30%", "label": "Cost Optimized" }
+      ],
+      "highlights": [
+        "Developed and managed the Azure Labs Platform for Certification training, driving a 210% increase in course sales",
+        "Architected 300+ custom Azure lab environments for real-world case studies, maintaining 4.8/5 user satisfaction",
+        "Optimized cloud operations costs by 30% through Azure Well-Architected Framework best practices",
+        "Authored comprehensive PRDs and coordinated across engineering, UX, and content teams for new cloud product features",
+        "Conducted market research and competitor analysis, helping position Whizlabs as a leading Azure certification provider"
+      ]
+    }
+  ],
+  "research": [
+    {
+      "title": "Criminal Combat: Crime Analysis and Prediction Using Machine Learning",
+      "publisher": "IEEE",
+      "year": 2021
+    }
+  ],
+  "extracurricular": [
+    {
+      "role": "Organizer and Community Leader",
+      "org": "Microsoft Azure Developer Community India",
+      "period": "September 2021 – Present"
+    },
+    {
+      "role": "AWS Community Builder for Dev Tools",
+      "org": "Amazon Web Services",
+      "period": "October 2021 – April 2022"
+    },
+    {
+      "role": "Organizer and Community Leader",
+      "org": "AWS User Group India & South Asia",
+      "period": "January 2021 – April 2022"
     }
   ]
 }
