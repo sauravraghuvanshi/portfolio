@@ -61,8 +61,17 @@ export function TimelineCard({ entry, isExpanded, onToggle, index }: TimelineCar
       <div className="p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-slate-900 dark:text-white text-base leading-snug">
+            <h3 className="font-semibold text-slate-900 dark:text-white text-base leading-snug flex items-center gap-2">
               {entry.role}
+              {!entry.endDate && (
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-accent-50 dark:bg-accent-950/40 text-accent-600 dark:text-accent-400 text-[10px] font-medium">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-accent-500" />
+                  </span>
+                  Present
+                </span>
+              )}
             </h3>
             <p className="text-brand-600 dark:text-brand-400 text-sm font-medium mt-0.5">
               {entry.company}

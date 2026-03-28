@@ -137,7 +137,7 @@
       "endDate": null,
       "icon": "rocket",
       "summary": "Partnering with startups & unicorns to architect scalable, AI-powered cloud-native platforms on Azure.",
-      "technologies": ["Azure", "Kubernetes", "Terraform", "AI Foundry", "Generative AI"],
+      "technologies": ["Azure", "Agentic AI", "Generative AI", "Well-Architected Framework", "Hybrid & Multi-Cloud"],
       "stats": [
         { "value": "80+", "label": "Startups Empowered" },
         { "value": "3x", "label": "Avg Cloud ROI" }
@@ -156,16 +156,16 @@
       "startDate": "2022-09",
       "endDate": "2025-10",
       "icon": "headset",
-      "summary": "Resolved 500+ Azure production issues, trained 30,000+ engineers, and shipped product features with engineering teams.",
+      "summary": "Resolved 700+ Azure production issues, trained 30,000+ engineers, and shipped product features with engineering teams.",
       "technologies": ["Azure PaaS", "APIM", "App Service", "Azure Functions", "Dynamics 365"],
       "stats": [
-        { "value": "500+", "label": "Issues Resolved" },
+        { "value": "700+", "label": "Issues Resolved" },
         { "value": "30K+", "label": "Engineers Trained" },
         { "value": "5/5", "label": "CSAT Score" },
         { "value": "30%", "label": "Faster Resolution" }
       ],
       "highlights": [
-        "Resolved 500+ Azure technical issues, providing end-to-end support to help clients deploy, troubleshoot, and optimize cloud solutions in production",
+        "Resolved 700+ Azure technical issues, providing end-to-end support to help clients deploy, troubleshoot, and optimize cloud solutions in production",
         "Trained 30,000+ tech enthusiasts by delivering 70+ sessions on Azure and AI services",
         "Collaborated with engineering teams to ship APIM Workspace feature, M365 Copilot Integration with Dynamics, and Case Prioritization in DFM Copilot",
         "Achieved 5/5 Customer Satisfaction Score, consistently delivering highest KPIs within the Microsoft DAS team",

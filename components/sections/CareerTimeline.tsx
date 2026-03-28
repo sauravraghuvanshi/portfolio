@@ -39,9 +39,9 @@ export default function CareerTimeline({ experience }: CareerTimelineProps) {
   };
 
   return (
-    <section aria-labelledby="career-timeline" className="py-16">
+    <section aria-labelledby="career-timeline" className="mb-10">
       <div className="section-container max-w-4xl">
-        <h2 id="career-timeline" className="text-lg font-semibold text-slate-900 dark:text-white mb-8 flex items-center gap-2">
+        <h2 id="career-timeline" className="text-lg font-semibold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
           <Briefcase className="w-5 h-5 text-brand-600 dark:text-brand-400" aria-hidden="true" />
           Experience
         </h2>
@@ -50,14 +50,6 @@ export default function CareerTimeline({ experience }: CareerTimelineProps) {
         <div className="relative">
           {/* Connector line */}
           <div className="absolute left-[19px] top-0 bottom-0 w-[2px] bg-gradient-to-b from-brand-400 dark:from-brand-600 via-slate-200 dark:via-slate-700 to-slate-200 dark:to-slate-800" />
-
-          {/* Present pulse at top of line */}
-          <div className="absolute left-[14px] -top-1 z-10">
-            <span className="relative flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-accent-500" />
-            </span>
-          </div>
 
           <div className="space-y-8">
             {experience.map((entry, i) => (
