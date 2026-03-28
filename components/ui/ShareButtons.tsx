@@ -11,6 +11,7 @@ interface ShareButtonsProps {
 
 export default function ShareButtons({ title, url }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
+  const [linkedInCopied, setLinkedInCopied] = useState(false);
 
   const fullUrl = `${SITE_URL}${url}`;
 
@@ -21,21 +22,40 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
     });
   }, [fullUrl]);
 
+  const handleLinkedIn = useCallback(() => {
+    const postText = `${title}\n\n${fullUrl}`;
+    navigator.clipboard.writeText(postText).then(() => {
+      setLinkedInCopied(true);
+      setTimeout(() => setLinkedInCopied(false), 3000);
+      window.open(
+        `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(fullUrl)}&title=${encodeURIComponent(title)}`,
+        "_blank",
+        "noopener,noreferrer"
+      );
+    });
+  }, [title, fullUrl]);
+
   const encodedUrl = encodeURIComponent(fullUrl);
   const encodedTitle = encodeURIComponent(title);
 
   return (
     <div className="flex items-center gap-2">
       <span className="text-xs text-slate-400 dark:text-slate-500 mr-1">Share</span>
-      <a
-        href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Share on LinkedIn"
-        className="p-2 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors"
-      >
-        <Linkedin className="w-4 h-4" />
-      </a>
+      <div className="relative">
+        <button
+          type="button"
+          onClick={handleLinkedIn}
+          aria-label="Share on LinkedIn (copies post text to clipboard)"
+          className="p-2 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors"
+        >
+          <Linkedin className="w-4 h-4" />
+        </button>
+        {linkedInCopied && (
+          <span className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-[10px] px-2 py-1 rounded bg-slate-800 text-white dark:bg-slate-200 dark:text-slate-800 shadow-lg">
+            Post copied! Paste in LinkedIn
+          </span>
+        )}
+      </div>
       <a
         href={`https://x.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`}
         target="_blank"

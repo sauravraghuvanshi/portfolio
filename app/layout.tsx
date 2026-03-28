@@ -4,8 +4,11 @@ import { GeistMono } from "geist/font/mono";
 import Navigation from "@/components/layout/Navigation";
 import Footer from "@/components/layout/Footer";
 import LayoutShell from "@/components/layout/LayoutShell";
+import CommandPalette from "@/components/ui/CommandPalette";
+import type { SearchItem } from "@/components/ui/CommandPalette";
 import { PersonSchema, WebSiteSchema } from "@/components/JsonLd";
 import { SITE_URL } from "@/lib/constants";
+import { getAllBlogPosts, getAllCaseStudies, getProjects, getTalks, getEvents, getProfile } from "@/lib/content";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -84,6 +87,48 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Build lightweight search index for command palette
+  const searchIndex: SearchItem[] = [
+    ...getAllBlogPosts().map((p) => ({
+      title: p.title,
+      description: p.description,
+      url: `/blog/${p.slug}`,
+      type: "blog" as const,
+    })),
+    ...getAllCaseStudies().map((cs) => ({
+      title: cs.title,
+      description: cs.subtitle,
+      url: `/case-studies/${cs.slug}`,
+      type: "case-study" as const,
+    })),
+    ...getProjects().map((p) => ({
+      title: p.title,
+      description: p.description,
+      url: `/projects`,
+      type: "project" as const,
+    })),
+    ...getTalks().map((t) => ({
+      title: t.title,
+      description: t.description || t.topic,
+      url: `/talks`,
+      type: "talk" as const,
+    })),
+    ...getEvents().map((e) => ({
+      title: e.title,
+      description: e.summary?.slice(0, 100),
+      url: `/events/${e.slug}`,
+      type: "event" as const,
+    })),
+  ];
+
+  const profile = getProfile();
+  const socialLinks = {
+    linkedin: profile.social?.linkedin ?? "",
+    github: profile.social?.github ?? "",
+    twitter: profile.social?.twitter ?? "",
+    calendly: profile.social?.calendly ?? "",
+  };
+
   return (
     <html
       lang="en"
@@ -107,6 +152,7 @@ export default function RootLayout({
         <WebSiteSchema />
       </head>
       <body className="min-h-screen flex flex-col antialiased">
+        <CommandPalette searchIndex={searchIndex} socialLinks={socialLinks} />
         <LayoutShell
           navigation={<Navigation />}
           footer={<Footer />}

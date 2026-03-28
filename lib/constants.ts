@@ -1,1 +1,1 @@
-export const SITE_URL = "https://sauravraghuvanshi.dev";
+export const SITE_URL = "https://saurav-portfolio.azurewebsites.net";

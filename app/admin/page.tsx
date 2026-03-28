@@ -16,7 +16,7 @@ export default function AdminDashboard() {
   const totalPublished = publishedPosts.length + caseStudies.length + projects.length + talks.length + events.length + certifications.length;
 
   const stats = [
-    { label: "Blog Posts", value: allPosts.length, icon: FileText },
+    { label: "Blogs", value: allPosts.length, icon: FileText },
     { label: "Case Studies", value: caseStudies.length, icon: BookOpen },
     { label: "Projects", value: projects.length, icon: FolderKanban },
     { label: "Talks", value: talks.length, icon: Video },
@@ -33,10 +33,10 @@ export default function AdminDashboard() {
         <div className="flex items-center gap-2">
           <Link
             href="/admin/blog/new"
-            className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-700"
+            className="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-surface-dark px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800"
           >
             <Plus className="h-4 w-4" />
-            New Post
+            New Blog
           </Link>
           <Link
             href="/admin/case-studies/new"
@@ -98,7 +98,7 @@ export default function AdminDashboard() {
       {/* Recent Blog Posts */}
       <div className="rounded-xl border border-slate-800 bg-surface-dark">
         <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
-          <h2 className="font-semibold text-white">Blog Posts</h2>
+          <h2 className="font-semibold text-white">Blogs</h2>
           <Link href="/admin/blog" className="text-xs text-brand-400 hover:underline">
             View all
           </Link>

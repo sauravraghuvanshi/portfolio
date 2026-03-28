@@ -10,13 +10,13 @@ export default function AdminBlogListPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-white">Blog Posts</h1>
+        <h1 className="text-2xl font-bold text-white">Blogs</h1>
         <Link
           href="/admin/blog/new"
           className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-700"
         >
           <Plus className="h-4 w-4" />
-          New Post
+          New Blog
         </Link>
       </div>
 

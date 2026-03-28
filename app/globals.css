@@ -246,4 +246,21 @@
   .shadow-glass-dark  { box-shadow: var(--shadow-glass-dark); }
   .shadow-glow        { box-shadow: var(--shadow-glow); }
   .shadow-glow-strong { box-shadow: var(--shadow-glow-strong); }
+
+  /* Command palette animations */
+  .cmdk-overlay {
+    animation: cmdk-overlay-show 150ms ease-out;
+  }
+  .cmdk-dialog {
+    animation: cmdk-dialog-show 150ms ease-out;
+  }
+
+  @keyframes cmdk-overlay-show {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes cmdk-dialog-show {
+    from { opacity: 0; transform: scale(0.98) translateY(-4px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
 }

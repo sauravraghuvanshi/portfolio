@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Moon, Sun, Download } from "lucide-react";
+import { Menu, X, Moon, Sun, Download, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -30,6 +30,15 @@ export default function Navigation() {
     const preferred = saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
     setTheme(preferred);
     document.documentElement.classList.toggle("dark", preferred === "dark");
+  }, []);
+
+  // Sync theme when toggled externally (e.g. from CommandPalette)
+  useEffect(() => {
+    const handler = (e: Event) => {
+      setTheme((e as CustomEvent).detail as "light" | "dark");
+    };
+    window.addEventListener("themechange", handler);
+    return () => window.removeEventListener("themechange", handler);
   }, []);
 
   useEffect(() => {
@@ -111,6 +120,21 @@ export default function Navigation() {
 
           {/* Actions */}
           <div className="flex items-center gap-2">
+            {/* Search / Command palette trigger */}
+            <button
+              onClick={() => {
+                document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
+              }}
+              className="hidden md:inline-flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 bg-slate-100 dark:bg-slate-800/60 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 text-xs"
+              aria-label="Open command palette (Ctrl+K)"
+            >
+              <Search className="w-3.5 h-3.5" />
+              <span className="text-slate-400 dark:text-slate-500">Search...</span>
+              <kbd className="ml-1 px-1.5 py-0.5 text-[10px] font-mono bg-white dark:bg-slate-700 rounded border border-slate-200 dark:border-slate-600 text-slate-400">
+                ⌘K
+              </kbd>
+            </button>
+
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"

@@ -26,8 +26,8 @@ const navSections = [
   {
     title: "Blog",
     items: [
-      { label: "Blog Posts", href: "/admin/blog", icon: FileText },
-      { label: "New Post", href: "/admin/blog/new", icon: PenSquare },
+      { label: "Blogs", href: "/admin/blog", icon: FileText },
+      { label: "New Blog", href: "/admin/blog/new", icon: PenSquare },
     ],
   },
   {
