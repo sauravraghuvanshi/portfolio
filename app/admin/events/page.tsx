@@ -38,6 +38,7 @@ export default function AdminEventsListPage() {
                 <th className="px-5 py-3 font-medium">Year</th>
                 <th className="px-5 py-3 font-medium">Format</th>
                 <th className="px-5 py-3 font-medium">Topic</th>
+                <th className="px-5 py-3 font-medium">Location</th>
                 <th className="px-5 py-3 font-medium">Featured</th>
                 <th className="px-5 py-3 font-medium text-right">Actions</th>
               </tr>
@@ -51,6 +52,16 @@ export default function AdminEventsListPage() {
                   <td className="px-5 py-3 text-slate-400">{event.year}</td>
                   <td className="px-5 py-3">{event.format}</td>
                   <td className="px-5 py-3">{event.topic}</td>
+                  <td className="px-5 py-3">
+                    {event.location ? (
+                      <span className="inline-flex items-center gap-1 text-slate-300">
+                        <span className="w-1.5 h-1.5 rounded-full bg-brand-500" />
+                        {event.location.city}
+                      </span>
+                    ) : (
+                      <span className="text-slate-500 italic">Virtual</span>
+                    )}
+                  </td>
                   <td className="px-5 py-3">
                     {event.featured && (
                       <span className="rounded-full bg-accent-500/15 px-2 py-0.5 text-xs font-medium text-accent-400">
