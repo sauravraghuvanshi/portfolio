@@ -1,5 +1,9 @@
 import { createUIMessageStreamResponse, createUIMessageStream } from "ai";
-import { AzureCliCredential } from "@azure/identity";
+import {
+  ManagedIdentityCredential,
+  AzureCliCredential,
+  type TokenCredential,
+} from "@azure/identity";
 import { auth } from "@/auth";
 import { buildSystemPrompt } from "@/lib/ai/system-prompt";
 import { CONTENT_TYPES } from "@/lib/ai/content-schemas";
@@ -8,10 +12,19 @@ import type { AIContentType } from "@/types/ai-writer";
 export const maxDuration = 120;
 
 // Cached credential (reused across requests)
-let cachedCredential: AzureCliCredential | null = null;
+let cachedCredential: TokenCredential | null = null;
 
-function getCredential(): AzureCliCredential {
-  if (!cachedCredential) cachedCredential = new AzureCliCredential();
+function getCredential(): TokenCredential {
+  if (!cachedCredential) {
+    // WEBSITE_SITE_NAME is set automatically on Azure App Service
+    if (process.env.WEBSITE_SITE_NAME) {
+      console.log("[ai-writer] Using ManagedIdentityCredential (App Service)");
+      cachedCredential = new ManagedIdentityCredential();
+    } else {
+      console.log("[ai-writer] Using AzureCliCredential (local dev)");
+      cachedCredential = new AzureCliCredential();
+    }
+  }
   return cachedCredential;
 }
 
