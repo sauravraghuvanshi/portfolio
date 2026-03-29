@@ -3,8 +3,8 @@ import type { ContentTypeConfig, GroundingResult } from "@/types/ai-writer";
 interface SystemPromptOptions {
   contentType: string;
   schema: ContentTypeConfig;
-  portfolioContext: string;
-  groundingResults: GroundingResult[];
+  portfolioContext?: string;
+  groundingResults?: GroundingResult[];
 }
 
 export function buildSystemPrompt({
@@ -13,8 +13,23 @@ export function buildSystemPrompt({
   portfolioContext,
   groundingResults,
 }: SystemPromptOptions): string {
+  const questionsFormatted = schema.requiredQuestions
+    .map((q, i) => `${i + 1}. ${q}`)
+    .join("\n");
+
+  const optionalFormatted =
+    schema.optionalQuestions.length > 0
+      ? `\nOptional (ask after essentials):\n${schema.optionalQuestions.map((q) => `- ${q}`).join("\n")}`
+      : "";
+
+  // Portfolio context section (used in both agent and fallback)
+  const portfolioSection = portfolioContext
+    ? `\n## Existing Portfolio Context\n${portfolioContext}\n`
+    : "";
+
+  // Grounding section (used in fallback; agent handles grounding via tools)
   const groundingSection =
-    groundingResults.length > 0
+    groundingResults && groundingResults.length > 0
       ? `
 ## Microsoft Learn Grounding (Use These Sources)
 The following are verified facts from official Microsoft documentation. Reference them when relevant:
@@ -29,18 +44,6 @@ RULES:
 - Cite source URLs in your sources[] output for every Microsoft/Azure claim you make.
 - If you state something about Azure that is NOT in these sources, label it as "Needs verification" in verificationNotes[].
 `
-      : `
-## Grounding
-No external sources were retrieved for this request. If you mention Microsoft/Azure product facts, add them to verificationNotes[] so the author can verify.
-`;
-
-  const questionsFormatted = schema.requiredQuestions
-    .map((q, i) => `${i + 1}. ${q}`)
-    .join("\n");
-
-  const optionalFormatted =
-    schema.optionalQuestions.length > 0
-      ? `\nOptional (ask after essentials):\n${schema.optionalQuestions.map((q) => `- ${q}`).join("\n")}`
       : "";
 
   return `You are the Portfolio Admin Agent (Agentic AI Writer) for Saurav Raghuvanshi's portfolio website.
@@ -65,10 +68,17 @@ Create a **${schema.label}** (content type: ${contentType}).
 ## Required Questions for ${schema.label}
 ${questionsFormatted}
 ${optionalFormatted}
+${portfolioSection}${groundingSection}
+## Tools Available
+You have access to:
+- **Portfolio Knowledge** (file_search): Search Saurav's portfolio data — projects, case studies, events, talks, certifications, blog posts, experience. USE THIS when referencing past work.
+- **Web Search**: Search the internet for current Azure/Microsoft topics, documentation, and trends.
+- **Microsoft Learn**: Access official Microsoft documentation for accurate Azure/AI product information.
 
-## Existing Portfolio Context
-${portfolioContext || "No additional context available."}
-${groundingSection}
+When writing content:
+- Use portfolio knowledge to reference Saurav's actual experience, projects, and metrics
+- Use web search and Microsoft Learn for accurate Azure product facts
+- Cite sources when making Azure/Microsoft product claims
 
 ## Output Format
 When the author has provided enough information and you generate the final draft, return:
@@ -97,6 +107,14 @@ When the author has provided enough information and you generate the final draft
 - Frame as: Business goal → constraints → architecture → decisions → results
 - Never invent metrics the author didn't provide
 - Never hallucinate Microsoft product features
+
+## Inline Citations (Critical)
+- **ALWAYS embed hyperlinks inline** throughout the content using markdown link syntax: \`[descriptive text](URL)\`
+- When referencing Azure services, features, or APIs — link directly to the Microsoft Learn documentation page
+- When referencing Saurav's portfolio content — link to the portfolio page (e.g., \`[SupportIQ case study](https://saurav-portfolio.azurewebsites.net/case-studies/supportiq-genai)\`)
+- Every technical claim about an Azure service MUST have an inline link to its documentation
+- Do NOT only list sources at the bottom — weave them into the text naturally
+- The Sources section at the end should be a summary of all links used, not the only place they appear
 
 ## Important
 - Do NOT generate content until the author has answered your questions.

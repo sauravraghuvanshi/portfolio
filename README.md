@@ -24,7 +24,7 @@
 - **Scroll Progress** — Reading progress bar on blog and case study detail pages
 - **Code Copy Button** — Hover-to-reveal copy button on all MDX code blocks
 - **Noise Texture** — Subtle SVG noise overlay for visual depth
-- **AI Writer** — AI-powered content creation assistant at `/admin/ai-writer` using Azure OpenAI GPT-4o via Vercel AI SDK v5 streaming, content type selection (Blog, Case Study, Project, Talk, Event, Social), and save-to-CMS integration. Phase 2 (planned): Full AI Foundry Agent with portfolio data grounding, Microsoft Learn MCP server, and Bing Search API.
+- **AI Writer (Agentic)** — AI-powered content creation assistant at `/admin/ai-writer` backed by an **Azure AI Foundry Agent** with three grounding sources: portfolio knowledge base (RAG via vector store with 12 indexed documents), Microsoft Learn MCP server (official Azure documentation), and Web Search. Uses stateful Responses API with automatic MCP tool-approval flow, AAD authentication, and inline source citations. Content types: Blog, Case Study, Project, Talk, Event, Social.
 - **Admin Panel** — Protected dashboard at `/admin` with authentication, managing blogs, case studies, projects, talks, events, and certifications
 - **Blog Editor** — Medium-style MDX editor with live preview, image upload, and drag-and-drop media
 - **Case Study Editor** — MDX editor for case studies with metrics, timeline, role, and client fields
@@ -53,8 +53,8 @@
 | Auth | NextAuth v5 (Credentials provider, JWT sessions) |
 | Editor | `@uiw/react-md-editor` with custom toolbar |
 | Image Storage | Azure Blob Storage (`@azure/storage-blob`) |
-| AI | Vercel AI SDK v5 (`ai`, `@ai-sdk/azure`, `@ai-sdk/react`) |
-| AI Backend | Azure AI Foundry (`saurav-portfolio-ai`, East US) |
+| AI | Vercel AI SDK v5 (`ai`, `@ai-sdk/react`) · Azure AI Foundry Agent (Responses API) |
+| AI Backend | Azure AI Foundry (`saurav-portfolio-ai`, East US) — Agent with file_search + Web Search + Microsoft Learn MCP |
 | Deployment | Azure App Service (Linux, Node 20 LTS, F1 Free) |
 | CI/CD | GitHub Actions → Kudu zip-deploy |
 
@@ -83,7 +83,8 @@ npm run dev                   # http://localhost:3000
 | `AZURE_OPENAI_ENDPOINT` | No | Azure AI Foundry endpoint (for AI Writer) |
 | `AZURE_OPENAI_API_KEY` | No | Azure AI Foundry API key (for AI Writer) |
 | `AZURE_OPENAI_DEPLOYMENT` | No | GPT-4o deployment name (default: `gpt-4o`) |
-| `BING_SEARCH_KEY` | No | Bing Search API key (for AI Writer grounding) |
+| `AZURE_FOUNDRY_PROJECT_ENDPOINT` | No | Azure AI Foundry project endpoint (for AI Writer Agent) |
+| `AZURE_FOUNDRY_AGENT_NAME` | No | Foundry Agent name (for AI Writer Agent) |
 
 > On Azure App Service, also set `AUTH_URL` to the public site URL (required for NextAuth callback resolution).
 
@@ -227,9 +228,7 @@ portfolio/
 │   ├── admin.ts                      # Blog, Case Study, Project, Talk, Event, Certification CRUD + image upload helpers
 │   ├── ai/                           # AI Writer helpers
 │   │   ├── content-schemas.ts        # Content type configs + question sets
-│   │   ├── system-prompt.ts          # Dynamic system prompt builder
-│   │   ├── grounding.ts              # Bing Search + Azure AI Search helpers
-│   │   └── portfolio-context.ts      # RAG context from existing portfolio content
+│   │   └── system-prompt.ts          # Dynamic system prompt builder
 │   ├── azure-storage.ts              # Azure Blob Storage client (uploadToBlob)
 │   ├── mdx-components.tsx            # Shared MDX component map
 │   └── utils.ts                      # cn(), formatDate(), etc.
@@ -237,6 +236,7 @@ portfolio/
 ├── middleware.ts                      # Protects /admin/* routes
 ├── scripts/
 │   ├── generate-events.mjs           # DOCX → events.json + photos
+│   ├── build-portfolio-rag.mjs       # RAG pipeline: extract portfolio → Foundry vector store
 │   └── postbuild.mjs                 # Copies public/ + static/ into standalone/
 └── public/                           # Static assets (images, resume PDF)
 ```
@@ -298,7 +298,7 @@ CI/CD is fully automated via GitHub Actions. Every push to `main`:
 | App Service | `saurav-portfolio.azurewebsites.net` |
 | Storage Account | `sauravportfoliomedia` |
 | Blob Container | `blog-images` (public access) — organized as `blog/`, `events/`, `case-studies/`, `certifications/` subfolders |
-| AI Foundry | `saurav-portfolio-ai` (East US, AIServices, S0) |
+| AI Foundry | `saurav-portfolio-ai` (East US, AIServices, S0) — Agent: `saurav-portfolio-ai-project-agent` |
 | Region | Central India (App Service) · East US (AI Foundry) |
 | Plan | F1 Free (Linux, Node 20) |
 
