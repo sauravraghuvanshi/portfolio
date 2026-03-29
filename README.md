@@ -24,6 +24,7 @@
 - **Scroll Progress** — Reading progress bar on blog and case study detail pages
 - **Code Copy Button** — Hover-to-reveal copy button on all MDX code blocks
 - **Noise Texture** — Subtle SVG noise overlay for visual depth
+- **AI Writer** — AI-powered content creation assistant at `/admin/ai-writer` using Azure AI Foundry Agent with Vercel AI SDK v5 streaming, content type selection (Blog, Case Study, Project, Talk, Event, Social), and save-to-CMS integration
 - **Admin Panel** — Protected dashboard at `/admin` with authentication, managing blogs, case studies, projects, talks, events, and certifications
 - **Blog Editor** — Medium-style MDX editor with live preview, image upload, and drag-and-drop media
 - **Case Study Editor** — MDX editor for case studies with metrics, timeline, role, and client fields
@@ -52,6 +53,8 @@
 | Auth | NextAuth v5 (Credentials provider, JWT sessions) |
 | Editor | `@uiw/react-md-editor` with custom toolbar |
 | Image Storage | Azure Blob Storage (`@azure/storage-blob`) |
+| AI | Vercel AI SDK v5 (`ai`, `@ai-sdk/azure`, `@ai-sdk/react`) |
+| AI Backend | Azure AI Foundry (`saurav-portfolio-ai`, East US) |
 | Deployment | Azure App Service (Linux, Node 20 LTS, F1 Free) |
 | CI/CD | GitHub Actions → Kudu zip-deploy |
 
@@ -77,6 +80,10 @@ npm run dev                   # http://localhost:3000
 | `AZURE_STORAGE_CONNECTION_STRING` | Yes | Azure Blob Storage connection string |
 | `AZURE_STORAGE_CONTAINER_NAME` | Yes | Container name (default: `blog-images`) |
 | `NEXT_PUBLIC_AZURE_STORAGE_URL` | Yes | Public blob URL base (build-time inlined) |
+| `AZURE_OPENAI_ENDPOINT` | No | Azure AI Foundry endpoint (for AI Writer) |
+| `AZURE_OPENAI_API_KEY` | No | Azure AI Foundry API key (for AI Writer) |
+| `AZURE_OPENAI_DEPLOYMENT` | No | GPT-4o deployment name (default: `gpt-4o`) |
+| `BING_SEARCH_KEY` | No | Bing Search API key (for AI Writer grounding) |
 
 > On Azure App Service, also set `AUTH_URL` to the public site URL (required for NextAuth callback resolution).
 
@@ -165,10 +172,12 @@ portfolio/
 │   │   │   ├── page.tsx              # Event list (admin)
 │   │   │   ├── new/page.tsx          # Create new event
 │   │   │   └── [slug]/edit/page.tsx  # Edit existing event
-│   │   └── certifications/
-│   │       ├── page.tsx              # Certification list (admin)
-│   │       ├── new/page.tsx          # Create new certification
-│   │       └── [code]/edit/page.tsx  # Edit existing certification
+│   │   ├── certifications/
+│   │   │   ├── page.tsx              # Certification list (admin)
+│   │   │   ├── new/page.tsx          # Create new certification
+│   │   │   └── [code]/edit/page.tsx  # Edit existing certification
+│   │   └── ai-writer/
+│   │       └── page.tsx              # AI Writer — content creation assistant
 │   ├── api/
 │   │   ├── auth/[...nextauth]/route.ts  # NextAuth handler
 │   │   └── admin/
@@ -184,7 +193,8 @@ portfolio/
 │   │       ├── events/[slug]/route.ts  # PUT/DELETE — update/delete event
 │   │       ├── certifications/route.ts  # POST — create certification
 │   │       ├── certifications/[code]/route.ts  # PUT/DELETE — update/delete certification
-│   │       └── upload/route.ts       # POST — image upload to Azure Blob
+│   │       ├── upload/route.ts       # POST — image upload to Azure Blob
+│   │       └── ai-writer/route.ts    # POST — AI Writer streaming chat endpoint
 │   ├── case-studies/
 │   │   ├── page.tsx                  # Case studies listing
 │   │   └── [slug]/page.tsx           # Individual case study (MDX)
@@ -199,7 +209,8 @@ portfolio/
 │   ├── layout/                       # Navigation, Footer, LayoutShell
 │   ├── sections/                     # Homepage sections + BlogGrid, FeaturedBlogPosts, CareerTimeline, SpeakingMap
 │   ├── timeline/                     # TimelineCard, StatCounter (career timeline)
-│   ├── admin/                        # AdminSidebar, BlogEditor, CaseStudyEditor, ProjectEditor, TalkEditor, EventEditor, CertificationEditor, CategoryMultiSelect, MediaResizeBar, DeleteItemButton
+│   ├── admin/                        # AdminSidebar, BlogEditor, CaseStudyEditor, ProjectEditor, TalkEditor, EventEditor, CertificationEditor, AIWriter, CategoryMultiSelect, MediaResizeBar, DeleteItemButton
+│   ├── admin/ai-writer/              # ContentTypeSelector, ChatMessages, ContentPreview
 │   ├── events/                       # EventGallery (lightbox)
 │   └── ui/                           # Primitives (Badge, Card, YouTubeEmbed, CommandPalette, ShareButtons, ScrollProgress, CodeBlock, TableOfContents, etc.)
 ├── content/
@@ -214,6 +225,11 @@ portfolio/
 ├── lib/
 │   ├── content.ts                    # Data loading (profiles, blogs, events, talks)
 │   ├── admin.ts                      # Blog, Case Study, Project, Talk, Event, Certification CRUD + image upload helpers
+│   ├── ai/                           # AI Writer helpers
+│   │   ├── content-schemas.ts        # Content type configs + question sets
+│   │   ├── system-prompt.ts          # Dynamic system prompt builder
+│   │   ├── grounding.ts              # Bing Search + Azure AI Search helpers
+│   │   └── portfolio-context.ts      # RAG context from existing portfolio content
 │   ├── azure-storage.ts              # Azure Blob Storage client (uploadToBlob)
 │   ├── mdx-components.tsx            # Shared MDX component map
 │   └── utils.ts                      # cn(), formatDate(), etc.
@@ -262,6 +278,7 @@ portfolio/
 | `/admin/certifications` | Certification management |
 | `/admin/certifications/new` | Create new certification |
 | `/admin/certifications/[code]/edit` | Edit existing certification |
+| `/admin/ai-writer` | AI Writer — content creation assistant |
 
 ---
 
@@ -281,7 +298,8 @@ CI/CD is fully automated via GitHub Actions. Every push to `main`:
 | App Service | `saurav-portfolio.azurewebsites.net` |
 | Storage Account | `sauravportfoliomedia` |
 | Blob Container | `blog-images` (public access) — organized as `blog/`, `events/`, `case-studies/`, `certifications/` subfolders |
-| Region | Central India |
+| AI Foundry | `saurav-portfolio-ai` (East US, AIServices, S0) |
+| Region | Central India (App Service) · East US (AI Foundry) |
 | Plan | F1 Free (Linux, Node 20) |
 
 ### GitHub Secrets

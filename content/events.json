@@ -802,7 +802,13 @@
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/cloud-computing-as-a-career-and-journey-to-microsoft/cover.jpg",
     "images": [],
     "coverImagePosition": "bottom",
-    "location": null
+    "featured": false,
+    "location": {
+      "city": "Noida",
+      "country": "India",
+      "lat": 28.5355,
+      "lng": 77.391
+    }
   },
   {
     "slug": "azure-generative-ai-day",

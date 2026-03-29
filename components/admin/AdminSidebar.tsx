@@ -15,12 +15,19 @@ import {
   Award,
   Plus,
   LogOut,
+  Sparkles,
 } from "lucide-react";
 
 const navSections = [
   {
     items: [
       { label: "Dashboard", href: "/admin", icon: LayoutDashboard, exact: true },
+    ],
+  },
+  {
+    title: "AI Tools",
+    items: [
+      { label: "AI Writer", href: "/admin/ai-writer", icon: Sparkles },
     ],
   },
   {

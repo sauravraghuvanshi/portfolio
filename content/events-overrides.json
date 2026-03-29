@@ -742,7 +742,13 @@
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/cloud-computing-as-a-career-and-journey-to-microsoft/cover.jpg",
     "coverImagePosition": "bottom",
     "images": [],
-    "location": null
+    "featured": false,
+    "location": {
+      "city": "Noida",
+      "country": "India",
+      "lat": 28.5355,
+      "lng": 77.391
+    }
   },
   "wrapping-up-2024-with-azure-devday-bangalore": {
     "title": "Azure Dev Day Bangalore — End of Year 2024",
