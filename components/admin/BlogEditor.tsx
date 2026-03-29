@@ -4,6 +4,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import CategoryMultiSelect from "./CategoryMultiSelect";
+import { triggerReindex } from "@/lib/triggerReindex";
 import {
   Save,
   Eye,
@@ -253,6 +254,7 @@ export default function BlogEditor({ mode, initialData }: BlogEditorProps) {
         type: "success",
         text: mode === "create" ? "Post created!" : "Post updated!",
       });
+      triggerReindex();
       if (mode === "create" && data.slug) {
         router.push(`/admin/blog/${data.slug}/edit`);
       } else {

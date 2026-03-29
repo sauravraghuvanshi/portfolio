@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Save, Loader2 } from "lucide-react";
 import type { Talk } from "@/lib/content";
+import { triggerReindex } from "@/lib/triggerReindex";
 
 interface TalkEditorProps {
   mode: "create" | "edit";
@@ -65,6 +66,7 @@ export default function TalkEditor({ mode, initialData }: TalkEditorProps) {
         type: "success",
         text: mode === "create" ? "Talk created!" : "Talk updated!",
       });
+      triggerReindex();
       if (mode === "create" && data.id) {
         router.push(`/admin/talks/${data.id}/edit`);
       } else {

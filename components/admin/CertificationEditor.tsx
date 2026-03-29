@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Save, Loader2, Upload, X } from "lucide-react";
 import type { Certification } from "@/lib/content";
+import { triggerReindex } from "@/lib/triggerReindex";
 
 interface CertificationEditorProps {
   mode: "create" | "edit";
@@ -103,6 +104,7 @@ export default function CertificationEditor({ mode, initialData }: Certification
         type: "success",
         text: mode === "create" ? "Certification created!" : "Certification updated!",
       });
+      triggerReindex();
       if (mode === "create" && data.code) {
         router.push(`/admin/certifications/${data.code}/edit`);
       } else {

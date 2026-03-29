@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Trash2 } from "lucide-react";
+import { triggerReindex } from "@/lib/triggerReindex";
 
 export default function DeleteItemButton({
   deleteUrl,
@@ -17,6 +18,7 @@ export default function DeleteItemButton({
   async function handleDelete() {
     const res = await fetch(deleteUrl, { method: "DELETE" });
     if (res.ok) {
+      triggerReindex();
       router.refresh();
     }
   }

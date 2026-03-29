@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Save, Loader2, Plus, X } from "lucide-react";
 import type { Project } from "@/lib/content";
 import CategoryMultiSelect from "./CategoryMultiSelect";
+import { triggerReindex } from "@/lib/triggerReindex";
 
 interface ProjectEditorProps {
   mode: "create" | "edit";
@@ -98,6 +99,7 @@ export default function ProjectEditor({ mode, initialData }: ProjectEditorProps)
         type: "success",
         text: mode === "create" ? "Project created!" : "Project updated!",
       });
+      triggerReindex();
       if (mode === "create" && data.id) {
         router.push(`/admin/projects/${data.id}/edit`);
       } else {

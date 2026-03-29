@@ -4,6 +4,7 @@ import { useState, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Save, Loader2, Plus, X, Upload, Image as ImageIcon, Search, MapPin } from "lucide-react";
 import type { EventMeta } from "@/lib/content";
+import { triggerReindex } from "@/lib/triggerReindex";
 
 interface CityEntry {
   city: string;
@@ -236,6 +237,7 @@ export default function EventEditor({ mode, initialData }: EventEditorProps) {
         type: "success",
         text: mode === "create" ? "Event created!" : "Event updated!",
       });
+      triggerReindex();
       if (mode === "create" && data.slug) {
         router.push(`/admin/events/${data.slug}/edit`);
       } else {

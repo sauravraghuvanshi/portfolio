@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Send, ArrowLeft, Sparkles } from "lucide-react";
 import type { AIContentType, AIWriterPayload } from "@/types/ai-writer";
 import { CONTENT_TYPES } from "@/lib/ai/content-schemas";
+import { triggerReindex } from "@/lib/triggerReindex";
 import ContentTypeSelector from "./ai-writer/ContentTypeSelector";
 import ChatMessages from "./ai-writer/ChatMessages";
 import { getMessageText } from "./ai-writer/ChatMessages";
@@ -100,8 +101,12 @@ export default function AIWriter() {
 
       if (res.ok) {
         const data = await res.json();
+        triggerReindex();
         const editPath = getEditPath(contentType, data.slug || data.id || data.code);
         if (editPath) router.push(editPath);
+      } else {
+        const err = await res.json().catch(() => ({ error: `Save failed (${res.status})` }));
+        alert(err.error || `Save failed with status ${res.status}`);
       }
     } finally {
       setIsSaving(false);

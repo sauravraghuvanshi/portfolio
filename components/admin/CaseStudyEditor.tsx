@@ -4,6 +4,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import CategoryMultiSelect from "./CategoryMultiSelect";
+import { triggerReindex } from "@/lib/triggerReindex";
 import {
   Save,
   Eye,
@@ -261,6 +262,7 @@ export default function CaseStudyEditor({ mode, initialData }: CaseStudyEditorPr
         type: "success",
         text: mode === "create" ? "Case study created!" : "Case study updated!",
       });
+      triggerReindex();
       if (mode === "create" && data.slug) {
         router.push(`/admin/case-studies/${data.slug}/edit`);
       } else {

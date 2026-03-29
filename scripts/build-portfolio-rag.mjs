@@ -412,15 +412,15 @@ async function pollVectorStore(vsId, timeoutMs = 120_000) {
   throw new Error(`Vector store polling timed out after ${timeoutMs}ms`);
 }
 
-async function listAssistants() {
-  return apiFetch("openai/assistants");
+async function getAgent(agentName) {
+  return apiFetch(`agents/${agentName}`);
 }
 
-async function updateAssistant(assistantId, patch) {
-  return apiFetch(`openai/assistants/${assistantId}`, {
+async function updateAgent(agentName, definitionPatch) {
+  return apiFetch(`agents/${agentName}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(patch),
+    body: JSON.stringify({ definition: definitionPatch }),
   });
 }
 
@@ -511,28 +511,17 @@ async function main() {
   const agentName = process.env.AZURE_FOUNDRY_AGENT_NAME || "saurav-portfolio-ai-project-agent";
 
   try {
-    const assistants = await listAssistants();
-    const agentList = assistants.data || assistants;
-    const agent = agentList.find(
-      (a) => a.name === agentName || a.id === agentName
+    const agent = await getAgent(agentName);
+    const existingTools = (agent.versions?.latest?.definition?.tools || []).filter(
+      (t) => t.type !== "file_search"
     );
-
-    if (!agent) {
-      console.log(`[rag]   Agent "${agentName}" not found in assistants list.`);
-      console.log(`[rag]   Vector store ID for manual configuration: ${vs.id}`);
-      console.log(`[rag]   Add file_search tool with this vector store in the Foundry portal.`);
-    } else {
-      const existingTools = (agent.tools || []).filter(
-        (t) => t.type !== "file_search"
-      );
-      await updateAssistant(agent.id, {
-        tools: [...existingTools, { type: "file_search" }],
-        tool_resources: {
-          file_search: { vector_store_ids: [vs.id] },
-        },
-      });
-      console.log(`[rag]   ✓ Agent "${agentName}" updated with file_search tool`);
-    }
+    await updateAgent(agentName, {
+      tools: [
+        ...existingTools,
+        { type: "file_search", vector_store_ids: [vs.id] },
+      ],
+    });
+    console.log(`[rag]   ✓ Agent "${agentName}" updated with file_search → ${vs.id}`);
   } catch (err) {
     console.log(`[rag]   Could not update agent via API: ${err.message}`);
     console.log(`[rag]   Vector store ID for manual configuration: ${vs.id}`);
