@@ -71,10 +71,12 @@ export async function POST(req: Request) {
     groundingResults,
   });
 
-  // 7. Create Azure OpenAI provider
+  // 7. Create Azure OpenAI provider (AI Services endpoint, not standalone OpenAI)
   const azure = createAzure({
-    resourceName: new URL(endpoint).hostname.split(".")[0],
+    baseURL: `${endpoint.replace(/\/$/, "")}/openai`,
     apiKey,
+    apiVersion: "2024-08-01-preview",
+    useDeploymentBasedUrls: true,
   });
 
   // 8. Stream response

@@ -24,7 +24,7 @@
 - **Scroll Progress** — Reading progress bar on blog and case study detail pages
 - **Code Copy Button** — Hover-to-reveal copy button on all MDX code blocks
 - **Noise Texture** — Subtle SVG noise overlay for visual depth
-- **AI Writer** — AI-powered content creation assistant at `/admin/ai-writer` using Azure AI Foundry Agent with Vercel AI SDK v5 streaming, content type selection (Blog, Case Study, Project, Talk, Event, Social), and save-to-CMS integration
+- **AI Writer** — AI-powered content creation assistant at `/admin/ai-writer` using Azure OpenAI GPT-4o via Vercel AI SDK v5 streaming, content type selection (Blog, Case Study, Project, Talk, Event, Social), and save-to-CMS integration. Phase 2 (planned): Full AI Foundry Agent with portfolio data grounding, Microsoft Learn MCP server, and Bing Search API.
 - **Admin Panel** — Protected dashboard at `/admin` with authentication, managing blogs, case studies, projects, talks, events, and certifications
 - **Blog Editor** — Medium-style MDX editor with live preview, image upload, and drag-and-drop media
 - **Case Study Editor** — MDX editor for case studies with metrics, timeline, role, and client fields
