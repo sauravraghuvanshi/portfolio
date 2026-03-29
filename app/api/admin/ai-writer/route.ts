@@ -73,10 +73,8 @@ export async function POST(req: Request) {
 
   // 7. Create Azure OpenAI provider
   const azure = createAzure({
-    baseURL: `${endpoint.replace(/\/$/, "")}/openai`,
+    resourceName: new URL(endpoint).hostname.split(".")[0],
     apiKey,
-    apiVersion: "2024-10-21",
-    useDeploymentBasedUrls: true,
   });
 
   // 8. Stream response
