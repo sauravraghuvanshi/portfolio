@@ -24,7 +24,8 @@
 - **Scroll Progress** — Reading progress bar on blog and case study detail pages
 - **Code Copy Button** — Hover-to-reveal copy button on all MDX code blocks
 - **Noise Texture** — Subtle SVG noise overlay for visual depth
-- **AI Writer (Agentic)** — AI-powered content creation assistant at `/admin/ai-writer` backed by an **Azure AI Foundry Agent** with three grounding sources: portfolio knowledge base (RAG via vector store with 12 indexed documents), Microsoft Learn MCP server (official Azure documentation), and Web Search. Uses stateful Responses API with automatic MCP tool-approval flow, AAD authentication, and inline source citations. Content types: Blog, Case Study, Project, Talk, Event, Social.
+- **AI Writer (Agentic)** — AI-powered content creation assistant at `/admin/ai-writer` backed by an **Azure AI Foundry Agent** with three grounding sources: portfolio knowledge base (RAG via vector store with 12 indexed documents), Microsoft Learn MCP server (official Azure documentation), and Web Search. Uses stateful Responses API with automatic MCP tool-approval flow, AAD authentication (ManagedIdentity on production, AzureCLI on local dev), and inline source citations. Content types: Blog, Case Study, Project, Talk, Event, Social.
+- **Auto RAG Reindex** — Automatic reindexing pipeline triggers on every content save/delete via admin panel. Extracts portfolio content → uploads to Foundry → creates vector store → updates agent → cleans up old resources. Safe ordering ensures the agent is never left pointing to deleted data.
 - **Admin Panel** — Protected dashboard at `/admin` with authentication, managing blogs, case studies, projects, talks, events, and certifications
 - **Blog Editor** — Medium-style MDX editor with live preview, image upload, and drag-and-drop media
 - **Case Study Editor** — MDX editor for case studies with metrics, timeline, role, and client fields
@@ -195,7 +196,8 @@ portfolio/
 │   │       ├── certifications/route.ts  # POST — create certification
 │   │       ├── certifications/[code]/route.ts  # PUT/DELETE — update/delete certification
 │   │       ├── upload/route.ts       # POST — image upload to Azure Blob
-│   │       └── ai-writer/route.ts    # POST — AI Writer streaming chat endpoint
+│   │       ├── ai-writer/route.ts    # POST — AI Writer streaming chat endpoint
+   199→│   │       └── reindex/route.ts      # POST — Auto RAG reindex pipeline
 │   ├── case-studies/
 │   │   ├── page.tsx                  # Case studies listing
 │   │   └── [slug]/page.tsx           # Individual case study (MDX)
@@ -228,7 +230,9 @@ portfolio/
 │   ├── admin.ts                      # Blog, Case Study, Project, Talk, Event, Certification CRUD + image upload helpers
 │   ├── ai/                           # AI Writer helpers
 │   │   ├── content-schemas.ts        # Content type configs + question sets
-│   │   └── system-prompt.ts          # Dynamic system prompt builder
+│   │   ├── system-prompt.ts          # Dynamic system prompt builder
+│   │   └── rag-pipeline.ts           # RAG pipeline (extract → upload → index → update agent → cleanup)
+│   ├── triggerReindex.ts              # Debounced fire-and-forget reindex trigger
 │   ├── azure-storage.ts              # Azure Blob Storage client (uploadToBlob)
 │   ├── mdx-components.tsx            # Shared MDX component map
 │   └── utils.ts                      # cn(), formatDate(), etc.
