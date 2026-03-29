@@ -358,6 +358,38 @@ async function uploadFile(name, content) {
   return res.json();
 }
 
+async function listVectorStores() {
+  return apiFetch("openai/vector_stores");
+}
+
+async function deleteVectorStore(vsId) {
+  const url = apiUrl(`openai/vector_stores/${vsId}`);
+  const res = await fetch(url, {
+    method: "DELETE",
+    headers: { "api-key": API_KEY },
+  });
+  if (!res.ok && res.status !== 404) {
+    const text = await res.text();
+    throw new Error(`Delete vector store ${vsId} failed: ${res.status} — ${text}`);
+  }
+}
+
+async function deleteFile(fileId) {
+  const url = apiUrl(`openai/files/${fileId}`);
+  const res = await fetch(url, {
+    method: "DELETE",
+    headers: { "api-key": API_KEY },
+  });
+  if (!res.ok && res.status !== 404) {
+    const text = await res.text();
+    throw new Error(`Delete file ${fileId} failed: ${res.status} — ${text}`);
+  }
+}
+
+async function listFiles() {
+  return apiFetch("openai/files");
+}
+
 async function createVectorStore(name, fileIds) {
   return apiFetch("openai/vector_stores", {
     method: "POST",
@@ -414,8 +446,38 @@ async function main() {
     console.log(`[rag]     - ${d.name} (${(d.content.length / 1024).toFixed(1)} KB)`);
   }
 
-  // Step 2: Upload files
-  console.log("[rag] Step 2: Uploading files to Foundry...");
+  // Step 2: Clean up old vector stores and files
+  console.log("[rag] Step 2: Cleaning up old vector stores and files...");
+  try {
+    const stores = await listVectorStores();
+    const storeList = stores.data || stores;
+    const oldStores = (Array.isArray(storeList) ? storeList : []).filter(
+      (s) => s.name === "portfolio-content"
+    );
+    for (const old of oldStores) {
+      await deleteVectorStore(old.id);
+      console.log(`[rag]   ✓ Deleted old vector store: ${old.id}`);
+    }
+
+    const files = await listFiles();
+    const fileList = files.data || files;
+    const oldFiles = (Array.isArray(fileList) ? fileList : []).filter(
+      (f) => f.purpose === "assistants"
+    );
+    for (const old of oldFiles) {
+      await deleteFile(old.id);
+      console.log(`[rag]   ✓ Deleted old file: ${old.id} (${old.filename})`);
+    }
+
+    if (oldStores.length === 0 && oldFiles.length === 0) {
+      console.log("[rag]   No old resources to clean up.");
+    }
+  } catch (err) {
+    console.log(`[rag]   Cleanup warning (non-fatal): ${err.message}`);
+  }
+
+  // Step 3: Upload files
+  console.log("[rag] Step 3: Uploading files to Foundry...");
   const fileIds = [];
   for (const doc of docs) {
     try {
@@ -432,20 +494,20 @@ async function main() {
     process.exit(1);
   }
 
-  // Step 3: Create vector store
-  console.log("[rag] Step 3: Creating vector store...");
+  // Step 4: Create vector store
+  console.log("[rag] Step 4: Creating vector store...");
   const vs = await createVectorStore("portfolio-content", fileIds);
   console.log(`[rag]   Vector store ID: ${vs.id}, status: ${vs.status}`);
 
-  // Step 4: Poll until ready
-  console.log("[rag] Step 4: Waiting for vector store indexing...");
+  // Step 5: Poll until ready
+  console.log("[rag] Step 5: Waiting for vector store indexing...");
   const readyVs = await pollVectorStore(vs.id);
   console.log(
     `[rag]   ✓ Vector store ready — ${readyVs.file_counts?.completed ?? "?"} files indexed`
   );
 
-  // Step 5: Find and update agent
-  console.log("[rag] Step 5: Updating agent with file_search tool...");
+  // Step 6: Find and update agent
+  console.log("[rag] Step 6: Updating agent with file_search tool...");
   const agentName = process.env.AZURE_FOUNDRY_AGENT_NAME || "saurav-portfolio-ai-project-agent";
 
   try {
