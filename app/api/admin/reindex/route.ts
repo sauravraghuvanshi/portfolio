@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { runRagPipeline } from "@/lib/ai/rag-pipeline";
+import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export const maxDuration = 300;
+
+const isDev = process.env.NODE_ENV === "development";
+const log = isDev ? console.log : () => {};
 
 let reindexInProgress = false;
 
@@ -12,15 +16,19 @@ export async function POST() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // Rate limit: 1 request per minute
+  const rl = checkRateLimit("reindex", { limit: 1, windowSeconds: 60 });
+  if (!rl.allowed) return rateLimitResponse(rl.resetInSeconds);
+
   if (reindexInProgress) {
     return NextResponse.json({ status: "already_running" }, { status: 409 });
   }
 
   reindexInProgress = true;
   try {
-    console.log("[reindex] Pipeline started");
+    log("[reindex] Pipeline started");
     const result = await runRagPipeline();
-    console.log("[reindex] Pipeline completed:", result.status);
+    log("[reindex] Pipeline completed:", result.status);
     return NextResponse.json(result);
   } catch (err) {
     console.error("[reindex] Pipeline error:", err);

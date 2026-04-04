@@ -4,6 +4,7 @@ import { saveCertification } from "@/lib/admin";
 import { getCertifications } from "@/lib/content";
 import { revalidatePath } from "next/cache";
 import type { Certification } from "@/lib/content";
+import { CertificationSchema } from "@/lib/api-schemas";
 
 export async function POST(request: NextRequest) {
   const session = await auth();
@@ -13,11 +14,11 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { code, name } = body;
-
-    if (!code || !name) {
-      return NextResponse.json({ error: "Code and name are required" }, { status: 400 });
+    const parsed = CertificationSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
+    const { code, name, issuer, year, verifyUrl, badge, color } = parsed.data;
 
     const existing = getCertifications().find((c) => c.code === code);
     if (existing) {
@@ -27,11 +28,11 @@ export async function POST(request: NextRequest) {
     const cert: Certification = {
       code,
       name,
-      issuer: body.issuer ?? "",
-      year: body.year ?? new Date().getFullYear(),
-      verifyUrl: body.verifyUrl ?? "#",
-      badge: body.badge ?? "",
-      color: body.color ?? "blue",
+      issuer,
+      year: year ?? new Date().getFullYear(),
+      verifyUrl,
+      badge,
+      color,
     };
 
     saveCertification(cert);

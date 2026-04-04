@@ -5,6 +5,7 @@ import { getProjects, normalizeCategory } from "@/lib/content";
 import { slugify } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import type { Project } from "@/lib/content";
+import { ProjectSchema } from "@/lib/api-schemas";
 
 export async function POST(request: NextRequest) {
   const session = await auth();
@@ -14,11 +15,11 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { title, description, outcomes, tags, category, techStack, githubUrl, liveUrl, featured, year } = body;
-
-    if (!title) {
-      return NextResponse.json({ error: "Title is required" }, { status: 400 });
+    const parsed = ProjectSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
+    const { title, description, outcomes, tags, category, techStack, githubUrl, liveUrl, featured, year } = parsed.data;
 
     const id = slugify(title);
 

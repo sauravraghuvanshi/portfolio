@@ -37,7 +37,7 @@ export default function CaseStudiesPage() {
         </div>
 
         <div className="space-y-8 max-w-4xl mx-auto">
-          {caseStudies.map((cs, i) => (
+          {caseStudies.map((cs) => (
             <article key={cs.slug} aria-label={cs.title}>
               <Link
                 href={`/case-studies/${cs.slug}`}

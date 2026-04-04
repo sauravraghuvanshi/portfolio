@@ -192,12 +192,12 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
             Let&apos;s talk about your architecture goals.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <a
+            <Link
               href="/#contact"
               className="px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl text-sm transition-colors shadow-sm hover:shadow-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
             >
               Get in Touch
-            </a>
+            </Link>
             <a
               href="https://outlook.office.com/bookwithme/user/7724061ce7fa4a87acfd23b2dbaf800a@microsoft.com/meetingtype/ojiCbqKOdUCmNTWtPZFSnQ2?anonymous&ismsaljsauthenabled&ep=mlink"
               target="_blank"

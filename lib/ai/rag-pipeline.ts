@@ -19,6 +19,9 @@ import {
 const API_VERSION = "2025-05-15-preview";
 const VECTOR_STORE_NAME = "portfolio-content";
 
+const isDev = process.env.NODE_ENV === "development";
+const log = isDev ? console.log : () => {};
+
 interface RagDocument {
   name: string;
   content: string;
@@ -109,7 +112,7 @@ async function pollVectorStore(
     if (vs.status === "failed" || vs.status === "cancelled") {
       throw new Error(`Vector store ${vsId} ${vs.status}`);
     }
-    console.log(`[reindex] Vector store status: ${vs.status} — waiting...`);
+    log(`[reindex] Vector store status: ${vs.status} — waiting...`);
     await new Promise((r) => setTimeout(r, 3000));
   }
   throw new Error(`Vector store polling timed out after ${timeoutMs}ms`);
@@ -372,7 +375,7 @@ export async function runRagPipeline(): Promise<PipelineResult> {
   const ep = projectEndpoint;
 
   // Step 1: Extract content
-  console.log("[reindex] Extracting portfolio content...");
+  log("[reindex] Extracting portfolio content...");
   const docs: RagDocument[] = [
     extractProfile(),
     extractProjectsDocs(),
@@ -382,7 +385,7 @@ export async function runRagPipeline(): Promise<PipelineResult> {
     ...extractBlogPostsDocs(),
     ...extractCaseStudiesDocs(),
   ];
-  console.log(`[reindex] Generated ${docs.length} documents`);
+  log(`[reindex] Generated ${docs.length} documents`);
 
   // Step 2: Snapshot old resources for cleanup AFTER agent is updated
   let oldStoreIds: string[] = [];
@@ -403,17 +406,17 @@ export async function runRagPipeline(): Promise<PipelineResult> {
       .filter((f: any) => f.purpose === "assistants")
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .map((f: any) => f.id);
-    console.log(
+    log(
       `[reindex] Found ${oldStoreIds.length} old stores, ${oldFileIds.length} old files to cleanup later`
     );
   } catch (err) {
-    console.log(
+    log(
       `[reindex] Could not list old resources: ${err instanceof Error ? err.message : err}`
     );
   }
 
   // Step 3: Upload new files
-  console.log("[reindex] Uploading files...");
+  log("[reindex] Uploading files...");
   const fileIds: string[] = [];
   for (const doc of docs) {
     try {
@@ -429,10 +432,10 @@ export async function runRagPipeline(): Promise<PipelineResult> {
   if (fileIds.length === 0) {
     return { status: "error", error: "No files uploaded" };
   }
-  console.log(`[reindex] Uploaded ${fileIds.length} files`);
+  log(`[reindex] Uploaded ${fileIds.length} files`);
 
   // Step 4: Create new vector store
-  console.log("[reindex] Creating vector store...");
+  log("[reindex] Creating vector store...");
   const vs = await apiFetch(ep, apiKey, "openai/vector_stores", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -440,9 +443,9 @@ export async function runRagPipeline(): Promise<PipelineResult> {
   });
 
   // Step 5: Poll until ready
-  console.log(`[reindex] Polling vector store ${vs.id}...`);
+  log(`[reindex] Polling vector store ${vs.id}...`);
   const readyVs = await pollVectorStore(ep, apiKey, vs.id);
-  console.log(
+  log(
     `[reindex] Vector store ready — ${readyVs.file_counts?.completed ?? "?"} files indexed`
   );
 
@@ -473,20 +476,20 @@ export async function runRagPipeline(): Promise<PipelineResult> {
         },
       }),
     });
-    console.log(`[reindex] Agent updated with vector store ${vs.id}`);
+    log(`[reindex] Agent updated with vector store ${vs.id}`);
   } catch (err) {
-    console.log(
+    log(
       `[reindex] Agent update failed (update manually): ${err instanceof Error ? err.message : err}`
     );
-    console.log(`[reindex] Vector store ID: ${vs.id}`);
+    log(`[reindex] Vector store ID: ${vs.id}`);
   }
 
   // Step 7: Cleanup old vector stores and files (safe — agent already points to new one)
-  console.log("[reindex] Cleaning up old resources...");
+  log("[reindex] Cleaning up old resources...");
   for (const id of oldStoreIds) {
     try {
       await deleteResource(ep, apiKey, `openai/vector_stores/${id}`);
-      console.log(`[reindex]   Deleted old vector store: ${id}`);
+      log(`[reindex]   Deleted old vector store: ${id}`);
     } catch {
       /* ignore cleanup errors */
     }
@@ -501,11 +504,11 @@ export async function runRagPipeline(): Promise<PipelineResult> {
       /* ignore cleanup errors */
     }
   }
-  console.log(
+  log(
     `[reindex] Cleaned ${oldStoreIds.length} old stores, ${oldFileIds.filter((id) => !newFileSet.has(id)).length} old files`
   );
 
-  console.log(`[reindex] Pipeline complete!`);
+  log(`[reindex] Pipeline complete!`);
   return {
     status: "success",
     vectorStoreId: vs.id,

@@ -4,6 +4,7 @@ import { saveProject, deleteProject } from "@/lib/admin";
 import { getProjects, normalizeCategory } from "@/lib/content";
 import { revalidatePath } from "next/cache";
 import type { Project } from "@/lib/content";
+import { ProjectUpdateSchema } from "@/lib/api-schemas";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -23,18 +24,22 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     }
 
     const body = await request.json();
+    const parsed = ProjectUpdateSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
+    }
     const project: Project = {
       id,
-      title: body.title ?? existing.title,
-      description: body.description ?? existing.description,
-      outcomes: body.outcomes ?? existing.outcomes,
-      tags: body.tags ?? existing.tags,
-      category: normalizeCategory(body.category ?? existing.category),
-      techStack: body.techStack ?? existing.techStack,
-      githubUrl: body.githubUrl ?? existing.githubUrl,
-      liveUrl: body.liveUrl ?? existing.liveUrl,
-      featured: body.featured ?? existing.featured,
-      year: body.year ?? existing.year,
+      title: parsed.data.title ?? existing.title,
+      description: parsed.data.description ?? existing.description,
+      outcomes: parsed.data.outcomes ?? existing.outcomes,
+      tags: parsed.data.tags ?? existing.tags,
+      category: normalizeCategory(parsed.data.category ?? existing.category),
+      techStack: parsed.data.techStack ?? existing.techStack,
+      githubUrl: parsed.data.githubUrl ?? existing.githubUrl,
+      liveUrl: parsed.data.liveUrl ?? existing.liveUrl,
+      featured: parsed.data.featured ?? existing.featured,
+      year: parsed.data.year ?? existing.year,
     };
 
     saveProject(project);

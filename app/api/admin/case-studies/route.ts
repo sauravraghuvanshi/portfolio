@@ -5,6 +5,7 @@ import { getCaseStudy, normalizeCategory } from "@/lib/content";
 import { slugify } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import type { CaseStudyMeta } from "@/lib/content";
+import { CaseStudySchema } from "@/lib/api-schemas";
 
 export async function POST(request: NextRequest) {
   const session = await auth();
@@ -14,11 +15,11 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { title, subtitle, category, tags, timeline, role, client, featured, coverImage, metrics, content } = body;
-
-    if (!title) {
-      return NextResponse.json({ error: "Title is required" }, { status: 400 });
+    const parsed = CaseStudySchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
+    const { title, subtitle, category, tags, timeline, role, client, featured, coverImage, metrics, content } = parsed.data;
 
     const slug = slugify(title);
 

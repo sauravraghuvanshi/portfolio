@@ -4,6 +4,7 @@ import { saveEvent, deleteEvent } from "@/lib/admin";
 import { getEvent } from "@/lib/content";
 import { revalidatePath } from "next/cache";
 import type { EventMeta } from "@/lib/content";
+import { EventUpdateSchema } from "@/lib/api-schemas";
 
 interface RouteParams {
   params: Promise<{ slug: string }>;
@@ -23,21 +24,25 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     }
 
     const body = await request.json();
+    const parsed = EventUpdateSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
+    }
     const event: EventMeta = {
       slug,
-      title: body.title ?? existing.title,
-      year: body.year ?? existing.year,
-      format: body.format ?? existing.format,
-      topic: body.topic ?? existing.topic,
-      tags: body.tags ?? existing.tags,
-      summary: body.summary ?? existing.summary,
-      highlights: body.highlights ?? existing.highlights,
-      impact: body.impact ?? existing.impact,
-      coverImage: body.coverImage ?? existing.coverImage,
-      coverImagePosition: body.coverImagePosition ?? existing.coverImagePosition,
-      images: body.images ?? existing.images,
-      featured: body.featured ?? existing.featured ?? false,
-      location: body.location !== undefined ? body.location : existing.location,
+      title: parsed.data.title ?? existing.title,
+      year: parsed.data.year ?? existing.year,
+      format: parsed.data.format ?? existing.format,
+      topic: parsed.data.topic ?? existing.topic,
+      tags: parsed.data.tags ?? existing.tags,
+      summary: parsed.data.summary ?? existing.summary,
+      highlights: parsed.data.highlights ?? existing.highlights,
+      impact: parsed.data.impact ?? existing.impact,
+      coverImage: parsed.data.coverImage ?? existing.coverImage,
+      coverImagePosition: parsed.data.coverImagePosition ?? existing.coverImagePosition,
+      images: parsed.data.images ?? existing.images,
+      featured: parsed.data.featured ?? existing.featured ?? false,
+      location: parsed.data.location !== undefined ? parsed.data.location : existing.location,
     };
 
     saveEvent(event);

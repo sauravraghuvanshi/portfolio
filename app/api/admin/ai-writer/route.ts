@@ -7,9 +7,21 @@ import {
 import { auth } from "@/auth";
 import { buildSystemPrompt } from "@/lib/ai/system-prompt";
 import { CONTENT_TYPES } from "@/lib/ai/content-schemas";
+import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import type { AIContentType } from "@/types/ai-writer";
+import type {
+  FoundryResponse,
+  FoundryOutputItem,
+  FoundryMessageOutput,
+  FoundryMcpApprovalRequest,
+  FoundryMcpApprovalInput,
+  ChatMessage,
+} from "@/types/foundry";
 
 export const maxDuration = 120;
+
+const isDev = process.env.NODE_ENV === "development";
+const log = isDev ? console.log : () => {};
 
 // Cached credential (reused across requests)
 let cachedCredential: TokenCredential | null = null;
@@ -18,10 +30,10 @@ function getCredential(): TokenCredential {
   if (!cachedCredential) {
     // WEBSITE_SITE_NAME is set automatically on Azure App Service
     if (process.env.WEBSITE_SITE_NAME) {
-      console.log("[ai-writer] Using ManagedIdentityCredential (App Service)");
+      log("[ai-writer] Using ManagedIdentityCredential (App Service)");
       cachedCredential = new ManagedIdentityCredential();
     } else {
-      console.log("[ai-writer] Using AzureCliCredential (local dev)");
+      log("[ai-writer] Using AzureCliCredential (local dev)");
       cachedCredential = new AzureCliCredential();
     }
   }
@@ -29,25 +41,24 @@ function getCredential(): TokenCredential {
 }
 
 /** Extract plain text from a chat message */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function messageText(m: any): string {
+function messageText(m: ChatMessage): string {
   if (typeof m.content === "string") return m.content;
   if (Array.isArray(m.parts)) {
     return m.parts
-      .filter((p: { type: string }) => p.type === "text")
-      .map((p: { text: string }) => p.text)
+      .filter((p) => p.type === "text")
+      .map((p) => p.text ?? "")
       .join("");
   }
   return "";
 }
 
 /** Extract assistant text from agent response output array */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function extractText(data: any): string {
+function extractText(data: FoundryResponse): string {
   const parts: string[] = [];
   for (const item of data.output ?? []) {
-    if (item.type === "message" && item.role === "assistant") {
-      for (const c of item.content ?? []) {
+    if (item.type === "message") {
+      const msg = item as FoundryMessageOutput;
+      for (const c of msg.content ?? []) {
         if (c.type === "output_text" && c.text) parts.push(c.text);
       }
     }
@@ -59,18 +70,15 @@ function extractText(data: any): string {
 }
 
 /** Check if agent output contains pending MCP approval requests */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function findApprovalRequests(data: any): any[] {
+function findApprovalRequests(data: FoundryResponse): FoundryMcpApprovalRequest[] {
   return (data.output ?? []).filter(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (item: any) => item.type === "mcp_approval_request"
+    (item): item is FoundryMcpApprovalRequest => item.type === "mcp_approval_request"
   );
 }
 
 async function callFoundryAgent(
   systemPrompt: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  messages: any[]
+  messages: ChatMessage[]
 ): Promise<string> {
   const projectEndpoint = process.env.AZURE_FOUNDRY_PROJECT_ENDPOINT;
   const agentName = process.env.AZURE_FOUNDRY_AGENT_NAME;
@@ -85,7 +93,7 @@ async function callFoundryAgent(
   const base = projectEndpoint.replace(/\/$/, "");
   const url = `${base}/openai/responses?api-version=2025-05-15-preview`;
 
-  console.log("[ai-writer] Acquiring AAD token...");
+  log("[ai-writer] Acquiring AAD token...");
   const credential = getCredential();
   const token = await credential.getToken("https://ai.azure.com/.default");
   if (!token) throw new Error("Failed to acquire AAD token for ai.azure.com");
@@ -101,8 +109,7 @@ async function callFoundryAgent(
   };
 
   // Build initial input — inject system prompt into first user message
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const input: any[] = [];
+  const input: { role: string; content: string }[] = [];
   let systemInjected = false;
 
   for (const m of messages) {
@@ -122,7 +129,7 @@ async function callFoundryAgent(
   // Turn 1: Initial call with store=true so MCP approval flow works
   const MAX_TURNS = 5;
 
-  console.log("[ai-writer] Agent call #1...");
+  log("[ai-writer] Agent call #1...");
   let res = await fetch(url, {
     method: "POST",
     headers,
@@ -139,17 +146,16 @@ async function callFoundryAgent(
     throw new Error(`Foundry Agent ${res.status}: ${errText}`);
   }
 
-  let data = await res.json();
+  let data: FoundryResponse = await res.json();
   let itemTypes = (data.output ?? []).map(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (item: any) => item.type
+    (item: FoundryOutputItem) => item.type
   );
-  console.log("[ai-writer] Output types:", itemTypes.join(", "));
+  log("[ai-writer] Output types:", itemTypes.join(", "));
 
   // Check for immediate text (no approval needed)
   let text = extractText(data);
   if (text) {
-    console.log(`[ai-writer] Got response (${text.length} chars) after 1 turn`);
+    log(`[ai-writer] Got response (${text.length} chars) after 1 turn`);
     return text;
   }
 
@@ -161,16 +167,15 @@ async function callFoundryAgent(
       return "";
     }
 
-    console.log(`[ai-writer] Auto-approving ${approvals.length} MCP tool call(s)...`);
+    log(`[ai-writer] Auto-approving ${approvals.length} MCP tool call(s)...`);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const approvalInputs = approvals.map((req: any) => ({
+    const approvalInputs: FoundryMcpApprovalInput[] = approvals.map((req) => ({
       type: "mcp_approval_response",
       approval_request_id: req.id,
       approve: true,
     }));
 
-    console.log(`[ai-writer] Agent call #${turn + 1}...`);
+    log(`[ai-writer] Agent call #${turn + 1}...`);
     res = await fetch(url, {
       method: "POST",
       headers,
@@ -190,14 +195,13 @@ async function callFoundryAgent(
 
     data = await res.json();
     itemTypes = (data.output ?? []).map(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (item: any) => item.type
+      (item: FoundryOutputItem) => item.type
     );
-    console.log("[ai-writer] Output types:", itemTypes.join(", "));
+    log("[ai-writer] Output types:", itemTypes.join(", "));
 
     text = extractText(data);
     if (text) {
-      console.log(
+      log(
         `[ai-writer] Got response (${text.length} chars) after ${turn + 1} turns`
       );
       return text;
@@ -217,9 +221,12 @@ export async function POST(req: Request) {
     return new Response("Unauthorized", { status: 401 });
   }
 
+  // Rate limit: 5 requests per minute per user
+  const rl = checkRateLimit(`ai-writer:${session.user.id}`, { limit: 5, windowSeconds: 60 });
+  if (!rl.allowed) return rateLimitResponse(rl.resetInSeconds);
+
   const body = await req.json();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const messages = body.messages as any[];
+  const messages = body.messages as ChatMessage[];
   const contentType = body.contentType as AIContentType;
 
   if (!contentType || !CONTENT_TYPES[contentType]) {

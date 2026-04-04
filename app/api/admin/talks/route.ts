@@ -4,6 +4,7 @@ import { saveTalk } from "@/lib/admin";
 import { getTalks } from "@/lib/content";
 import { revalidatePath } from "next/cache";
 import type { Talk } from "@/lib/content";
+import { TalkSchema } from "@/lib/api-schemas";
 
 export async function POST(request: NextRequest) {
   const session = await auth();
@@ -13,11 +14,11 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { id, title, topic, description, featured } = body;
-
-    if (!id || !title) {
-      return NextResponse.json({ error: "ID and title are required" }, { status: 400 });
+    const parsed = TalkSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
+    const { id, title, topic, description, featured } = parsed.data;
 
     const existing = getTalks().find((t) => t.id === id);
     if (existing) {

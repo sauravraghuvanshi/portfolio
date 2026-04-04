@@ -4,6 +4,7 @@ import { saveCertification, deleteCertification } from "@/lib/admin";
 import { getCertifications } from "@/lib/content";
 import { revalidatePath } from "next/cache";
 import type { Certification } from "@/lib/content";
+import { CertificationUpdateSchema } from "@/lib/api-schemas";
 
 interface RouteParams {
   params: Promise<{ code: string }>;
@@ -23,14 +24,18 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     }
 
     const body = await request.json();
+    const parsed = CertificationUpdateSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
+    }
     const cert: Certification = {
       code,
-      name: body.name ?? existing.name,
-      issuer: body.issuer ?? existing.issuer,
-      year: body.year ?? existing.year,
-      verifyUrl: body.verifyUrl ?? existing.verifyUrl,
-      badge: body.badge ?? existing.badge,
-      color: body.color ?? existing.color,
+      name: parsed.data.name ?? existing.name,
+      issuer: parsed.data.issuer ?? existing.issuer,
+      year: parsed.data.year ?? existing.year,
+      verifyUrl: parsed.data.verifyUrl ?? existing.verifyUrl,
+      badge: parsed.data.badge ?? existing.badge,
+      color: parsed.data.color ?? existing.color,
     };
 
     saveCertification(cert);

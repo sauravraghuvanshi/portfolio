@@ -31,9 +31,25 @@ const nextConfig: NextConfig = {
     {
       source: "/(.*)",
       headers: [
+        {
+          key: "Content-Security-Policy",
+          value: [
+            "default-src 'self'",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+            "style-src 'self' 'unsafe-inline'",
+            "img-src 'self' data: blob: https://img.youtube.com https://sauravportfoliomedia.blob.core.windows.net https://i.ytimg.com",
+            "font-src 'self'",
+            "connect-src 'self' https://sauravportfoliomedia.blob.core.windows.net",
+            "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com",
+            "media-src 'self'",
+            "object-src 'none'",
+            "base-uri 'self'",
+            "form-action 'self'",
+            "frame-ancestors 'none'",
+          ].join("; "),
+        },
         { key: "X-Content-Type-Options", value: "nosniff" },
         { key: "X-Frame-Options", value: "DENY" },
-        { key: "X-XSS-Protection", value: "1; mode=block" },
         { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
         {
           key: "Permissions-Policy",

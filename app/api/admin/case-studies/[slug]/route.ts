@@ -4,6 +4,7 @@ import { saveCaseStudy, deleteCaseStudy } from "@/lib/admin";
 import { getCaseStudy, normalizeCategory } from "@/lib/content";
 import { revalidatePath } from "next/cache";
 import type { CaseStudyMeta } from "@/lib/content";
+import { CaseStudyUpdateSchema } from "@/lib/api-schemas";
 
 interface RouteParams {
   params: Promise<{ slug: string }>;
@@ -23,21 +24,25 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     }
 
     const body = await request.json();
+    const parsed = CaseStudyUpdateSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
+    }
     const meta: CaseStudyMeta = {
-      title: body.title ?? existing.title,
-      subtitle: body.subtitle ?? existing.subtitle,
+      title: parsed.data.title ?? existing.title,
+      subtitle: parsed.data.subtitle ?? existing.subtitle,
       slug,
-      tags: body.tags ?? existing.tags,
-      category: normalizeCategory(body.category ?? existing.category),
-      timeline: body.timeline ?? existing.timeline,
-      role: body.role ?? existing.role,
-      client: body.client ?? existing.client,
-      featured: body.featured ?? existing.featured,
-      coverImage: body.coverImage ?? existing.coverImage,
-      metrics: body.metrics ?? existing.metrics,
+      tags: parsed.data.tags ?? existing.tags,
+      category: normalizeCategory(parsed.data.category ?? existing.category),
+      timeline: parsed.data.timeline ?? existing.timeline,
+      role: parsed.data.role ?? existing.role,
+      client: parsed.data.client ?? existing.client,
+      featured: parsed.data.featured ?? existing.featured,
+      coverImage: parsed.data.coverImage ?? existing.coverImage,
+      metrics: parsed.data.metrics ?? existing.metrics,
     };
 
-    saveCaseStudy(meta, body.content ?? existing.content);
+    saveCaseStudy(meta, parsed.data.content ?? existing.content);
     revalidatePath("/case-studies");
     revalidatePath(`/case-studies/${slug}`);
     revalidatePath("/");

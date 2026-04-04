@@ -5,6 +5,7 @@ import { getBlogPost, normalizeCategory } from "@/lib/content";
 import { slugify } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import type { BlogPostMeta } from "@/lib/content";
+import { BlogPostSchema } from "@/lib/api-schemas";
 
 export async function POST(request: NextRequest) {
   const session = await auth();
@@ -14,11 +15,11 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { title, description, category, tags, coverImage, featured, status, content, externalUrl, externalSource } = body;
-
-    if (!title) {
-      return NextResponse.json({ error: "Title is required" }, { status: 400 });
+    const parsed = BlogPostSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
+    const { title, description, category, tags, coverImage, featured, status, content, externalUrl, externalSource } = parsed.data;
 
     const slug = slugify(title);
 

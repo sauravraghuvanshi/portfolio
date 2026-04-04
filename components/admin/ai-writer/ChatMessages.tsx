@@ -99,7 +99,7 @@ export default function ChatMessages({ messages, isLoading }: ChatMessagesProps)
 
 /**
  * Simple markdown-like formatting for AI messages.
- * Renders bold, code blocks, and numbered lists.
+ * Renders bold and code blocks using safe React elements (no innerHTML).
  */
 function formatAIMessage(content: string): React.ReactNode {
   // Split by code blocks
@@ -120,17 +120,20 @@ function formatAIMessage(content: string): React.ReactNode {
       );
     }
 
-    // Bold text
-    const formatted = part.replace(
-      /\*\*(.*?)\*\*/g,
-      '<strong class="font-semibold text-white">$1</strong>'
-    );
-
+    // Bold text — split on **…** markers and render as React elements
+    const boldParts = part.split(/\*\*(.*?)\*\*/g);
     return (
-      <span
-        key={i}
-        dangerouslySetInnerHTML={{ __html: formatted }}
-      />
+      <span key={i}>
+        {boldParts.map((segment, j) =>
+          j % 2 === 1 ? (
+            <strong key={j} className="font-semibold text-white">
+              {segment}
+            </strong>
+          ) : (
+            segment
+          )
+        )}
+      </span>
     );
   });
 }

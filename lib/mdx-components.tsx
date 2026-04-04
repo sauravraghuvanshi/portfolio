@@ -1,3 +1,4 @@
+import Image from "next/image";
 import YouTubeEmbed from "@/components/ui/YouTubeEmbed";
 import CodeBlock from "@/components/ui/CodeBlock";
 import type { MDXComponents } from "mdx/types";
@@ -138,21 +139,23 @@ export const sharedMDXComponents: MDXComponents = {
     </a>
   ),
   hr: () => <hr className="my-10 border-slate-200 dark:border-slate-800" />,
-  img: ({ src, alt, width, ...props }: { src?: string; alt?: string; width?: string; [key: string]: unknown }) => {
+  img: ({ src, alt, width }: { src?: string; alt?: string; width?: string; [key: string]: unknown }) => {
     const hasCustomWidth = width && width !== "100%";
+    if (!src) return null;
     return (
       <span
         className="block my-8"
         style={hasCustomWidth ? { maxWidth: width, margin: "0 auto" } : undefined}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={src}
-          alt={alt || ""}
-          className="rounded-xl w-full"
-          loading="lazy"
-          {...props}
-        />
+        <span className="block relative aspect-video">
+          <Image
+            src={src}
+            alt={alt || ""}
+            fill
+            sizes="(max-width: 768px) 100vw, 700px"
+            className="rounded-xl object-cover"
+          />
+        </span>
         {alt && (
           <span className="block text-center text-xs text-slate-500 dark:text-slate-400 mt-2">
             {alt}

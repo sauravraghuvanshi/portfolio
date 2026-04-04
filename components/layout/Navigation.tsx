@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Moon, Sun, Download, Search } from "lucide-react";
+import { Menu, X, Moon, Sun, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -22,15 +22,16 @@ const navLinks = [
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    if (typeof window === "undefined") return "dark";
+    const saved = localStorage.getItem("theme") as "light" | "dark" | null;
+    return saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  });
   const pathname = usePathname();
 
   useEffect(() => {
-    const saved = localStorage.getItem("theme") as "light" | "dark" | null;
-    const preferred = saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-    setTheme(preferred);
-    document.documentElement.classList.toggle("dark", preferred === "dark");
-  }, []);
+    document.documentElement.classList.toggle("dark", theme === "dark");
+  }, [theme]);
 
   // Sync theme when toggled externally (e.g. from CommandPalette)
   useEffect(() => {

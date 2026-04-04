@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Calendar, Clock, ExternalLink } from "lucide-react";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Badge } from "@/components/ui/Badge";
@@ -40,10 +41,12 @@ export default function FeaturedBlogPosts({ posts }: FeaturedBlogPostsProps) {
                 {/* Cover or placeholder */}
                 <div className="aspect-video bg-gradient-to-br from-brand-500/10 to-accent-500/10 dark:from-brand-900/30 dark:to-accent-900/30 relative overflow-hidden">
                   {post.coverImage ? (
-                    <img
+                    <Image
                       src={post.coverImage}
                       alt={post.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">

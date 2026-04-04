@@ -1,4 +1,4 @@
-﻿import { getProfile, getAllCaseStudies, getCertifications } from "@/lib/content";
+﻿import { getProfile, getCertifications } from "@/lib/content";
 import { SITE_URL } from "@/lib/constants";
 
 export function PersonSchema() {

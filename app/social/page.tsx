@@ -82,7 +82,7 @@ export default function SocialPage() {
 
         {/* Profile cards */}
         <div className="space-y-4">
-          {profiles.map(({ platform, handle, description, href, followHref, followLabel, iconBg, btnBg, Icon }) => (
+          {profiles.map(({ platform, handle, description, followHref, followLabel, iconBg, btnBg, Icon }) => (
             <div
               key={platform}
               className="flex flex-col sm:flex-row sm:items-center gap-5 p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm"

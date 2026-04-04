@@ -50,7 +50,7 @@ export function StatCounter({ value, label }: { value: string; label: string }) 
         {prefersReducedMotion ? (
           <span>{value}</span>
         ) : (
-          <span ref={ref}>0{suffix}</span>
+          <span ref={ref} suppressHydrationWarning>{value}</span>
         )}
       </p>
       <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">{label}</p>

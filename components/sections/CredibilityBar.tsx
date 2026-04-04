@@ -65,7 +65,7 @@ function AnimatedCounter({
     return <span>{value}</span>;
   }
 
-  return <span ref={ref}>0{suffix}</span>;
+  return <span ref={ref} suppressHydrationWarning>{value}</span>;
 }
 
 const domains = [

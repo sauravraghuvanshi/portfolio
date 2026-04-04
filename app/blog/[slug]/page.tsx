@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { getBlogPost, getAllBlogPosts } from "@/lib/content";
 import { compileMDX } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
@@ -154,10 +155,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {/* Cover image */}
           {post.coverImage && (
             <div className="mt-8 aspect-video relative rounded-2xl overflow-hidden">
-              <img
+              <Image
                 src={post.coverImage}
                 alt={post.title}
-                className="w-full h-full object-cover"
+                fill
+                sizes="(max-width: 768px) 100vw, 800px"
+                className="object-cover"
+                priority
               />
             </div>
           )}
@@ -238,12 +242,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             I&apos;d love to hear your thoughts on cloud architecture and AI.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <a
+            <Link
               href="/#contact"
               className="px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl text-sm transition-colors shadow-sm"
             >
               Get in Touch
-            </a>
+            </Link>
             <Link
               href="/blog"
               className="px-5 py-2.5 border border-slate-300 dark:border-slate-700 hover:border-brand-500 text-slate-700 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-semibold rounded-xl text-sm transition-all"

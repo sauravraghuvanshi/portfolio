@@ -4,6 +4,7 @@ import { saveBlogPost, deleteBlogPost } from "@/lib/admin";
 import { getBlogPost, normalizeCategory } from "@/lib/content";
 import { revalidatePath } from "next/cache";
 import type { BlogPostMeta } from "@/lib/content";
+import { BlogPostUpdateSchema } from "@/lib/api-schemas";
 
 interface RouteParams {
   params: Promise<{ slug: string }>;
@@ -23,22 +24,26 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     }
 
     const body = await request.json();
+    const parsed = BlogPostUpdateSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
+    }
     const meta: BlogPostMeta = {
-      title: body.title ?? existing.title,
+      title: parsed.data.title ?? existing.title,
       slug,
-      description: body.description ?? existing.description,
+      description: parsed.data.description ?? existing.description,
       date: existing.date,
       updated: new Date().toISOString().split("T")[0],
-      category: normalizeCategory(body.category ?? existing.category),
-      tags: body.tags ?? existing.tags,
-      coverImage: body.coverImage ?? existing.coverImage,
-      featured: body.featured ?? existing.featured,
-      status: body.status ?? existing.status,
-      externalUrl: body.externalUrl ?? existing.externalUrl,
-      externalSource: body.externalSource ?? existing.externalSource,
+      category: normalizeCategory(parsed.data.category ?? existing.category),
+      tags: parsed.data.tags ?? existing.tags,
+      coverImage: parsed.data.coverImage ?? existing.coverImage,
+      featured: parsed.data.featured ?? existing.featured,
+      status: parsed.data.status ?? existing.status,
+      externalUrl: parsed.data.externalUrl ?? existing.externalUrl,
+      externalSource: parsed.data.externalSource ?? existing.externalSource,
     };
 
-    saveBlogPost(meta, body.content ?? existing.content);
+    saveBlogPost(meta, parsed.data.content ?? existing.content);
     revalidatePath("/blog");
     revalidatePath(`/blog/${slug}`);
     revalidatePath("/");

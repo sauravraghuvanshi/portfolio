@@ -4,6 +4,7 @@ import { saveTalk, deleteTalk } from "@/lib/admin";
 import { getTalks } from "@/lib/content";
 import { revalidatePath } from "next/cache";
 import type { Talk } from "@/lib/content";
+import { TalkUpdateSchema } from "@/lib/api-schemas";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -23,12 +24,16 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     }
 
     const body = await request.json();
+    const parsed = TalkUpdateSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
+    }
     const talk: Talk = {
       id,
-      title: body.title ?? existing.title,
-      topic: body.topic ?? existing.topic,
-      description: body.description ?? existing.description,
-      featured: body.featured ?? existing.featured,
+      title: parsed.data.title ?? existing.title,
+      topic: parsed.data.topic ?? existing.topic,
+      description: parsed.data.description ?? existing.description,
+      featured: parsed.data.featured ?? existing.featured,
     };
 
     saveTalk(talk);

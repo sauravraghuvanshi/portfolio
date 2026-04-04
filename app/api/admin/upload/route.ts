@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { saveImage } from "@/lib/admin";
+import { UploadParamsSchema } from "@/lib/api-schemas";
 
 /** Validate image by checking file magic bytes, not just the Content-Type header. */
 function isValidImageMagic(buffer: Buffer): boolean {
@@ -33,6 +34,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
   }
 
+  const paramsParsed = UploadParamsSchema.safeParse({ folder, slug });
+  const sanitizedFolder = paramsParsed.success ? paramsParsed.data.folder : folder?.replace(/[^a-zA-Z0-9._-]/g, "-");
+  const sanitizedSlug = paramsParsed.success ? paramsParsed.data.slug : slug?.replace(/[^a-zA-Z0-9._-]/g, "-");
+
   const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/avif", "image/gif"];
   if (!allowedTypes.includes(file.type)) {
     return NextResponse.json({ error: "Invalid file type. Allowed: JPEG, PNG, WebP, AVIF, GIF" }, { status: 400 });
@@ -49,7 +54,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "File content does not match a valid image format" }, { status: 400 });
     }
 
-    const url = await saveImage(file.name, buffer, folder || undefined, slug || undefined);
+    const url = await saveImage(file.name, buffer, sanitizedFolder || undefined, sanitizedSlug || undefined);
     return NextResponse.json({ url, message: "Image uploaded" });
   } catch (err) {
     console.error("Image upload error:", err);

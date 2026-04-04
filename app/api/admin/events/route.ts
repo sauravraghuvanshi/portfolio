@@ -5,6 +5,7 @@ import { getEvent } from "@/lib/content";
 import { slugify } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import type { EventMeta } from "@/lib/content";
+import { EventSchema } from "@/lib/api-schemas";
 
 export async function POST(request: NextRequest) {
   const session = await auth();
@@ -14,11 +15,11 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { title, year, format, topic, tags, summary, highlights, impact, coverImage, coverImagePosition, images, featured, location } = body;
-
-    if (!title) {
-      return NextResponse.json({ error: "Title is required" }, { status: 400 });
+    const parsed = EventSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
+    const { title, year, format, topic, tags, summary, highlights, impact, coverImage, coverImagePosition, images, featured, location } = parsed.data;
 
     const slug = slugify(title);
 

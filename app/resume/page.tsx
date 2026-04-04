@@ -1,12 +1,12 @@
 import { getProfile, getCertifications } from "@/lib/content";
-import { Download, MapPin, Mail, Linkedin, Github, GraduationCap, BookOpen, Users, Award } from "lucide-react";
+import { Download, MapPin, Mail, Linkedin, Github, GraduationCap, BookOpen, Users } from "lucide-react";
 import CareerTimeline from "@/components/sections/CareerTimeline";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Resume",
   description:
-    "Resume of Saurav Raghuvanshi, Digital Cloud Solution Architect at Microsoft — Azure, Generative AI, Cloud-Native architecture, 8 certifications.",
+    "Resume of Saurav Raghuvanshi, Digital Cloud Solution Architect at Microsoft — Azure, Generative AI, Cloud-Native architecture, 10 certifications.",
 };
 
 export default function ResumePage() {

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getAllBlogPosts } from "@/lib/content";
 import { formatDate } from "@/lib/utils";
-import { Plus, PenSquare, Eye, ExternalLink, Trash2 } from "lucide-react";
+import { Plus, PenSquare, Eye, ExternalLink } from "lucide-react";
 import DeleteItemButton from "@/components/admin/DeleteItemButton";
 
 export default function AdminBlogListPage() {
