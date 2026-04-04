@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
+import ImageWithShimmer from "@/components/ui/ImageWithShimmer";
 import Link from "next/link";
 import { ArrowRight, MapPin, Search, X } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
@@ -168,7 +168,7 @@ export default function EventsGrid({ events, cityFilter, onClearCity }: EventsGr
               {/* Cover */}
               {event.coverImage ? (
                 <div className="aspect-video relative overflow-hidden bg-slate-100 dark:bg-slate-800">
-                  <Image
+                  <ImageWithShimmer
                     src={event.coverImage}
                     alt={`${event.title} cover`}
                     fill

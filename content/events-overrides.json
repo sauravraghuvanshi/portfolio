@@ -530,8 +530,15 @@
     ],
     "impact": [],
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/the-past-few-months-at-microsoft-have-been-nothing-short-of-incredible/cover.jpg",
+    "coverImagePosition": "center",
     "images": [],
-    "location": null
+    "featured": false,
+    "location": {
+      "city": "Bengaluru",
+      "country": "India",
+      "lat": 12.9716,
+      "lng": 77.5946
+    }
   },
   "the-present-and-future-of-it-industry": {
     "title": "India: The Present and Future of IT",
@@ -553,8 +560,15 @@
     ],
     "impact": [],
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/the-present-and-future-of-it-industry/cover.jpg",
+    "coverImagePosition": "center",
     "images": [],
-    "location": null
+    "featured": false,
+    "location": {
+      "city": "Bengaluru",
+      "country": "India",
+      "lat": 12.9716,
+      "lng": 77.5946
+    }
   },
   "azure-developer-day": {
     "title": "Azure Developer Day — Bengaluru 2025",

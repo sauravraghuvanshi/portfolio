@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
+import ImageWithShimmer from "@/components/ui/ImageWithShimmer";
 import { getEvent, getEvents } from "@/lib/content";
 import { ArrowLeft, ArrowRight, Tag, Users } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
@@ -125,7 +125,7 @@ export default async function EventPage({ params }: EventPageProps) {
 
           {event.coverImage && (
             <div className="mt-8 rounded-2xl overflow-hidden aspect-video relative bg-slate-100 dark:bg-slate-800">
-              <Image
+              <ImageWithShimmer
                 src={event.coverImage}
                 alt={`${event.title} cover photo`}
                 fill

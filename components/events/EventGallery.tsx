@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import Image from "next/image";
+import ImageWithShimmer from "@/components/ui/ImageWithShimmer";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -69,7 +69,7 @@ export default function EventGallery({ images, eventTitle }: EventGalleryProps) 
             className="aspect-square relative rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 cursor-zoom-in"
             aria-label={`View photo ${i + 1} of ${images.length} from ${eventTitle}`}
           >
-            <Image
+            <ImageWithShimmer
               src={src}
               alt={`${eventTitle} — photo ${i + 1}`}
               fill
@@ -114,7 +114,7 @@ export default function EventGallery({ images, eventTitle }: EventGalleryProps) 
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="relative w-full flex items-center justify-center" style={{ maxHeight: "80vh" }}>
-                  <Image
+                  <ImageWithShimmer
                     src={images[activeIndex]}
                     alt={`${eventTitle} — photo ${activeIndex + 1}`}
                     width={1200}

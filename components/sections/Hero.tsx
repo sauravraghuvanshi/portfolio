@@ -1,7 +1,7 @@
 ﻿"use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence, type Variants } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion, type Variants } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, Download, Mail, Github, Linkedin, Twitter, Calendar } from "lucide-react";
 
@@ -33,6 +33,19 @@ const itemVariants: Variants = {
 
 export default function Hero() {
   const [phraseIndex, setPhraseIndex] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
+  const prefersReduced = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  // Background moves at 30% of scroll speed (subtle depth)
+  // Disabled when user prefers reduced motion
+  const bgY = useTransform(scrollYProgress, [0, 1], prefersReduced ? ["0%", "0%"] : ["0%", "30%"]);
+  const blob1Y = useTransform(scrollYProgress, [0, 1], prefersReduced ? ["0%", "0%"] : ["0%", "20%"]);
+  const blob2Y = useTransform(scrollYProgress, [0, 1], prefersReduced ? ["0%", "0%"] : ["0%", "40%"]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -43,15 +56,22 @@ export default function Hero() {
 
   return (
     <section
+      ref={sectionRef}
       aria-label="Introduction"
       className="relative min-h-[calc(100vh-4rem)] flex items-center overflow-hidden"
     >
-      {/* Background effects */}
-      <div className="absolute inset-0 -z-10" aria-hidden="true">
+      {/* Background effects — parallax layers */}
+      <motion.div className="absolute inset-0 -z-10" aria-hidden="true" style={{ y: bgY }}>
         <div className="absolute inset-0 bg-mesh-light dark:bg-mesh-dark opacity-60" />
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-brand-400/10 dark:bg-brand-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-accent-400/10 dark:bg-accent-500/10 rounded-full blur-3xl" />
-      </div>
+        <motion.div
+          className="absolute top-1/4 right-1/4 w-96 h-96 bg-brand-400/10 dark:bg-brand-500/10 rounded-full blur-3xl"
+          style={{ y: blob1Y }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-accent-400/10 dark:bg-accent-500/10 rounded-full blur-3xl"
+          style={{ y: blob2Y }}
+        />
+      </motion.div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
         <motion.div

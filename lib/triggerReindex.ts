@@ -10,6 +10,8 @@ export function triggerReindex(): void {
       .then((res) => {
         if (res.status === 409) {
           console.log("[reindex] Already running, skipped");
+        } else if (res.status === 429) {
+          console.log("[reindex] Rate limited, will retry on next save");
         } else if (!res.ok) {
           console.error("[reindex] Failed:", res.status);
         } else {

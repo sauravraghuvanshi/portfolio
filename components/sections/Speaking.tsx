@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import ImageWithShimmer from "@/components/ui/ImageWithShimmer";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -54,10 +54,11 @@ export default function Speaking({ events }: SpeakingProps) {
                 {/* Cover image */}
                 <div className="relative aspect-video overflow-hidden bg-slate-100 dark:bg-slate-800 flex-shrink-0">
                   {event.coverImage ? (
-                    <Image
+                    <ImageWithShimmer
                       src={event.coverImage}
                       alt={event.title}
                       fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className={`object-cover ${coverPos[event.coverImagePosition ?? ""] ?? "object-center"} group-hover:scale-105 transition-transform duration-500`}
                     />
                   ) : (

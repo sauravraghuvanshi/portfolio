@@ -256,6 +256,18 @@
   .shadow-glow        { box-shadow: var(--shadow-glow); }
   .shadow-glow-strong { box-shadow: var(--shadow-glow-strong); }
 
+  /* Image shimmer placeholder */
+  .shimmer-placeholder {
+    background: linear-gradient(
+      90deg,
+      rgba(148, 163, 184, 0.06) 0%,
+      rgba(148, 163, 184, 0.12) 50%,
+      rgba(148, 163, 184, 0.06) 100%
+    );
+    background-size: 1000px 100%;
+    animation: var(--animate-shimmer);
+  }
+
   /* Command palette animations */
   .cmdk-overlay {
     animation: cmdk-overlay-show 150ms ease-out;

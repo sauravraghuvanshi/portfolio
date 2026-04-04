@@ -16,8 +16,8 @@ export async function POST() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Rate limit: 1 request per minute
-  const rl = checkRateLimit("reindex", { limit: 1, windowSeconds: 60 });
+  // Rate limit: 5 requests per minute
+  const rl = checkRateLimit("reindex", { limit: 5, windowSeconds: 60 });
   if (!rl.allowed) return rateLimitResponse(rl.resetInSeconds);
 
   if (reindexInProgress) {

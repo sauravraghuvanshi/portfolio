@@ -10,7 +10,7 @@ import {
 } from "react-simple-maps";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Globe, X, Calendar, ArrowRight, Wifi, MousePointerClick } from "lucide-react";
-import Image from "next/image";
+import ImageWithShimmer from "@/components/ui/ImageWithShimmer";
 import Link from "next/link";
 import type { CityCluster } from "@/lib/content";
 
@@ -81,7 +81,7 @@ function PinPopup({
             {/* Thumbnail */}
             <div className="relative w-20 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-slate-100 dark:bg-slate-800">
               {event.coverImage ? (
-                <Image
+                <ImageWithShimmer
                   src={event.coverImage}
                   alt={event.title}
                   fill

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
+import ImageWithShimmer from "@/components/ui/ImageWithShimmer";
 import { getBlogPost, getAllBlogPosts } from "@/lib/content";
 import { compileMDX } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
@@ -155,7 +155,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {/* Cover image */}
           {post.coverImage && (
             <div className="mt-8 aspect-video relative rounded-2xl overflow-hidden">
-              <Image
+              <ImageWithShimmer
                 src={post.coverImage}
                 alt={post.title}
                 fill

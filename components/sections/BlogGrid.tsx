@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import Image from "next/image";
+import ImageWithShimmer from "@/components/ui/ImageWithShimmer";
 import { ArrowRight, Search, X, Calendar, Clock, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { formatDate } from "@/lib/utils";
@@ -111,7 +111,7 @@ export default function BlogGrid({ posts }: BlogGridProps) {
                 {/* Cover image or gradient */}
                 <div className="aspect-video bg-gradient-to-br from-brand-500/10 to-accent-500/10 dark:from-brand-900/30 dark:to-accent-900/30 relative overflow-hidden">
                   {post.coverImage ? (
-                    <Image
+                    <ImageWithShimmer
                       src={post.coverImage}
                       alt={post.title}
                       fill

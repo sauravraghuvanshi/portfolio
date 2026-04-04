@@ -1,4 +1,4 @@
-import Image from "next/image";
+import ImageWithShimmer from "@/components/ui/ImageWithShimmer";
 import YouTubeEmbed from "@/components/ui/YouTubeEmbed";
 import CodeBlock from "@/components/ui/CodeBlock";
 import type { MDXComponents } from "mdx/types";
@@ -148,7 +148,7 @@ export const sharedMDXComponents: MDXComponents = {
         style={hasCustomWidth ? { maxWidth: width, margin: "0 auto" } : undefined}
       >
         <span className="block relative aspect-video">
-          <Image
+          <ImageWithShimmer
             src={src}
             alt={alt || ""}
             fill
