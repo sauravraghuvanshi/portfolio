@@ -12,7 +12,7 @@ interface YouTubeEmbedProps {
 export default function YouTubeEmbed({ videoId, title, width = "100%" }: YouTubeEmbedProps) {
   const [playing, setPlaying] = useState(false);
   const [thumbSrc, setThumbSrc] = useState(
-    `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
+    `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
   );
 
   const hasCustomWidth = width && width !== "100%";

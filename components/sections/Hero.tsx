@@ -58,6 +58,7 @@ export default function Hero() {
     <section
       ref={sectionRef}
       aria-label="Introduction"
+      style={{ position: "relative" }}
       className="relative min-h-[calc(100vh-4rem)] flex items-center overflow-hidden"
     >
       {/* Background effects — parallax layers */}
