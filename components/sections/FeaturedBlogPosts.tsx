@@ -36,7 +36,7 @@ export default function FeaturedBlogPosts({ posts }: FeaturedBlogPostsProps) {
             >
               <Link
                 href={`/blog/${post.slug}`}
-                className="group block h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden hover:border-brand-300 dark:hover:border-brand-700 hover:shadow-lg transition-all duration-300"
+                className="group block h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden hover:border-brand-300 dark:hover:border-brand-700 hover:shadow-lg transition-all duration-300 gradient-border"
               >
                 {/* Cover or placeholder */}
                 <div className="aspect-video bg-gradient-to-br from-brand-500/10 to-accent-500/10 dark:from-brand-900/30 dark:to-accent-900/30 relative overflow-hidden">

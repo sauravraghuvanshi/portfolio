@@ -7,9 +7,10 @@ interface YouTubeEmbedProps {
   videoId: string;
   title: string;
   width?: string;
+  priority?: boolean;
 }
 
-export default function YouTubeEmbed({ videoId, title, width = "100%" }: YouTubeEmbedProps) {
+export default function YouTubeEmbed({ videoId, title, width = "100%", priority = false }: YouTubeEmbedProps) {
   const [playing, setPlaying] = useState(false);
   const [thumbSrc, setThumbSrc] = useState(
     `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
@@ -47,6 +48,7 @@ export default function YouTubeEmbed({ videoId, title, width = "100%" }: YouTube
         src={thumbSrc}
         alt={title}
         fill
+        priority={priority}
         sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
         className="object-cover transition-transform duration-500 group-hover:scale-105"
         onError={() => setThumbSrc(`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`)}

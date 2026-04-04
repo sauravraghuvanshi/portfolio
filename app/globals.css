@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/* CSS Houdini — must be top-level, outside @layer */
+@property --gradient-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
 /* ============================================================
    Tailwind v4 Design Tokens — @theme
    ============================================================ */
@@ -266,6 +273,41 @@
     );
     background-size: 1000px 100%;
     animation: var(--animate-shimmer);
+  }
+
+  /* Animated gradient border for featured cards */
+  .gradient-border {
+    position: relative;
+  }
+  .gradient-border::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 2px;
+    background: conic-gradient(
+      from var(--gradient-angle, 0deg),
+      var(--color-brand-500),
+      var(--color-accent-500),
+      var(--color-brand-400),
+      var(--color-brand-500)
+    );
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask-composite: xor;
+    z-index: 10;
+    pointer-events: none;
+    animation: gradient-rotate 3s linear infinite;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .gradient-border:hover::after {
+    opacity: 0.4;
+  }
+
+  @keyframes gradient-rotate {
+    to { --gradient-angle: 360deg; }
   }
 
   /* Command palette animations */

@@ -58,9 +58,9 @@ export default function TalksGrid({ talks }: { talks: Talk[] }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96 }}
               transition={{ duration: 0.3, delay: i * 0.04 }}
-              className="flex flex-col gap-3"
+              className={`flex flex-col gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 hover:border-brand-300 dark:hover:border-brand-700 hover:shadow-lg transition-all duration-300${talk.featured ? " gradient-border" : ""}`}
             >
-              <YouTubeEmbed videoId={talk.id} title={talk.title} />
+              <YouTubeEmbed videoId={talk.id} title={talk.title} priority={i === 0} />
               <div className="flex items-center justify-between gap-2">
                 <Badge variant={topicColors[talk.topic] ?? "blue"}>
                   {talk.topic}

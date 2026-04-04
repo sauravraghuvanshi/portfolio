@@ -33,7 +33,7 @@ export default function FeaturedCaseStudies({ caseStudies }: FeaturedCaseStudies
             >
               <Link
                 href={`/case-studies/${cs.slug}`}
-                className="group block bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden hover:border-brand-300 dark:hover:border-brand-700 hover:shadow-lg dark:hover:shadow-brand-950/20 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+                className="group block bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden hover:border-brand-300 dark:hover:border-brand-700 hover:shadow-lg dark:hover:shadow-brand-950/20 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 gradient-border"
               >
                 <div className="p-8 lg:p-10">
                   <div className="flex flex-col lg:flex-row gap-8">

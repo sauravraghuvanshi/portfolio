@@ -73,7 +73,7 @@ export default function ProjectsGrid({ projects, showFilters = true, limit }: Pr
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.3, delay: i * 0.04 }}
-                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm hover:border-brand-300 dark:hover:border-brand-700 hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col"
+                className={`bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm hover:border-brand-300 dark:hover:border-brand-700 hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col${project.featured ? " gradient-border" : ""}`}
                 aria-label={project.title}
               >
                 <div className="flex items-start justify-between gap-3 mb-4">
