@@ -20,7 +20,8 @@
 - **Technical Blog** — MDX-powered blog with rich typography, syntax highlighting, reading time, Table of Contents with scroll-spy, and related posts
 - **Social Sharing** — LinkedIn (copies post text + opens composer), X/Twitter, and copy link on blog posts
 - **RSS Feed** — Auto-generated RSS feed at `/feed.xml` with link auto-discovery
-- **Hero Animations** — Smooth rotating subtitle phrases with AnimatePresence transitions
+- **Hero Animations** — Smooth rotating subtitle phrases with AnimatePresence transitions + subtle parallax depth on scroll (respects `prefers-reduced-motion`)
+- **Page Transitions** — Cinematic fade+slide animation on every route change via `app/template.tsx`
 - **Scroll Progress** — Reading progress bar on blog and case study detail pages
 - **Code Copy Button** — Hover-to-reveal copy button on all MDX code blocks
 - **Noise Texture** — Subtle SVG noise overlay for visual depth
@@ -36,6 +37,7 @@
 - **Multi-Select Categories** — All content types support multiple categories with custom category input
 - **Media Resize** — Inline image resize controls in the editor
 - **Azure Blob Storage** — Images stored in Azure Blob Storage with organized hierarchy (`blog/`, `events/`, `case-studies/`, `certifications/`)
+- **Animated Gradient Border** — Rotating `conic-gradient` border on featured cards (blog, projects, talks, case studies, events) appears on hover via CSS Houdini `@property` animation
 - **Dark/Light Mode** — System-aware theme toggle with zero flash
 - **SEO** — JSON-LD schema (Person, WebSite, BreadcrumbList, SpeakingEvent, CaseStudy), OpenGraph/Twitter cards, sitemap, robots.txt
 - **Reduced Motion** — Global `MotionConfig reducedMotion="user"` respects `prefers-reduced-motion`
