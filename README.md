@@ -141,8 +141,10 @@ public/events/{slug}/*.jpg   ← committed to repo
 ```
 portfolio/
 ├── app/
-│   ├── layout.tsx                    # Root layout (nav, footer, fonts, SEO)
+│   ├── layout.tsx                    # Root layout (nav, footer, fonts, SEO, skip-to-content)
 │   ├── page.tsx                      # Homepage (11 sections)
+│   ├── error.tsx                     # Global error boundary
+│   ├── loading.tsx                   # Global loading spinner
 │   ├── sitemap.ts                    # Auto-generated sitemap
 │   ├── robots.ts                     # robots.txt
 │   ├── not-found.tsx                 # 404 page
@@ -228,6 +230,8 @@ portfolio/
 ├── lib/
 │   ├── content.ts                    # Data loading (profiles, blogs, events, talks)
 │   ├── admin.ts                      # Blog, Case Study, Project, Talk, Event, Certification CRUD + image upload helpers
+│   ├── api-schemas.ts                # Zod validation schemas for all content types
+│   ├── rate-limit.ts                 # In-memory rate limiter (configurable limit/window)
 │   ├── ai/                           # AI Writer helpers
 │   │   ├── content-schemas.ts        # Content type configs + question sets
 │   │   ├── system-prompt.ts          # Dynamic system prompt builder
@@ -236,8 +240,10 @@ portfolio/
 │   ├── azure-storage.ts              # Azure Blob Storage client (uploadToBlob)
 │   ├── mdx-components.tsx            # Shared MDX component map
 │   └── utils.ts                      # cn(), formatDate(), etc.
-├── auth.ts                           # NextAuth v5 config (Credentials provider)
-├── middleware.ts                      # Protects /admin/* routes
+├── types/
+│   └── foundry.ts                    # TypeScript interfaces for Azure AI Foundry Responses API
+├── auth.ts                           # NextAuth v5 config (Credentials provider + brute-force lockout)
+├── middleware.ts                      # Protects /admin/* and /api/admin/* routes
 ├── scripts/
 │   ├── generate-events.mjs           # DOCX → events.json + photos
 │   ├── build-portfolio-rag.mjs       # RAG pipeline: extract portfolio → Foundry vector store
@@ -320,18 +326,26 @@ See [`AZURE-DEPLOY.md`](../AZURE-DEPLOY.md) for manual deployment steps and trou
 ## Performance & Security
 
 - [x] `next/font` for zero-CLS font loading
-- [x] AVIF/WebP image formats via `next/image`
+- [x] AVIF/WebP image formats via `next/image` (blog, case study, and MDX images)
 - [x] YouTube embeds lazy-loaded (thumbnail first, iframe on click)
 - [x] Blog images served from Azure Blob Storage with immutable cache headers
-- [x] Security headers (X-Content-Type-Options, X-Frame-Options, XSS-Protection, Referrer-Policy, Permissions-Policy)
+- [x] **Content-Security-Policy (CSP)** — comprehensive policy covering self, YouTube iframes, Azure Blob images, inline styles
+- [x] **Security headers** — HSTS, X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy
+- [x] **Zod input validation** — all 13 admin API routes validate request bodies at the boundary (`lib/api-schemas.ts`)
+- [x] **Rate limiting** — in-memory rate limiter for AI Writer (5/min per user) and reindex (1/min global) (`lib/rate-limit.ts`)
+- [x] **Brute-force protection** — exponential backoff login lockout (5 failures → 30s, doubles, max 15min) in `auth.ts`
+- [x] **Error boundaries** — global and admin-specific error/loading states (`app/error.tsx`, `app/admin/error.tsx`)
+- [x] **Skip-to-content** — accessible skip link for keyboard navigation
+- [x] **TypeScript strict** — no `any` types in AI Writer route, proper Foundry API interfaces in `types/foundry.ts`
+- [x] **Dev-only logging** — production builds emit zero `console.log` output
 - [x] `prefers-reduced-motion` respected by Framer Motion
 - [x] Semantic HTML + ARIA labels
-- [x] Keyboard navigation + skip-to-content
+- [x] Keyboard navigation
 - [x] Dark/light mode with zero flash
 - [x] JSON-LD schema (Person, WebSite, CreativeWork, BreadcrumbList, SpeakingEvent, CaseStudy)
 - [x] `sitemap.xml` + `robots.txt`
-- [x] OpenGraph + Twitter card metadata per page
-- [x] Admin routes protected by NextAuth middleware
+- [x] OpenGraph + Twitter card metadata per page with branded OG image (1200×630)
+- [x] Admin routes protected by NextAuth middleware (covers `/admin/*` and `/api/admin/*`)
 
 ---
 
