@@ -1,10 +1,12 @@
 ﻿import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import Navigation from "@/components/layout/Navigation";
 import Footer from "@/components/layout/Footer";
 import LayoutShell from "@/components/layout/LayoutShell";
 import CommandPalette from "@/components/ui/CommandPalette";
+import ChatBubble from "@/components/chat/ChatBubble";
 import type { SearchItem } from "@/components/ui/CommandPalette";
 import { PersonSchema, WebSiteSchema } from "@/components/JsonLd";
 import { SITE_URL } from "@/lib/constants";
@@ -138,17 +140,13 @@ export default function RootLayout({
     >
       <head>
         <link rel="alternate" type="application/rss+xml" title="Blog RSS Feed" href="/feed.xml" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                var theme = localStorage.getItem('theme');
-                var preferred = theme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-                document.documentElement.classList.toggle('dark', preferred === 'dark');
-              })();
-            `,
-          }}
-        />
+        <Script id="theme-init" strategy="beforeInteractive">{`
+          (function() {
+            var theme = localStorage.getItem('theme');
+            var preferred = theme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.classList.toggle('dark', preferred === 'dark');
+          })();
+        `}</Script>
         <PersonSchema />
         <WebSiteSchema />
       </head>
@@ -166,6 +164,7 @@ export default function RootLayout({
         >
           {children}
         </LayoutShell>
+        <ChatBubble />
       </body>
     </html>
   );

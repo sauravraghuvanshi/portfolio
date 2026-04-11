@@ -1,9 +1,14 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion, type Variants } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, Download, Mail, Github, Linkedin, Twitter, Calendar } from "lucide-react";
+import ImageWithShimmer from "@/components/ui/ImageWithShimmer";
+
+interface HeroProps {
+  headshot?: string;
+}
 
 const ROTATING_PHRASES = [
   "Harness the Power of Cloud & AI",
@@ -31,7 +36,7 @@ const itemVariants: Variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.55 } },
 };
 
-export default function Hero() {
+export default function Hero({ headshot }: HeroProps) {
   const [phraseIndex, setPhraseIndex] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
   const prefersReduced = useReducedMotion();
@@ -41,8 +46,6 @@ export default function Hero() {
     offset: ["start start", "end start"],
   });
 
-  // Background moves at 30% of scroll speed (subtle depth)
-  // Disabled when user prefers reduced motion
   const bgY = useTransform(scrollYProgress, [0, 1], prefersReduced ? ["0%", "0%"] : ["0%", "30%"]);
   const blob1Y = useTransform(scrollYProgress, [0, 1], prefersReduced ? ["0%", "0%"] : ["0%", "20%"]);
   const blob2Y = useTransform(scrollYProgress, [0, 1], prefersReduced ? ["0%", "0%"] : ["0%", "40%"]);
@@ -74,103 +77,134 @@ export default function Hero() {
         />
       </motion.div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="max-w-4xl"
-        >
-          {/* Status chip */}
-          <motion.div variants={itemVariants} className="mb-6">
-            <span className="inline-flex items-center gap-2 px-4 py-2 bg-accent-50 dark:bg-accent-950/40 border border-accent-200 dark:border-accent-800/50 rounded-full text-sm text-accent-700 dark:text-accent-300 font-medium">
-              <span className="w-2 h-2 rounded-full bg-accent-500 animate-pulse" aria-hidden="true" />
-              Open to speaking &amp; collaborations
-            </span>
-          </motion.div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32 w-full">
+        <div className={headshot ? "grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center" : ""}>
+          {/* Text column */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className={headshot ? "order-2 lg:order-1" : "max-w-4xl"}
+          >
+            {/* Status chip */}
+            <motion.div variants={itemVariants} className="mb-6">
+              <span className="inline-flex items-center gap-2 px-4 py-2 bg-accent-50 dark:bg-accent-950/40 border border-accent-200 dark:border-accent-800/50 rounded-full text-sm text-accent-700 dark:text-accent-300 font-medium">
+                <span className="w-2 h-2 rounded-full bg-accent-500 animate-pulse" aria-hidden="true" />
+                Open to speaking &amp; collaborations
+              </span>
+            </motion.div>
 
-          {/* Headline */}
-          <motion.h1 variants={itemVariants} className="heading-xl text-slate-900 dark:text-white mb-6">
-            Helping Startups and Unicorns{" "}
-            <br />
-            <span className="relative grid overflow-y-clip">
-              {/* All phrases in same grid cell — container height = tallest phrase */}
-              {ROTATING_PHRASES.map((phrase) => (
-                <span key={phrase} className="invisible [grid-area:1/1] whitespace-nowrap" aria-hidden="true">{phrase}</span>
-              ))}
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={phraseIndex}
-                  className="gradient-text [grid-area:1/1] whitespace-nowrap"
-                  initial={{ y: "100%", opacity: 0 }}
-                  animate={{ y: "0%", opacity: 1 }}
-                  exit={{ y: "-100%", opacity: 0 }}
-                  transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
-                >
-                  {ROTATING_PHRASES[phraseIndex]}
-                </motion.span>
-              </AnimatePresence>
-            </span>
-          </motion.h1>
+            {/* Headline */}
+            <motion.h1 variants={itemVariants} className="heading-xl text-slate-900 dark:text-white mb-6">
+              Helping Startups and Unicorns{" "}
+              <br />
+              <span className="relative grid overflow-y-clip overflow-x-hidden">
+                {ROTATING_PHRASES.map((phrase) => (
+                  <span key={phrase} className="invisible [grid-area:1/1]" aria-hidden="true">{phrase}</span>
+                ))}
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={phraseIndex}
+                    className="gradient-text [grid-area:1/1]"
+                    initial={{ y: "100%", opacity: 0 }}
+                    animate={{ y: "0%", opacity: 1 }}
+                    exit={{ y: "-100%", opacity: 0 }}
+                    transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  >
+                    {ROTATING_PHRASES[phraseIndex]}
+                  </motion.span>
+                </AnimatePresence>
+              </span>
+            </motion.h1>
 
-          {/* Sub-headline */}
-          <motion.p variants={itemVariants} className="text-xl sm:text-2xl text-slate-700 dark:text-slate-200 font-semibold mb-3">
-            Saurav Raghuvanshi · Digital Cloud Solution Architect @ Microsoft
-          </motion.p>
+            {/* Sub-headline */}
+            <motion.p variants={itemVariants} className="text-xl sm:text-2xl text-slate-700 dark:text-slate-200 font-semibold mb-3">
+              Saurav Raghuvanshi · Digital Cloud Solution Architect @ Microsoft
+            </motion.p>
 
-          {/* Value prop */}
-          <motion.p variants={itemVariants} className="body-lg max-w-2xl mb-10 text-slate-600 dark:text-slate-300">
-            I help high-growth startups and unicorns{" "}
-            <strong className="text-slate-900 dark:text-white font-semibold">design secure, scalable, AI-powered platforms on Azure</strong>
-            {" "}— from cloud-native architecture and Generative AI to DevOps and cost optimization.
-          </motion.p>
+            {/* Value prop */}
+            <motion.p variants={itemVariants} className="body-lg max-w-2xl mb-10 text-slate-600 dark:text-slate-300">
+              I help high-growth startups and unicorns{" "}
+              <strong className="text-slate-900 dark:text-white font-semibold">design secure, scalable, AI-powered platforms on Azure</strong>
+              {" "}— from cloud-native architecture and Generative AI to DevOps and cost optimization.
+            </motion.p>
 
-          {/* CTAs */}
-          <motion.div variants={itemVariants} className="flex flex-wrap gap-3 mb-10">
-            <Link
-              href="/#case-studies"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-sm hover:shadow-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 group"
-            >
-              View Case Studies
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
-            </Link>
-
-            <a
-              href="/resume"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-brand-400 dark:hover:border-brand-600 text-slate-700 dark:text-slate-300 font-semibold rounded-xl transition-all duration-200 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
-            >
-              <Download className="w-4 h-4" aria-hidden="true" />
-              Download Resume
-            </a>
-
-            <a
-              href="https://outlook.office.com/bookwithme/user/7724061ce7fa4a87acfd23b2dbaf800a@microsoft.com/meetingtype/ojiCbqKOdUCmNTWtPZFSnQ2?anonymous&ismsaljsauthenabled&ep=mlink"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-accent-400 dark:hover:border-accent-600 text-slate-700 dark:text-slate-300 font-semibold rounded-xl transition-all duration-200 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
-            >
-              <Calendar className="w-4 h-4" aria-hidden="true" />
-              Book a Call
-            </a>
-          </motion.div>
-
-          {/* Social row */}
-          <motion.div variants={itemVariants} className="flex items-center gap-4">
-            <span className="text-sm text-slate-500 dark:text-slate-500">Connect:</span>
-            {socialLinks.map(({ icon: Icon, label, href }) => (
-              <a
-                key={label}
-                href={href}
-                target={href.startsWith("http") ? "_blank" : undefined}
-                rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                aria-label={label}
-                className="p-2 text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/50 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            {/* CTAs */}
+            <motion.div variants={itemVariants} className="flex flex-wrap gap-3 mb-10">
+              <Link
+                href="/#case-studies"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-sm hover:shadow-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 group"
               >
-                <Icon className="w-5 h-5" />
+                View Case Studies
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+              </Link>
+
+              <a
+                href="/resume"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-brand-400 dark:hover:border-brand-600 text-slate-700 dark:text-slate-300 font-semibold rounded-xl transition-all duration-200 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
+              >
+                <Download className="w-4 h-4" aria-hidden="true" />
+                Download Resume
               </a>
-            ))}
+
+              <a
+                href="https://outlook.office.com/bookwithme/user/7724061ce7fa4a87acfd23b2dbaf800a@microsoft.com/meetingtype/ojiCbqKOdUCmNTWtPZFSnQ2?anonymous&ismsaljsauthenabled&ep=mlink"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-accent-400 dark:hover:border-accent-600 text-slate-700 dark:text-slate-300 font-semibold rounded-xl transition-all duration-200 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
+              >
+                <Calendar className="w-4 h-4" aria-hidden="true" />
+                Book a Call
+              </a>
+            </motion.div>
+
+            {/* Social row */}
+            <motion.div variants={itemVariants} className="flex items-center gap-4">
+              <span className="text-sm text-slate-500 dark:text-slate-500">Connect:</span>
+              {socialLinks.map(({ icon: Icon, label, href }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target={href.startsWith("http") ? "_blank" : undefined}
+                  rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  aria-label={label}
+                  className="p-2 text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/50 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+                >
+                  <Icon className="w-5 h-5" />
+                </a>
+              ))}
+            </motion.div>
           </motion.div>
-        </motion.div>
+
+          {/* Headshot column */}
+          {headshot && (
+            <motion.div
+              className="order-1 lg:order-2 flex justify-center lg:justify-end"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <div className="relative">
+                {/* Decorative gradient glow behind photo */}
+                <div
+                  className="absolute -inset-3 rounded-2xl bg-gradient-to-br from-brand-500/20 via-accent-500/10 to-brand-400/20 blur-2xl -z-10"
+                  aria-hidden="true"
+                />
+                {/* Photo container */}
+                <div className="relative w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 xl:w-96 xl:h-96 rounded-2xl overflow-hidden ring-1 ring-slate-200 dark:ring-slate-700/50 shadow-glow bg-slate-100 dark:bg-slate-800">
+                  <ImageWithShimmer
+                    src={headshot}
+                    alt="Saurav Raghuvanshi — Digital Cloud Solution Architect at Microsoft"
+                    fill
+                    priority
+                    className="object-cover"
+                    sizes="(max-width: 640px) 256px, (max-width: 1024px) 288px, (max-width: 1280px) 320px, 384px"
+                  />
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </div>
 
         {/* Scroll indicator */}
         <motion.div

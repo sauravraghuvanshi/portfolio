@@ -2,14 +2,16 @@
 
 import { motion } from "framer-motion";
 import { CheckCircle2 } from "lucide-react";
+import ImageWithShimmer from "@/components/ui/ImageWithShimmer";
 
 interface AboutProps {
   summary: string;
   aboutLong: string;
   whatImKnownFor: string[];
+  headshot?: string;
 }
 
-export default function About({ summary, aboutLong, whatImKnownFor }: AboutProps) {
+export default function About({ summary, aboutLong, whatImKnownFor, headshot }: AboutProps) {
   const extraParagraphs = aboutLong.split("\n\n").filter(Boolean);
 
   return (
@@ -23,6 +25,17 @@ export default function About({ summary, aboutLong, whatImKnownFor }: AboutProps
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.55 }}
           >
+            {headshot && (
+              <div className="relative w-32 h-32 sm:w-40 sm:h-40 mb-8 rounded-2xl overflow-hidden ring-1 ring-white/20 dark:ring-slate-700/50 shadow-glow">
+                <ImageWithShimmer
+                  src={headshot}
+                  alt="Saurav Raghuvanshi"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 128px, 160px"
+                />
+              </div>
+            )}
             <p className="text-sm font-semibold text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-4">
               About
             </p>

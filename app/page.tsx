@@ -32,9 +32,9 @@ export default function HomePage() {
 
   return (
     <>
-      <Hero />
+      <Hero headshot={profile.headshot} />
       <CredibilityBar stats={profile.credibilityStats} />
-      <About summary={profile.summary} aboutLong={profile.aboutLong} whatImKnownFor={profile.whatImKnownFor} />
+      <About summary={profile.summary} aboutLong={profile.aboutLong} whatImKnownFor={profile.whatImKnownFor} headshot={profile.headshot} />
       <Skills skills={profile.skills} />
       <FeaturedCaseStudies caseStudies={caseStudies} />
       <ProjectsGrid projects={projects} limit={6} />
