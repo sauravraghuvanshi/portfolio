@@ -20,12 +20,13 @@
 - **Technical Blog** — MDX-powered blog with rich typography, syntax highlighting, reading time, Table of Contents with scroll-spy, and related posts
 - **Social Sharing** — LinkedIn (copies post text + opens composer), X/Twitter, and copy link on blog posts
 - **RSS Feed** — Auto-generated RSS feed at `/feed.xml` with link auto-discovery
-- **Hero Animations** — Smooth rotating subtitle phrases with AnimatePresence transitions + subtle parallax depth on scroll (respects `prefers-reduced-motion`)
+- **Hero Section** — Two-column layout with headshot image, smooth rotating subtitle phrases with AnimatePresence transitions + subtle parallax depth on scroll (respects `prefers-reduced-motion`)
 - **Page Transitions** — Cinematic fade+slide animation on every route change via `app/template.tsx`
 - **Scroll Progress** — Reading progress bar on blog and case study detail pages
 - **Code Copy Button** — Hover-to-reveal copy button on all MDX code blocks
 - **Noise Texture** — Subtle SVG noise overlay for visual depth
 - **AI Writer (Agentic)** — AI-powered content creation assistant at `/admin/ai-writer` backed by an **Azure AI Foundry Agent** with three grounding sources: portfolio knowledge base (RAG via vector store with 12 indexed documents), Microsoft Learn MCP server (official Azure documentation), and Web Search. Uses stateful Responses API with automatic MCP tool-approval flow, AAD authentication (ManagedIdentity on production, AzureCLI on local dev), and inline source citations. Content types: Blog, Case Study, Project, Talk, Event, Social.
+- **AI Chatbot** — Public-facing floating chat bubble powered by Azure AI Foundry Agent. Visitors can ask questions about Saurav's experience, skills, and projects. Uses `lib/ai/foundry-agent.ts` (shared Foundry client) and `lib/ai/chatbot-prompt.ts` (chatbot system prompt). Streams responses via `/api/chat` route with Vercel AI SDK.
 - **Auto RAG Reindex** — Automatic reindexing pipeline triggers on every content save/delete via admin panel. Extracts portfolio content → uploads to Foundry → creates vector store → updates agent → cleans up old resources. Safe ordering ensures the agent is never left pointing to deleted data.
 - **Admin Panel** — Protected dashboard at `/admin` with authentication, managing blogs, case studies, projects, talks, events, and certifications
 - **Blog Editor** — Medium-style MDX editor with live preview, image upload, and drag-and-drop media
@@ -38,7 +39,7 @@
 - **Media Resize** — Inline image resize controls in the editor
 - **Azure Blob Storage** — Images stored in Azure Blob Storage with organized hierarchy (`blog/`, `events/`, `case-studies/`, `certifications/`)
 - **Animated Gradient Border** — Rotating `conic-gradient` border on featured cards (blog, projects, talks, case studies, events) appears on hover via CSS Houdini `@property` animation
-- **Dark/Light Mode** — System-aware theme toggle with zero flash
+- **Dark/Light Mode** — System-aware theme toggle with zero flash (uses `next/script` `beforeInteractive` strategy)
 - **SEO** — JSON-LD schema (Person, WebSite, BreadcrumbList, SpeakingEvent, CaseStudy), OpenGraph/Twitter cards, sitemap, robots.txt
 - **Reduced Motion** — Global `MotionConfig reducedMotion="user"` respects `prefers-reduced-motion`
 - **Responsive** — Mobile-first design with Framer Motion animations
@@ -56,7 +57,7 @@
 | Auth | NextAuth v5 (Credentials provider, JWT sessions) |
 | Editor | `@uiw/react-md-editor` with custom toolbar |
 | Image Storage | Azure Blob Storage (`@azure/storage-blob`) |
-| AI | Vercel AI SDK v5 (`ai`, `@ai-sdk/react`) · Azure AI Foundry Agent (Responses API) |
+| AI | Vercel AI SDK v5 (`ai`, `@ai-sdk/react`) · Azure AI Foundry Agent (Responses API) · Public chatbot + admin AI Writer |
 | AI Backend | Azure AI Foundry (`saurav-portfolio-ai`, East US) — Agent with file_search + Web Search + Microsoft Learn MCP |
 | Deployment | Azure App Service (Linux, Node 20 LTS, F1 Free) |
 | CI/CD | GitHub Actions → Kudu zip-deploy |
@@ -202,6 +203,8 @@ portfolio/
 │   │       ├── upload/route.ts       # POST — image upload to Azure Blob
 │   │       ├── ai-writer/route.ts    # POST — AI Writer streaming chat endpoint
    199→│   │       └── reindex/route.ts      # POST — Auto RAG reindex pipeline
+│   ├── chat/
+│   │   └── route.ts                  # POST — Public AI chatbot streaming endpoint
 │   ├── case-studies/
 │   │   ├── page.tsx                  # Case studies listing
 │   │   └── [slug]/page.tsx           # Individual case study (MDX)
@@ -219,6 +222,7 @@ portfolio/
 │   ├── admin/                        # AdminSidebar, BlogEditor, CaseStudyEditor, ProjectEditor, TalkEditor, EventEditor, CertificationEditor, AIWriter, CategoryMultiSelect, MediaResizeBar, DeleteItemButton
 │   ├── admin/ai-writer/              # ContentTypeSelector, ChatMessages, ContentPreview
 │   ├── events/                       # EventGallery (lightbox)
+│   ├── chat/                          # ChatBubble, ChatMessage (public AI chatbot)
 │   └── ui/                           # Primitives (Badge, Card, YouTubeEmbed, CommandPalette, ShareButtons, ScrollProgress, CodeBlock, TableOfContents, etc.)
 ├── content/
 │   ├── profile.json                  # Personal info, skills, experience
@@ -237,6 +241,8 @@ portfolio/
 │   ├── ai/                           # AI Writer helpers
 │   │   ├── content-schemas.ts        # Content type configs + question sets
 │   │   ├── system-prompt.ts          # Dynamic system prompt builder
+│   │   ├── foundry-agent.ts          # Shared Foundry Agent client (used by ai-writer + chatbot)
+│   │   ├── chatbot-prompt.ts         # Chatbot-specific system prompt
 │   │   └── rag-pipeline.ts           # RAG pipeline (extract → upload → index → update agent → cleanup)
 │   ├── triggerReindex.ts              # Debounced fire-and-forget reindex trigger
 │   ├── azure-storage.ts              # Azure Blob Storage client (uploadToBlob)
