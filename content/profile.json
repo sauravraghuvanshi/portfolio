@@ -51,32 +51,7 @@
       "items": ["Python", "Shell Scripting", "HTML / CSS", "Cloud Automation", "Azure CLI", "REST APIs"]
     }
   },
-  "testimonials": [
-    {
-      "id": 1,
-      "quote": "Saurav's guidance helped us re-architect our platform for scale in record time. His ability to translate complex Azure architecture into actionable engineering decisions is rare. He thinks like a founder, not just an architect.",
-      "author": "Founder",
-      "role": "CTO",
-      "company": "Early-stage SaaS Startup (Microsoft Startups Hub)",
-      "avatar": ""
-    },
-    {
-      "id": 2,
-      "quote": "The SupportIQ solution Saurav helped design genuinely changed how our team operates. Saving an hour per engineer per day compounded across the team is a massive productivity win. The ROI was immediate.",
-      "author": "Engineering Lead",
-      "role": "Head of Engineering",
-      "company": "Product Team",
-      "avatar": ""
-    },
-    {
-      "id": 3,
-      "quote": "Saurav ran the Cloud-Ready Academy program for our engineering cohort and the results were exceptional — 95% skills uplift, incredibly well-structured labs, and a genuine passion for helping developers grow.",
-      "author": "Program Manager",
-      "role": "L&D Manager",
-      "company": "Enterprise Training Program",
-      "avatar": ""
-    }
-  ],
+  "testimonials": [],
   "speaking": [
     {
       "title": "Building with Azure AI Foundry: From Prototype to Production",

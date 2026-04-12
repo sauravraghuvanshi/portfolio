@@ -33,7 +33,7 @@
 - **Case Study Editor** — MDX editor for case studies with metrics, timeline, role, and client fields
 - **Project Editor** — Form-based editor for projects with outcomes, tech stack, and category fields
 - **Talk Editor** — Form-based editor for YouTube talks with title, topic, description, and featured flag
-- **Event Editor** — Full editor for events with highlights, impact, image upload, and featured flag
+- **Event Editor** — Full editor for events with highlights, impact, image upload, featured flag, and **location fields** (city search with 30+ pre-populated cities, virtual toggle, manual coordinates entry)
 - **Certification Editor** — Form-based editor for certifications with badge image upload, color picker, and verification URL
 - **Multi-Select Categories** — All content types support multiple categories with custom category input
 - **Media Resize** — Inline image resize controls in the editor

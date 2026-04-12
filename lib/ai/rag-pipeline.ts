@@ -173,17 +173,6 @@ function extractProfile(): RagDocument {
     }
   }
 
-  if (p.testimonials?.length) {
-    lines.push(`## Testimonials`);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    for (const t of p.testimonials as any[]) {
-      lines.push(
-        `> "${t.quote}" — ${t.author}, ${t.role} at ${t.company}`,
-        ``
-      );
-    }
-  }
-
   if (p.community?.length) {
     lines.push(`## Community Roles`);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

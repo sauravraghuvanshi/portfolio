@@ -151,13 +151,6 @@ function extractProfile() {
     }
   }
 
-  if (p.testimonials?.length) {
-    lines.push(`## Testimonials`);
-    for (const t of p.testimonials) {
-      lines.push(`> "${t.quote}" — ${t.author}, ${t.role} at ${t.company}`, ``);
-    }
-  }
-
   if (p.community?.length) {
     lines.push(`## Community Roles`);
     for (const c of p.community) {

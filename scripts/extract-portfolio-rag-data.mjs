@@ -174,18 +174,6 @@ for (const exp of profile.experience) {
   });
 }
 
-// Testimonials
-addChunk({
-  source: "profile",
-  title: `${profile.name} — Testimonials`,
-  content: profile.testimonials
-    .map((t) => `"${t.quote}" — ${t.author}, ${t.role}, ${t.company}`)
-    .join("\n\n"),
-  url: SITE_URL,
-  tags: ["testimonials", "feedback"],
-  category: "Profile",
-});
-
 // Community & speaking
 addChunk({
   source: "profile",
