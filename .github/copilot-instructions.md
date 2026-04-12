@@ -1,0 +1,61 @@
+# Portfolio — Copilot Workspace Instructions
+
+## Project
+- **Owner:** Saurav Raghuvanshi (Digital Cloud Solution Architect @ Microsoft)
+- **Stack:** Next.js 16 App Router · TypeScript · Tailwind v4 · Framer Motion
+- **Live:** https://saurav-portfolio.azurewebsites.net
+- **Repo:** https://github.com/sauravraghuvanshi/portfolio
+- **Local:** `C:\Users\sraghuvanshi\Downloads\My-Projects\Portfolio Website\portfolio\`
+
+## Session Start Protocol (AUTOMATIC — do this FIRST before anything else)
+
+At the **very start of EVERY new session**, before responding to any user request:
+
+1. **Read full project context:** Read `.claude/project-memory.md` — contains architecture, routes, infra, last session state, and remaining roadmap
+2. **Read lessons:** Read `.claude/lessons.md` — 38+ learned rules from past mistakes (NEVER repeat these)
+3. **Brief the user:** Say: "Context loaded — [one-line summary of where we left off]. Remaining: [top 3 items from roadmap]"
+4. If user has a task, proceed. If not, suggest the highest-priority remaining item.
+
+## Session End Protocol (AUTOMATIC — do this before ending ANY session)
+
+Before the session ends or when the user says "done", "that's all", "push", or signals session end:
+
+1. **Update `project-memory.md`** — Update the "Last Session Summary" section with: date, what was completed, phase status, changed files, last commit hash, remaining roadmap
+2. **Update `lessons.md`** — If ANY corrections were made or new patterns discovered, add new lessons
+3. **Update `README.md`** — If any notable features were added/changed (new routes, content types, dependencies, features)
+4. **Commit message format:** `feat:` / `fix:` / `chore:` / `docs:` prefix, concise description
+
+## Key Rules (from lessons.md — most critical)
+
+- **Never edit `events.json` directly** — use `events-overrides.json`
+- **Tailwind:** Full-string lookup maps for dynamic classes, never interpolate
+- **Never start dev server** — tell user to run `npm run dev` themselves
+- **Push only after approval** — never push until user confirms localhost looks good
+- **Set Azure env vars BEFORE pushing code** that depends on them
+- **Build check:** Run `NEXT_TURBOPACK=0 npx next build` after non-trivial changes
+- **Auth:** `ManagedIdentityCredential` on production (detected via `WEBSITE_SITE_NAME`), `AzureCliCredential` on local
+- **No console.log in production** — use `const log = isDev ? console.log : () => {};`
+- **Zod validation** at API boundaries — schemas in `lib/api-schemas.ts`
+- **SCM auth check before push:** `az rest --method get` to verify `basicPublishingCredentialsPolicies/scm`
+- **Testimonials are removed** — company compliance, do not add back
+
+## Content Pipeline
+- Blog: MDX in `content/blog/` — admin panel or manual
+- Case Studies: MDX in `content/case-studies/`
+- Projects: `content/projects.json`
+- Talks: `content/talks.json`
+- Events: Auto-generated from DOCX → `events.json`, overrides in `events-overrides.json`
+- Certifications: `content/certifications.json`
+
+## Azure Infrastructure
+| Resource | Value |
+|---|---|
+| Subscription | `60e58e3f-da14-4fa7-89dd-3d0369ddbc8b` (Visual Studio Enterprise) |
+| RG | `rg-saurav-portfolio` (Central India) |
+| App Service | `saurav-portfolio` (F1 Free, Linux, Node 20) |
+| AI Foundry | `saurav-portfolio-ai` (East US) — Agent: `saurav-portfolio-ai-project-agent` |
+
+## CI/CD
+```
+git push origin main → GitHub Actions → build → zip .next/standalone/ → Kudu zipdeploy
+```
