@@ -11,6 +11,7 @@ import type { SearchItem } from "@/components/ui/CommandPalette";
 import { PersonSchema, WebSiteSchema } from "@/components/JsonLd";
 import { SITE_URL } from "@/lib/constants";
 import { getAllBlogPosts, getAllCaseStudies, getProjects, getTalks, getEvents, getProfile } from "@/lib/content";
+import AppInsightsProvider from "@/components/AppInsightsProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -106,7 +107,7 @@ export default function RootLayout({
     ...getProjects().map((p) => ({
       title: p.title,
       description: p.description,
-      url: `/projects`,
+      url: `/projects/${p.id}`,
       type: "project" as const,
     })),
     ...getTalks().map((t) => ({
@@ -165,6 +166,7 @@ export default function RootLayout({
           {children}
         </LayoutShell>
         <ChatBubble />
+        <AppInsightsProvider />
       </body>
     </html>
   );

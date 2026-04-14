@@ -35,11 +35,11 @@ const nextConfig: NextConfig = {
           key: "Content-Security-Policy",
           value: [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.monitor.azure.com",
             "style-src 'self' 'unsafe-inline'",
             "img-src 'self' data: blob: https://img.youtube.com https://sauravportfoliomedia.blob.core.windows.net https://i.ytimg.com",
             "font-src 'self'",
-            "connect-src 'self' https://sauravportfoliomedia.blob.core.windows.net",
+            "connect-src 'self' https://sauravportfoliomedia.blob.core.windows.net https://*.applicationinsights.azure.com https://*.monitor.azure.com",
             "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com",
             "media-src 'self'",
             "object-src 'none'",

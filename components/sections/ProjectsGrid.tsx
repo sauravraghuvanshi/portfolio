@@ -66,14 +66,14 @@ export default function ProjectsGrid({ projects, showFilters = true, limit }: Pr
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
           >
             {displayed.map((project, i) => (
+              <Link key={project.id} href={`/projects/${project.id}`} className="block">
               <motion.article
-                key={project.id}
                 layout
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.3, delay: i * 0.04 }}
-                className={`bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm hover:border-brand-300 dark:hover:border-brand-700 hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col${project.featured ? " gradient-border" : ""}`}
+                className={`h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm hover:border-brand-300 dark:hover:border-brand-700 hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col${project.featured ? " gradient-border" : ""}`}
                 aria-label={project.title}
               >
                 <div className="flex items-start justify-between gap-3 mb-4">
@@ -84,26 +84,26 @@ export default function ProjectsGrid({ projects, showFilters = true, limit }: Pr
                   </div>
                   <div className="flex gap-2">
                     {project.githubUrl && project.githubUrl !== "#" && (
-                      <a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <span
+                        onClick={(e) => { e.preventDefault(); window.open(project.githubUrl, "_blank", "noopener,noreferrer"); }}
+                        role="link"
+                        tabIndex={0}
                         aria-label={`${project.title} GitHub repository`}
-                        className="p-1.5 text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+                        className="p-1.5 text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 cursor-pointer"
                       >
                         <Github className="w-4 h-4" />
-                      </a>
+                      </span>
                     )}
                     {project.liveUrl && project.liveUrl !== "#" && (
-                      <a
-                        href={project.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <span
+                        onClick={(e) => { e.preventDefault(); window.open(project.liveUrl, "_blank", "noopener,noreferrer"); }}
+                        role="link"
+                        tabIndex={0}
                         aria-label={`${project.title} live demo`}
-                        className="p-1.5 text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+                        className="p-1.5 text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 cursor-pointer"
                       >
                         <ExternalLink className="w-4 h-4" />
-                      </a>
+                      </span>
                     )}
                   </div>
                 </div>
@@ -133,6 +133,7 @@ export default function ProjectsGrid({ projects, showFilters = true, limit }: Pr
                   )}
                 </div>
               </motion.article>
+              </Link>
             ))}
           </motion.div>
         </AnimatePresence>

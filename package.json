@@ -11,7 +11,9 @@
     "lint": "eslint",
     "generate-events": "node scripts/generate-events.mjs",
     "audit": "node scripts/audit.mjs",
-    "build-rag": "node scripts/build-portfolio-rag.mjs"
+    "build-rag": "node scripts/build-portfolio-rag.mjs",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "@ai-sdk/azure": "^3.0.49",
@@ -21,6 +23,7 @@
     "@azure/storage-blob": "^12.31.0",
     "@mdx-js/loader": "^3.1.1",
     "@mdx-js/react": "^3.1.1",
+    "@microsoft/applicationinsights-web": "^3.4.1",
     "@next/mdx": "^16.1.6",
     "@uiw/react-md-editor": "^4.0.11",
     "ai": "^6.0.141",
@@ -42,6 +45,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

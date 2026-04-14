@@ -158,6 +158,46 @@ export function CaseStudySchema({ title, description, slug, tags, datePublished 
   );
 }
 
+// --- Project Schema ---
+
+interface ProjectSchemaProps {
+  title: string;
+  description: string;
+  slug: string;
+  tags: string[];
+  year: number;
+}
+
+export function ProjectSchema({ title, description, slug, tags, year }: ProjectSchemaProps) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    "@id": `${SITE_URL}/projects/${slug}`,
+    name: title,
+    description,
+    url: `${SITE_URL}/projects/${slug}`,
+    keywords: tags.join(", "),
+    datePublished: `${year}-01-01`,
+    author: {
+      "@id": `${SITE_URL}/#person`,
+    },
+    publisher: {
+      "@id": `${SITE_URL}/#person`,
+    },
+    about: {
+      "@type": "Thing",
+      name: "Cloud Architecture",
+    },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
 // --- BreadcrumbList Schema ---
 
 interface BreadcrumbItem {

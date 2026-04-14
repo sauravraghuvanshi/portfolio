@@ -12,18 +12,22 @@
 At the **very start of EVERY new session**, before responding to any user request:
 
 1. **Read full project context:** Read `.claude/project-memory.md` — contains architecture, routes, infra, last session state, and remaining roadmap
-2. **Read lessons:** Read `.claude/lessons.md` — 38+ learned rules from past mistakes (NEVER repeat these)
-3. **Brief the user:** Say: "Context loaded — [one-line summary of where we left off]. Remaining: [top 3 items from roadmap]"
-4. If user has a task, proceed. If not, suggest the highest-priority remaining item.
+2. **Read lessons:** Read `.claude/lessons.md` — 53+ learned rules from past mistakes (NEVER repeat these)
+3. **Read code patterns:** Read `.claude/patterns.md` — exact code templates for components, APIs, admin CRUD, MDX, streaming. Follow these patterns for all new code.
+4. **Read architecture:** Read `.claude/architecture.md` — architecture decisions and rationale. Don't "fix" intentional design choices.
+5. **Brief the user:** Say: "Context loaded — [one-line summary of where we left off]. Remaining: [top 3 items from roadmap]"
+6. If user has a task, proceed. If not, suggest the highest-priority remaining item.
 
 ## Session End Protocol (AUTOMATIC — do this before ending ANY session)
 
 Before the session ends or when the user says "done", "that's all", "push", or signals session end:
 
-1. **Update `project-memory.md`** — Update the "Last Session Summary" section with: date, what was completed, phase status, changed files, last commit hash, remaining roadmap
+1. **Update `project-memory.md`** — Update the "Last Session Summary" section with: date, what was completed, changed files, last commit hash, what's next
 2. **Update `lessons.md`** — If ANY corrections were made or new patterns discovered, add new lessons
-3. **Update `README.md`** — If any notable features were added/changed (new routes, content types, dependencies, features)
-4. **Commit message format:** `feat:` / `fix:` / `chore:` / `docs:` prefix, concise description
+3. **Update `patterns.md`** — If new code patterns were established
+4. **Update `architecture.md`** — If any architecture decisions were made or changed
+5. **Update `README.md`** — If notable features added/changed
+6. **Commit message format:** `feat:` / `fix:` / `chore:` / `docs:` prefix, concise description
 
 ## Key Rules (from lessons.md — most critical)
 

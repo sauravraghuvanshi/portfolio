@@ -93,6 +93,10 @@ export function getFeaturedProjects(): Project[] {
   return getProjects().filter((p) => p.featured);
 }
 
+export function getProject(id: string): Project | null {
+  return getProjects().find((p) => p.id === id) ?? null;
+}
+
 // ---------------------------------------------------------------------------
 // Certifications
 // ---------------------------------------------------------------------------
