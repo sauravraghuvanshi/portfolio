@@ -25,6 +25,10 @@ test.describe("Navigation", () => {
     // Events link
     await page.getByRole("link", { name: /events/i }).first().click();
     await expect(page).toHaveURL(/\/events/);
+
+    // Community link
+    await page.getByRole("link", { name: /community/i }).first().click();
+    await expect(page).toHaveURL(/\/community/);
   });
 
   test("command palette opens with Ctrl+K", async ({ page }) => {
