@@ -15,6 +15,7 @@ const navLinks = [
   { label: "Projects", href: "/projects" },
   { label: "Talks", href: "/talks" },
   { label: "Events", href: "/events" },
+  { label: "Community", href: "/community" },
   { label: "Social", href: "/social" },
   { label: "Resume", href: "/resume" },
 ];

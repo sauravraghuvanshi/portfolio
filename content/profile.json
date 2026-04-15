@@ -102,6 +102,11 @@
       "role": "Mentor",
       "org": "Microsoft Startups Hub",
       "description": "Mentoring early-stage founders and engineering teams on cloud architecture, AI adoption, and product scaling."
+    },
+    {
+      "role": "Former Organizer",
+      "org": "AWS User Group India & South Asia",
+      "description": "Organized community meetups and led developer engagement across India and South Asia, fostering cloud knowledge sharing and peer learning."
     }
   ],
   "experience": [
