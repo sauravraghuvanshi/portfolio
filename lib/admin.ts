@@ -3,8 +3,7 @@ import path from "path";
 import matter from "gray-matter";
 import type { BlogPostMeta, CaseStudyMeta, Project, Talk, EventMeta, Certification } from "./content";
 import { uploadToBlob } from "./azure-storage";
-
-const contentDir = path.join(process.cwd(), "content");
+import { contentDir } from "./content-dir";
 const blogDir = path.join(contentDir, "blog");
 
 /** Reject slugs/identifiers that could escape the content directory. */

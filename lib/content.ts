@@ -2,8 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { cache } from "react";
-
-const contentDir = path.join(process.cwd(), "content");
+import { contentDir } from "./content-dir";
 
 export function normalizeCategory(cat: unknown): string[] {
   if (Array.isArray(cat)) return cat.filter((c): c is string => typeof c === "string");
