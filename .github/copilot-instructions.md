@@ -107,6 +107,6 @@ Any failure → fix → re-run → only then confirm to the user.
 
 ---
 
-_**Last auto-synced:** 2026-04-21T18:58:37.042Z · commit `909496d fix: resolve theme toggle hydration mismatch in Navigation` · via [`scripts/sync-docs.mjs`](../scripts/sync-docs.mjs)_
+_**Last auto-synced:** 2026-04-21T19:09:38.194Z · commit `bdd8d10 feat: tier 1 audit wins + cert verify URLs + deploy verification automation` · via [`scripts/sync-docs.mjs`](../scripts/sync-docs.mjs)_
 
 <!-- SYNC:FOOTER:END -->
