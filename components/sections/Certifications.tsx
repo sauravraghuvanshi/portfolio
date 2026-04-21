@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ExternalLink, Award, ShieldCheck } from "lucide-react";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { CopyIdPill } from "@/components/sections/CopyIdPill";
 import type { Certification } from "@/lib/content";
 
 interface CertificationsProps {
@@ -67,12 +68,13 @@ export default function Certifications({ certifications }: CertificationsProps) 
                       {cert.code}
                     </span>
                     {cert.credentialId && (
-                      <span
-                        className="inline-block px-2 py-0.5 bg-slate-50 dark:bg-slate-800/60 rounded text-[10px] font-mono text-slate-500 dark:text-slate-500 border border-slate-200 dark:border-slate-700"
-                        title="Credential ID"
-                      >
-                        ID: {cert.credentialId}
-                      </span>
+                      <CopyIdPill
+                        value={cert.credentialId}
+                        hintForAws={
+                          typeof cert.verifyUrl === "string" &&
+                          cert.verifyUrl.includes("aws.amazon.com/verification")
+                        }
+                      />
                     )}
                   </div>
                 </div>
