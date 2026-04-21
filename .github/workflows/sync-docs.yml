@@ -1,0 +1,57 @@
+name: Sync docs (README + project-memory)
+
+# Runs after every push to main that touches content, components, or admin routes.
+# Regenerates the stats block in README.md and the last-auto-update block in
+# .claude/project-memory.md, then commits back with [skip ci] to avoid loops.
+#
+# Also runs on workflow_dispatch so you can trigger it manually from the Actions tab.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/**"
+      - "components/**"
+      - "app/**"
+      - "lib/**"
+      - "scripts/sync-docs.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-docs-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    # Skip if the triggering commit was itself made by this workflow (avoid infinite loop).
+    if: "!contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, 'chore(docs): sync')"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2 # need HEAD~1 for diff
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run sync script
+        run: node scripts/sync-docs.mjs
+
+      - name: Commit & push if docs changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md .claude/project-memory.md 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "No doc changes to commit."
+            exit 0
+          fi
+          git commit -m "chore(docs): sync README stats + project-memory [skip ci]"
+          git push

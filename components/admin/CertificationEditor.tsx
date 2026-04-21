@@ -23,6 +23,7 @@ export default function CertificationEditor({ mode, initialData }: Certification
   const [verifyUrl, setVerifyUrl] = useState(initialData?.verifyUrl ?? "#");
   const [badge, setBadge] = useState(initialData?.badge ?? "");
   const [color, setColor] = useState(initialData?.color ?? "blue");
+  const [credentialId, setCredentialId] = useState(initialData?.credentialId ?? "");
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -75,6 +76,7 @@ export default function CertificationEditor({ mode, initialData }: Certification
       verifyUrl: verifyUrl.trim() || "#",
       badge: badge.trim(),
       color,
+      credentialId: credentialId.trim() || undefined,
     };
 
     const url =
@@ -226,6 +228,18 @@ export default function CertificationEditor({ mode, initialData }: Certification
             onChange={(e) => setVerifyUrl(e.target.value)}
             className={inputClass}
             placeholder="https://learn.microsoft.com/..."
+          />
+        </div>
+
+        <div className="md:col-span-2 lg:col-span-3">
+          <label className="mb-1 block text-xs font-medium uppercase text-slate-400">
+            Credential ID <span className="normal-case text-slate-500">(optional — shown on card for verification reference)</span>
+          </label>
+          <input
+            value={credentialId}
+            onChange={(e) => setCredentialId(e.target.value)}
+            className={inputClass}
+            placeholder="ZXNTTFQC51Q4Q0WB"
           />
         </div>
 

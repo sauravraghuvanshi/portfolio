@@ -7,6 +7,22 @@ export const metadata: Metadata = {
   title: "Community Impact — Saurav Raghuvanshi",
   description:
     "Community leadership, developer advocacy, and inclusive tech education — organizing events, mentoring founders, and driving Azure adoption across India.",
+  alternates: { canonical: "/community" },
+  openGraph: {
+    type: "website",
+    url: "/community",
+    title: "Community Impact — Saurav Raghuvanshi",
+    description:
+      "Community leadership, developer advocacy, and inclusive tech education — 30K+ engineers trained, 70+ sessions delivered.",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Saurav Raghuvanshi — Community Impact" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Community Impact — Saurav Raghuvanshi",
+    description:
+      "30K+ engineers trained, 70+ sessions delivered across India.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function CommunityPage() {

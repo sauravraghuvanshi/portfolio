@@ -7,6 +7,21 @@ export const metadata: Metadata = {
   title: "Resume",
   description:
     "Resume of Saurav Raghuvanshi, Digital Cloud Solution Architect at Microsoft — Azure, Generative AI, Cloud-Native architecture, 10 certifications.",
+  alternates: { canonical: "/resume" },
+  openGraph: {
+    type: "profile",
+    url: "/resume",
+    title: "Resume — Saurav Raghuvanshi",
+    description:
+      "Digital Cloud Solution Architect at Microsoft — Azure, Generative AI, Cloud-Native architecture.",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Saurav Raghuvanshi — Resume" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Resume — Saurav Raghuvanshi",
+    description: "Digital Cloud Solution Architect at Microsoft.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function ResumePage() {

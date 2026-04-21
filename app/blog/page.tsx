@@ -9,6 +9,22 @@ export const metadata: Metadata = {
   title: "Blog",
   description:
     "Technical blog on Azure architecture, Generative AI, cloud-native engineering, and platform building — by Saurav Raghuvanshi.",
+  alternates: { canonical: "/blog" },
+  openGraph: {
+    type: "website",
+    url: "/blog",
+    title: "Blog — Saurav Raghuvanshi",
+    description:
+      "Technical blog on Azure architecture, Generative AI, cloud-native engineering, and platform building.",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Saurav Raghuvanshi — Blog" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Blog — Saurav Raghuvanshi",
+    description:
+      "Deep dives on Azure, Generative AI, and cloud-native engineering.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function BlogPage() {

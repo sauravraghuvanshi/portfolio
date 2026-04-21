@@ -20,6 +20,22 @@ export const metadata: Metadata = {
     "Digital Cloud Solution Architect at Microsoft helping high-growth startups and unicorns build AI-powered, cloud-native platforms at scale. Azure · Generative AI · Agentic AI.",
 };
 
+interface ExperienceEntry {
+  startDate?: string | null;
+}
+
+function computeYearsExperience(experience: ExperienceEntry[]): number {
+  const starts = experience
+    .map((e) => e.startDate)
+    .filter((d): d is string => typeof d === "string" && /^\d{4}-\d{2}/.test(d))
+    .map((d) => new Date(`${d}-01T00:00:00Z`).getTime())
+    .filter((t) => Number.isFinite(t));
+  if (starts.length === 0) return 4;
+  const earliest = Math.min(...starts);
+  const years = (Date.now() - earliest) / (365.25 * 24 * 3600 * 1000);
+  return Math.max(1, Math.floor(years));
+}
+
 export default function HomePage() {
   const profile = getProfile();
   const caseStudies = getFeaturedCaseStudies();
@@ -30,11 +46,25 @@ export default function HomePage() {
   const certifications = getCertifications();
   const speakingEvents = allEvents.filter((e) => e.featured);
 
+  const yearsExperience = computeYearsExperience(profile.experience ?? []);
+  const certCount = certifications.length;
+  const certIssuers = Array.from(
+    new Set(certifications.map((c) => c.issuer).filter(Boolean))
+  ).slice(0, 3);
+
   return (
     <>
       <Hero headshot={profile.headshot} />
       <CredibilityBar stats={profile.credibilityStats} />
-      <About summary={profile.summary} aboutLong={profile.aboutLong} whatImKnownFor={profile.whatImKnownFor} headshot={profile.headshot} />
+      <About
+        summary={profile.summary}
+        aboutLong={profile.aboutLong}
+        whatImKnownFor={profile.whatImKnownFor}
+        headshot={profile.headshot}
+        yearsExperience={yearsExperience}
+        certCount={certCount}
+        certIssuers={certIssuers}
+      />
       <Skills skills={profile.skills} />
       <FeaturedCaseStudies caseStudies={caseStudies} />
       <ProjectsGrid projects={projects} limit={6} />

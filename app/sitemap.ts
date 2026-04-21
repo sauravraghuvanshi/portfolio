@@ -1,11 +1,24 @@
 import { MetadataRoute } from "next";
-import { getCaseStudySlugs, getAllBlogPosts } from "@/lib/content";
+import {
+  getCaseStudySlugs,
+  getAllBlogPosts,
+  getProjects,
+  getEvents,
+} from "@/lib/content";
 import { SITE_URL } from "@/lib/constants";
+
+// For content where we only know the year (projects, events), anchor
+// lastModified to the end of that year rather than the build timestamp.
+function yearEnd(year: number): Date {
+  return new Date(Date.UTC(year, 11, 31));
+}
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = SITE_URL;
   const slugs = getCaseStudySlugs();
   const blogPosts = getAllBlogPosts();
+  const projects = getProjects();
+  const events = getEvents();
 
   const caseStudyUrls = slugs.map((slug) => ({
     url: `${baseUrl}/case-studies/${slug}`,
@@ -19,6 +32,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(post.updated || post.date),
     changeFrequency: "monthly" as const,
     priority: 0.8,
+  }));
+
+  const projectUrls = projects.map((project) => ({
+    url: `${baseUrl}/projects/${project.id}`,
+    lastModified: yearEnd(project.year),
+    changeFrequency: "yearly" as const,
+    priority: 0.7,
+  }));
+
+  const eventUrls = events.map((event) => ({
+    url: `${baseUrl}/events/${event.slug}`,
+    lastModified: yearEnd(event.year),
+    changeFrequency: "yearly" as const,
+    priority: 0.6,
   }));
 
   return [
@@ -78,5 +105,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     ...caseStudyUrls,
     ...blogUrls,
+    ...projectUrls,
+    ...eventUrls,
   ];
 }

@@ -9,6 +9,22 @@ export const metadata: Metadata = {
   title: "Projects",
   description:
     "A complete gallery of cloud architecture projects — Azure landing zones, AI platforms, DevOps pipelines, security architectures, and cost optimization programs.",
+  alternates: { canonical: "/projects" },
+  openGraph: {
+    type: "website",
+    url: "/projects",
+    title: "Projects — Saurav Raghuvanshi",
+    description:
+      "Cloud architecture projects: Azure landing zones, AI platforms, DevOps pipelines, security architectures, and FinOps programs.",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Saurav Raghuvanshi — Projects" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Projects — Saurav Raghuvanshi",
+    description:
+      "Azure, AI, DevOps, Security, and Cost Optimization projects.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function ProjectsPage() {

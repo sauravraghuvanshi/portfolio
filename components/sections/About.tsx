@@ -9,9 +9,13 @@ interface AboutProps {
   aboutLong: string;
   whatImKnownFor: string[];
   headshot?: string;
+  yearsExperience: number;
+  certCount: number;
+  certIssuers?: string[];
 }
 
-export default function About({ summary, aboutLong, whatImKnownFor, headshot }: AboutProps) {
+export default function About({ summary, aboutLong, whatImKnownFor, headshot, yearsExperience, certCount, certIssuers }: AboutProps) {
+  const issuersLabel = certIssuers && certIssuers.length > 0 ? ` (${certIssuers.join(" · ")})` : "";
   const extraParagraphs = aboutLong.split("\n\n").filter(Boolean);
 
   return (
@@ -91,11 +95,11 @@ export default function About({ summary, aboutLong, whatImKnownFor, headshot }: 
               </div>
               <div>
                 <p className="text-slate-500 dark:text-slate-500 text-xs uppercase tracking-wide mb-1">Experience</p>
-                <p className="font-medium text-slate-800 dark:text-slate-200">4 Years</p>
+                <p className="font-medium text-slate-800 dark:text-slate-200">{yearsExperience}+ Years</p>
               </div>
               <div>
                 <p className="text-slate-500 dark:text-slate-500 text-xs uppercase tracking-wide mb-1">Certifications</p>
-                <p className="font-medium text-slate-800 dark:text-slate-200">8 (Microsoft · AWS · Udacity)</p>
+                <p className="font-medium text-slate-800 dark:text-slate-200">{certCount}{issuersLabel}</p>
               </div>
             </div>
           </motion.div>

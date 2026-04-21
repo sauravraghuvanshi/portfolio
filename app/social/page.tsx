@@ -6,6 +6,22 @@ export const metadata: Metadata = {
   title: "Social",
   description:
     "Connect with Saurav Raghuvanshi on LinkedIn, Twitter/X, and GitHub for cloud architecture insights, Azure AI updates, and startup tech content.",
+  alternates: { canonical: "/social" },
+  openGraph: {
+    type: "profile",
+    url: "/social",
+    title: "Social — Saurav Raghuvanshi",
+    description:
+      "Connect on LinkedIn, Twitter/X, and GitHub for cloud architecture insights and Azure AI updates.",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Saurav Raghuvanshi — Connect" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Connect with Saurav Raghuvanshi",
+    description:
+      "Cloud architecture insights, Azure AI updates, and startup tech content.",
+    images: ["/og-image.png"],
+  },
 };
 
 const profiles = [

@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
-    const { code, name, issuer, year, verifyUrl, badge, color } = parsed.data;
+    const { code, name, issuer, year, verifyUrl, badge, color, credentialId } = parsed.data;
 
     const existing = getCertifications().find((c) => c.code === code);
     if (existing) {
@@ -33,6 +33,7 @@ export async function POST(request: NextRequest) {
       verifyUrl,
       badge,
       color,
+      ...(credentialId ? { credentialId } : {}),
     };
 
     saveCertification(cert);

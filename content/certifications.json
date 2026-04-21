@@ -13,7 +13,8 @@
     "code": "AI-900",
     "issuer": "Microsoft",
     "year": 2024,
-    "verifyUrl": "#",
+    "verifyUrl": "https://learn.microsoft.com/en-us/users/SauravRaghuvanshi-8368/credentials/63E74425F3D92153",
+    "credentialId": "63E74425F3D92153",
     "badge": "/images/certs/ai-900.png",
     "color": "blue"
   },
@@ -40,7 +41,8 @@
     "code": "SAA-C03",
     "issuer": "Amazon Web Services",
     "year": 2022,
-    "verifyUrl": "#",
+    "verifyUrl": "https://aws.amazon.com/verification",
+    "credentialId": "ZXNTTFQC51Q4Q0WB",
     "badge": "/images/certs/aws-sa.png",
     "color": "orange"
   },
@@ -49,7 +51,8 @@
     "code": "AZ-400",
     "issuer": "Microsoft",
     "year": 2022,
-    "verifyUrl": "#",
+    "verifyUrl": "https://learn.microsoft.com/en-us/users/SauravRaghuvanshi-8368/credentials/254F3754087D451D",
+    "credentialId": "254F3754087D451D",
     "badge": "/images/certs/az-400.png",
     "color": "blue"
   },
@@ -58,7 +61,8 @@
     "code": "AZ-104",
     "issuer": "Microsoft",
     "year": 2021,
-    "verifyUrl": "#",
+    "verifyUrl": "https://learn.microsoft.com/en-us/users/SauravRaghuvanshi-8368/credentials/C5BAAA2FA02CC998",
+    "credentialId": "C5BAAA2FA02CC998",
     "badge": "/images/certs/az-104.png",
     "color": "blue"
   },
@@ -67,7 +71,8 @@
     "code": "CLF-C02",
     "issuer": "Amazon Web Services",
     "year": 2021,
-    "verifyUrl": "#",
+    "verifyUrl": "https://aws.amazon.com/verification",
+    "credentialId": "MFGRVNVDG24E113X",
     "badge": "/images/certs/aws-cp.png",
     "color": "orange"
   },
@@ -76,7 +81,8 @@
     "code": "AZ-900",
     "issuer": "Microsoft",
     "year": 2020,
-    "verifyUrl": "#",
+    "verifyUrl": "https://learn.microsoft.com/en-us/users/SauravRaghuvanshi-8368/credentials/DC85F7586668EE6E",
+    "credentialId": "DC85F7586668EE6E",
     "badge": "/images/certs/az-900.png",
     "color": "blue"
   },
@@ -85,7 +91,28 @@
     "code": "ND898",
     "issuer": "Udacity",
     "year": 2020,
-    "verifyUrl": "#",
+    "verifyUrl": "https://confirm.udacity.com/6C4CP3P7",
+    "credentialId": "6C4CP3P7",
+    "badge": "/images/certs/udacity.png",
+    "color": "purple"
+  },
+  {
+    "name": "Programming for Data Science with Python Nanodegree",
+    "code": "ND104",
+    "issuer": "Udacity",
+    "year": 2020,
+    "verifyUrl": "https://confirm.udacity.com/CNNCJEE",
+    "credentialId": "CNNCJEE",
+    "badge": "/images/certs/udacity.png",
+    "color": "purple"
+  },
+  {
+    "name": "Deep Learning Nanodegree",
+    "code": "ND101",
+    "issuer": "Udacity",
+    "year": 2020,
+    "verifyUrl": "https://confirm.udacity.com/EGMKJ4ME",
+    "credentialId": "EGMKJ4ME",
     "badge": "/images/certs/udacity.png",
     "color": "purple"
   }

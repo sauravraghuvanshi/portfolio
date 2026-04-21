@@ -7,6 +7,22 @@ export const metadata: Metadata = {
   title: "Community Events — Saurav Raghuvanshi",
   description:
     "Conferences, workshops, bootcamps, and community meetups — sharing cloud and AI knowledge across Azure, Generative AI, DevOps, and the broader developer ecosystem.",
+  alternates: { canonical: "/events" },
+  openGraph: {
+    type: "website",
+    url: "/events",
+    title: "Community Events — Saurav Raghuvanshi",
+    description:
+      "Conferences, workshops, bootcamps, and community meetups on Azure and Generative AI.",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Saurav Raghuvanshi — Community Events" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Community Events — Saurav Raghuvanshi",
+    description:
+      "Conferences, workshops, and meetups on Azure and Generative AI.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function EventsPage() {

@@ -7,6 +7,22 @@ export const metadata: Metadata = {
   title: "Talks & Sessions — Saurav Raghuvanshi",
   description:
     "Watch live sessions, bootcamps, and webinars by Saurav Raghuvanshi on Azure, AI, GitHub Copilot, and cloud-native engineering.",
+  alternates: { canonical: "/talks" },
+  openGraph: {
+    type: "website",
+    url: "/talks",
+    title: "Talks & Sessions — Saurav Raghuvanshi",
+    description:
+      "Live sessions, bootcamps, and webinars on Azure, GitHub Copilot, AI services, and cloud-native engineering.",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Saurav Raghuvanshi — Talks & Sessions" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Talks & Sessions — Saurav Raghuvanshi",
+    description:
+      "Live sessions, bootcamps, and webinars on Azure and AI.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function TalksPage() {

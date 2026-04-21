@@ -37,6 +37,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       badge: parsed.data.badge ?? existing.badge,
       color: parsed.data.color ?? existing.color,
     };
+    const nextCredentialId = parsed.data.credentialId ?? existing.credentialId;
+    if (nextCredentialId) cert.credentialId = nextCredentialId;
 
     saveCertification(cert);
     revalidatePath("/");

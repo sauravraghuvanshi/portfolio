@@ -12,6 +12,12 @@
     "generate-events": "node scripts/generate-events.mjs",
     "audit": "node scripts/audit.mjs",
     "build-rag": "node scripts/build-portfolio-rag.mjs",
+    "sync:docs": "node scripts/sync-docs.mjs",
+    "verify:local": "node scripts/verify-local.mjs",
+    "verify:live": "node scripts/verify-live.mjs",
+    "watch:deploy": "node scripts/watch-deploy.mjs",
+    "verify:deploy": "node scripts/verify-deploy.mjs",
+    "ship": "node scripts/ship.mjs",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui"
   },

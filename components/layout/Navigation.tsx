@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -20,12 +20,19 @@ const navLinks = [
   { label: "Resume", href: "/resume" },
 ];
 
+// Selector for focusable elements inside the mobile drawer (used for focus trap).
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
+
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("dark");
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
+  const drawerRef = useRef<HTMLDivElement | null>(null);
+  const menuTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
 
   // After mount, read the real theme from localStorage / system preference
   useEffect(() => {
@@ -60,6 +67,60 @@ export default function Navigation() {
     if (isOpen) document.body.style.overflow = "hidden";
     else document.body.style.overflow = "";
     return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
+
+  // Mobile drawer: Escape to close + focus trap + restore focus on close.
+  useEffect(() => {
+    if (!isOpen) return;
+
+    previouslyFocusedRef.current = document.activeElement as HTMLElement | null;
+    const trigger = menuTriggerRef.current;
+
+    // Move focus into the drawer on next tick (after mount + animation start).
+    const focusFrame = requestAnimationFrame(() => {
+      const drawer = drawerRef.current;
+      if (!drawer) return;
+      const focusables = drawer.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
+      (focusables[0] ?? drawer).focus();
+    });
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setIsOpen(false);
+        return;
+      }
+      if (e.key !== "Tab") return;
+
+      const drawer = drawerRef.current;
+      if (!drawer) return;
+      const focusables = Array.from(
+        drawer.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
+      ).filter((el) => !el.hasAttribute("disabled") && el.offsetParent !== null);
+      if (focusables.length === 0) return;
+
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+
+      if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      cancelAnimationFrame(focusFrame);
+      document.removeEventListener("keydown", handleKeyDown);
+      // Return focus to the trigger (or previously focused element) when closing.
+      const target = trigger ?? previouslyFocusedRef.current;
+      target?.focus?.();
+    };
   }, [isOpen]);
 
   const toggleTheme = useCallback(() => {
@@ -161,6 +222,7 @@ export default function Navigation() {
 
             {/* Mobile menu button */}
             <button
+              ref={menuTriggerRef}
               onClick={() => setIsOpen((v) => !v)}
               className="md:hidden p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
               aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
@@ -187,11 +249,13 @@ export default function Navigation() {
             />
             <motion.div
               id="mobile-menu"
+              ref={drawerRef}
+              tabIndex={-1}
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 bottom-0 w-72 bg-white dark:bg-slate-900 z-50 shadow-2xl md:hidden flex flex-col"
+              className="fixed top-0 right-0 bottom-0 w-72 bg-white dark:bg-slate-900 z-50 shadow-2xl md:hidden flex flex-col focus:outline-none"
               role="dialog"
               aria-modal="true"
               aria-label="Navigation menu"

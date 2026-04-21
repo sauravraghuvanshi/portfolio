@@ -108,6 +108,7 @@ export interface Certification {
   verifyUrl: string;
   badge: string;
   color: string;
+  credentialId?: string;
 }
 
 export const getCertifications = cache(function getCertifications(): Certification[] {

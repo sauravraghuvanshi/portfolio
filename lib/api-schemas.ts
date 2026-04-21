@@ -102,6 +102,7 @@ export const CertificationSchema = z.object({
   verifyUrl: z.string().max(500).optional().default("#"),
   badge: z.string().max(500).optional().default(""),
   color: z.string().max(30).optional().default("blue"),
+  credentialId: z.string().max(100).optional(),
 });
 
 export const CertificationUpdateSchema = CertificationSchema.partial();
