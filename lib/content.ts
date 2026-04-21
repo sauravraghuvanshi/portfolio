@@ -3,6 +3,7 @@ import path from "path";
 import matter from "gray-matter";
 import { cache } from "react";
 import { contentDir } from "./content-dir";
+import { ensureContentSynced } from "./content-sync-once";
 
 export function normalizeCategory(cat: unknown): string[] {
   if (Array.isArray(cat)) return cat.filter((c): c is string => typeof c === "string");
@@ -112,6 +113,7 @@ export interface Certification {
 }
 
 export const getCertifications = cache(function getCertifications(): Certification[] {
+  ensureContentSynced("certifications.json");
   const filePath = path.join(contentDir, "certifications.json");
   if (!fs.existsSync(filePath)) return [];
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");

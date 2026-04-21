@@ -35,6 +35,11 @@ copyDir(path.join(root, "public"), path.join(standaloneDir, "public"));
 console.log("[postbuild] Copying .next/static/ → .next/standalone/.next/static/");
 copyDir(path.join(root, ".next", "static"), path.join(standaloneDir, ".next", "static"));
 
+// Explicitly copy content/ → standalone so lazy field-merge and other runtime
+// reads always have the latest bundled JSON/MDX, independent of Next.js tracing.
+console.log("[postbuild] Copying content/ → .next/standalone/content/");
+copyDir(path.join(root, "content"), path.join(standaloneDir, "content"));
+
 // Copy sync-content.mjs into standalone so it's available at runtime
 const syncSrc = path.join(root, "scripts", "sync-content.mjs");
 const syncDestDir = path.join(standaloneDir, "scripts");
