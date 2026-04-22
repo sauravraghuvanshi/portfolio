@@ -34,10 +34,14 @@ export default function Navigation() {
   const menuTriggerRef = useRef<HTMLButtonElement | null>(null);
   const previouslyFocusedRef = useRef<HTMLElement | null>(null);
 
-  // After mount, read the real theme from localStorage / system preference
+  // After mount, read the real theme from localStorage / system preference.
+  // setState-in-effect is intentional here: this is a one-time read of browser-only
+  // state (localStorage + matchMedia) that cannot run during SSR. The `mounted` flag
+  // gates the second effect to prevent the cascading render concern the rule warns about.
   useEffect(() => {
     const saved = localStorage.getItem("theme") as "light" | "dark" | null;
     const actual = saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTheme(actual);
     setMounted(true);
   }, []);

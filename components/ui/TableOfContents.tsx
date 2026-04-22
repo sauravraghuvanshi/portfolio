@@ -13,6 +13,9 @@ export default function TableOfContents() {
   const [activeId, setActiveId] = useState<string>("");
   const observerRef = useRef<IntersectionObserver | null>(null);
 
+  // setState-in-effect is intentional: we must read the article DOM after MDX has
+  // rendered (post-mount), so this state cannot be initialized lazily. Headings are
+  // a one-time read; the IntersectionObserver afterwards handles all subsequent updates.
   useEffect(() => {
     const article = document.querySelector("article");
     if (!article) return;
@@ -34,6 +37,7 @@ export default function TableOfContents() {
       });
     });
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setHeadings(items);
 
     observerRef.current = new IntersectionObserver(
