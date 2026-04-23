@@ -12,6 +12,7 @@ type NavLink = {
   href: string;
   description?: string;
   badge?: string;
+  external?: boolean;
 };
 
 type NavGroup = {
@@ -40,13 +41,14 @@ const navEntries: NavEntry[] = [
       { label: "Events", href: "/events", description: "Bootcamps, workshops, and community events I’ve hosted." },
     ],
   },
-  {
+   {
     label: "Labs",
     items: [
       {
         label: "Architecture Playground",
-        href: "/playground",
+        href: "https://architecture-playground.azurewebsites.net",
         description: "Drag-and-drop Azure / AWS / GCP icons, animate sequences, export PNG · GIF · JSON.",
+        external: true,
       },
     ],
   },
@@ -330,8 +332,11 @@ export default function Navigation() {
                             Experiments &amp; tools
                           </div>
                         )}
-                        {entry.items.map((item) => (
-                          <Link
+                        {entry.items.map((item) => {
+                          const LinkComponent = item.external ? "a" : Link;
+                          const externalProps = item.external ? { target: "_blank", rel: "noopener noreferrer" } : {};
+                          return (
+                          <LinkComponent
                             key={item.href}
                             href={item.href}
                             role="menuitem"
@@ -342,6 +347,7 @@ export default function Navigation() {
                                 ? "bg-brand-50 dark:bg-brand-950/50"
                                 : "hover:bg-slate-100 dark:hover:bg-slate-800/60"
                             )}
+                            {...externalProps}
                           >
                             <div className="flex items-center justify-between gap-2">
                               <span
@@ -365,8 +371,9 @@ export default function Navigation() {
                                 {item.description}
                               </p>
                             )}
-                          </Link>
-                        ))}
+                          </LinkComponent>
+                          );
+                        })}
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -497,8 +504,11 @@ export default function Navigation() {
                         {entry.label === "Labs" && <Sparkles className="w-3 h-3" aria-hidden="true" />}
                         {entry.label}
                       </div>
-                      {entry.items.map((item) => (
-                        <Link
+                      {entry.items.map((item) => {
+                        const LinkComponent = item.external ? "a" : Link;
+                        const externalProps = item.external ? { target: "_blank", rel: "noopener noreferrer" } : {};
+                        return (
+                        <LinkComponent
                           key={item.href}
                           href={item.href}
                           onClick={() => setIsOpen(false)}
@@ -508,6 +518,7 @@ export default function Navigation() {
                               ? "text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/50"
                               : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
                           )}
+                          {...externalProps}
                         >
                           <div className="flex items-center justify-between gap-2">
                             <span>{item.label}</span>
@@ -517,8 +528,9 @@ export default function Navigation() {
                               </span>
                             )}
                           </div>
-                        </Link>
-                      ))}
+                        </LinkComponent>
+                        );
+                      })}
                     </motion.div>
                   );
                 })}
