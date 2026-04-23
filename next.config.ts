@@ -42,6 +42,7 @@ const nextConfig: NextConfig = {
             "connect-src 'self' https://sauravportfoliomedia.blob.core.windows.net https://*.applicationinsights.azure.com https://*.monitor.azure.com",
             "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com",
             "media-src 'self'",
+            "worker-src 'self' blob:",
             "object-src 'none'",
             "base-uri 'self'",
             "form-action 'self'",

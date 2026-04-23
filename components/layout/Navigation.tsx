@@ -4,19 +4,60 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Moon, Sun, Search } from "lucide-react";
+import { Menu, X, Moon, Sun, Search, ChevronDown, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const navLinks = [
+type NavLink = {
+  label: string;
+  href: string;
+  description?: string;
+  badge?: string;
+};
+
+type NavGroup = {
+  label: string;
+  items: NavLink[];
+};
+
+type NavEntry = NavLink | NavGroup;
+
+const isGroup = (entry: NavEntry): entry is NavGroup => "items" in entry;
+
+const navEntries: NavEntry[] = [
   { label: "About", href: "/#about" },
-  { label: "Skills", href: "/#skills" },
-  { label: "Case Studies", href: "/case-studies" },
-  { label: "Blog", href: "/blog" },
-  { label: "Projects", href: "/projects" },
-  { label: "Talks", href: "/talks" },
-  { label: "Events", href: "/events" },
-  { label: "Community", href: "/community" },
-  { label: "Social", href: "/social" },
+  {
+    label: "Work",
+    items: [
+      { label: "Case Studies", href: "/case-studies", description: "Deep-dives into shipped cloud architectures and outcomes." },
+      { label: "Projects", href: "/projects", description: "Open-source and personal builds across Azure, AWS, GCP." },
+    ],
+  },
+  {
+    label: "Writing",
+    items: [
+      { label: "Blog", href: "/blog", description: "Technical posts on cloud, AI, and architecture patterns." },
+      { label: "Talks", href: "/talks", description: "Conference and meetup talks with slides + recordings." },
+      { label: "Events", href: "/events", description: "Bootcamps, workshops, and community events I’ve hosted." },
+    ],
+  },
+  {
+    label: "Labs",
+    items: [
+      {
+        label: "Architecture Playground",
+        href: "/playground",
+        description: "Drag-and-drop Azure / AWS / GCP icons, animate sequences, export PNG · GIF · JSON.",
+        badge: "New",
+      },
+    ],
+  },
+  {
+    label: "Connect",
+    items: [
+      { label: "Community", href: "/community", description: "Mentorship, MVP work, and the communities I contribute to." },
+      { label: "Social", href: "/social", description: "LinkedIn, GitHub, X, and other public channels." },
+    ],
+  },
   { label: "Resume", href: "/resume" },
 ];
 
@@ -29,10 +70,13 @@ export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("dark");
   const [mounted, setMounted] = useState(false);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
   const pathname = usePathname();
   const drawerRef = useRef<HTMLDivElement | null>(null);
   const menuTriggerRef = useRef<HTMLButtonElement | null>(null);
   const previouslyFocusedRef = useRef<HTMLElement | null>(null);
+  const navListRef = useRef<HTMLUListElement | null>(null);
+  const menuCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // After mount, read the real theme from localStorage / system preference.
   // setState-in-effect is intentional here: this is a one-time read of browser-only
@@ -139,6 +183,51 @@ export default function Navigation() {
     return pathname === href;
   };
 
+  const isGroupActive = (group: NavGroup) =>
+    group.items.some((item) => pathname === item.href || pathname.startsWith(item.href + "/"));
+
+  // Close any open dropdown on outside click or Escape, and clean up the hover-close timer.
+  useEffect(() => {
+    if (!openMenu) return;
+    const handlePointer = (e: MouseEvent) => {
+      if (!navListRef.current?.contains(e.target as Node)) setOpenMenu(null);
+    };
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpenMenu(null);
+    };
+    document.addEventListener("mousedown", handlePointer);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handlePointer);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [openMenu]);
+
+  // Close any open dropdown on route change (covers programmatic navigation).
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setOpenMenu((m) => (m ? null : m));
+  }, [pathname]);
+
+  useEffect(() => {
+    return () => {
+      if (menuCloseTimer.current) clearTimeout(menuCloseTimer.current);
+    };
+  }, []);
+
+  const openMenuFor = (label: string) => {
+    if (menuCloseTimer.current) {
+      clearTimeout(menuCloseTimer.current);
+      menuCloseTimer.current = null;
+    }
+    setOpenMenu(label);
+  };
+
+  const scheduleCloseMenu = () => {
+    if (menuCloseTimer.current) clearTimeout(menuCloseTimer.current);
+    menuCloseTimer.current = setTimeout(() => setOpenMenu(null), 120);
+  };
+
   return (
     <>
       <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-brand-600 focus:text-white focus:rounded-lg focus:text-sm focus:font-medium">
@@ -174,22 +263,117 @@ export default function Navigation() {
           </Link>
 
           {/* Desktop nav */}
-          <ul className="hidden md:flex items-center gap-1" role="list">
-            {navLinks.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className={cn(
-                    "px-3 py-2 rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500",
-                    isActive(link.href)
-                      ? "text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/50"
-                      : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50"
-                  )}
+          <ul ref={navListRef} className="hidden md:flex items-center gap-1" role="list">
+            {navEntries.map((entry) => {
+              if (!isGroup(entry)) {
+                return (
+                  <li key={entry.href}>
+                    <Link
+                      href={entry.href}
+                      className={cn(
+                        "px-3 py-2 rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500",
+                        isActive(entry.href)
+                          ? "text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/50"
+                          : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50"
+                      )}
+                    >
+                      {entry.label}
+                    </Link>
+                  </li>
+                );
+              }
+
+              const groupId = `nav-menu-${entry.label.toLowerCase()}`;
+              const open = openMenu === entry.label;
+              const active = isGroupActive(entry);
+              return (
+                <li
+                  key={entry.label}
+                  className="relative"
+                  onMouseEnter={() => openMenuFor(entry.label)}
+                  onMouseLeave={scheduleCloseMenu}
                 >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
+                  <button
+                    type="button"
+                    onClick={() => setOpenMenu((m) => (m === entry.label ? null : entry.label))}
+                    className={cn(
+                      "inline-flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500",
+                      active || open
+                        ? "text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/50"
+                        : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50"
+                    )}
+                    aria-haspopup="menu"
+                    aria-expanded={open}
+                    aria-controls={groupId}
+                  >
+                    {entry.label}
+                    <ChevronDown
+                      className={cn("w-3.5 h-3.5 transition-transform", open ? "rotate-180" : "rotate-0")}
+                      aria-hidden="true"
+                    />
+                  </button>
+
+                  <AnimatePresence>
+                    {open && (
+                      <motion.div
+                        id={groupId}
+                        role="menu"
+                        aria-label={entry.label}
+                        initial={{ opacity: 0, y: -6, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -6, scale: 0.98 }}
+                        transition={{ duration: 0.15, ease: "easeOut" }}
+                        className="absolute left-1/2 -translate-x-1/2 mt-2 w-72 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-2xl shadow-slate-900/10 dark:shadow-black/40 p-2 z-50"
+                      >
+                        {entry.label === "Labs" && (
+                          <div className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
+                            <Sparkles className="w-3 h-3" aria-hidden="true" />
+                            Experiments &amp; tools
+                          </div>
+                        )}
+                        {entry.items.map((item) => (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            role="menuitem"
+                            onClick={() => setOpenMenu(null)}
+                            className={cn(
+                              "block rounded-lg px-3 py-2.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500",
+                              pathname === item.href
+                                ? "bg-brand-50 dark:bg-brand-950/50"
+                                : "hover:bg-slate-100 dark:hover:bg-slate-800/60"
+                            )}
+                          >
+                            <div className="flex items-center justify-between gap-2">
+                              <span
+                                className={cn(
+                                  "text-sm font-medium",
+                                  pathname === item.href
+                                    ? "text-brand-600 dark:text-brand-400"
+                                    : "text-slate-900 dark:text-white"
+                                )}
+                              >
+                                {item.label}
+                              </span>
+                              {item.badge && (
+                                <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-brand-600 text-white">
+                                  {item.badge}
+                                </span>
+                              )}
+                            </div>
+                            {item.description && (
+                              <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400 leading-snug">
+                                {item.description}
+                              </p>
+                            )}
+                          </Link>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </li>
+              );
+            })}
           </ul>
 
           {/* Actions */}
@@ -275,28 +459,70 @@ export default function Navigation() {
                 </button>
               </div>
 
-              <nav className="flex-1 p-4 space-y-1" aria-label="Mobile navigation">
-                {navLinks.map((link, i) => (
-                  <motion.div
-                    key={link.href}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                  >
-                    <Link
-                      href={link.href}
-                      onClick={() => setIsOpen(false)}
-                      className={cn(
-                        "block px-4 py-3 rounded-xl text-sm font-medium transition-colors",
-                        isActive(link.href)
-                          ? "text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/50"
-                          : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
-                      )}
+              <nav className="flex-1 p-4 space-y-1 overflow-y-auto" aria-label="Mobile navigation">
+                {navEntries.map((entry, i) => {
+                  const delay = i * 0.04;
+                  if (!isGroup(entry)) {
+                    return (
+                      <motion.div
+                        key={entry.href}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay }}
+                      >
+                        <Link
+                          href={entry.href}
+                          onClick={() => setIsOpen(false)}
+                          className={cn(
+                            "block px-4 py-3 rounded-xl text-sm font-medium transition-colors",
+                            isActive(entry.href)
+                              ? "text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/50"
+                              : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+                          )}
+                        >
+                          {entry.label}
+                        </Link>
+                      </motion.div>
+                    );
+                  }
+
+                  return (
+                    <motion.div
+                      key={entry.label}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay }}
+                      className="pt-3 mt-1"
                     >
-                      {link.label}
-                    </Link>
-                  </motion.div>
-                ))}
+                      <div className="px-4 pb-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
+                        {entry.label === "Labs" && <Sparkles className="w-3 h-3" aria-hidden="true" />}
+                        {entry.label}
+                      </div>
+                      {entry.items.map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setIsOpen(false)}
+                          className={cn(
+                            "block px-4 py-2.5 rounded-xl text-sm font-medium transition-colors",
+                            pathname === item.href
+                              ? "text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/50"
+                              : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+                          )}
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <span>{item.label}</span>
+                            {item.badge && (
+                              <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-brand-600 text-white">
+                                {item.badge}
+                              </span>
+                            )}
+                          </div>
+                        </Link>
+                      ))}
+                    </motion.div>
+                  );
+                })}
               </nav>
 
               <div className="p-4 border-t border-slate-200 dark:border-slate-800">

@@ -77,6 +77,9 @@
     0%   { background-position: -1000px 0; }
     100% { background-position:  1000px 0; }
   }
+  @keyframes playgroundDash {
+    to { stroke-dashoffset: -20; }
+  }
 }
 
 /* Dark mode: toggle via .dark class on <html> */

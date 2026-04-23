@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Generated / vendored worker assets served verbatim from /public.
+    "public/playground/**",
   ]),
 ]);
 

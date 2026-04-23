@@ -23,6 +23,7 @@ const DEFAULT_ROUTES = [
   "/",
   "/blog",
   "/projects",
+  "/playground",
   "/events",
   "/talks",
   "/community",
