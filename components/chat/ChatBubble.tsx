@@ -29,12 +29,16 @@ export default function ChatBubble() {
     []
   );
 
-  const { messages, sendMessage, status, setMessages } = useChat({ transport });
+  const { messages, sendMessage, status, setMessages } = useChat({
+    transport,
+    experimental_throttle: 50,
+  });
 
   // Hide on admin pages
   if (pathname.startsWith("/admin")) return null;
 
   const isLoading = status === "streaming" || status === "submitted";
+  const showSpinner = status === "submitted";
   const userMessageCount = messages.filter((m) => m.role === "user").length;
   const limitReached = userMessageCount >= MAX_USER_MESSAGES;
 
@@ -173,10 +177,17 @@ export default function ChatBubble() {
                 </div>
               ) : (
                 <>
-                  {messages.map((message) => (
-                    <ChatMessage key={message.id} message={message} />
+                  {messages.map((message, i) => (
+                    <ChatMessage
+                      key={message.id}
+                      message={message}
+                      isStreaming={
+                        status === "streaming" &&
+                        i === messages.length - 1
+                      }
+                    />
                   ))}
-                  {isLoading && (
+                  {showSpinner && (
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}

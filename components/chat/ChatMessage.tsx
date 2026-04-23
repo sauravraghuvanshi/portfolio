@@ -1,10 +1,57 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Bot, User } from "lucide-react";
 import type { UIMessage } from "@ai-sdk/react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
+
+/** Reveals text gradually at ~charPerTick characters every ~intervalMs. */
+function useTypewriter(
+  fullText: string,
+  isStreaming: boolean,
+  charsPerTick = 3,
+  intervalMs = 18
+): string {
+  const [displayed, setDisplayed] = useState(isStreaming ? "" : fullText);
+  const cursorRef = useRef(isStreaming ? 0 : fullText.length);
+  const prevStreamingRef = useRef(isStreaming);
+
+  // When streaming finishes, snap to full text via rAF to avoid sync setState
+  useEffect(() => {
+    if (prevStreamingRef.current && !isStreaming) {
+      const raf = requestAnimationFrame(() => {
+        cursorRef.current = fullText.length;
+        setDisplayed(fullText);
+      });
+      prevStreamingRef.current = isStreaming;
+      return () => cancelAnimationFrame(raf);
+    }
+    prevStreamingRef.current = isStreaming;
+  }, [isStreaming, fullText]);
+
+  useEffect(() => {
+    if (!isStreaming) return;
+    if (cursorRef.current >= fullText.length) return;
+
+    const timer = setInterval(() => {
+      cursorRef.current = Math.min(
+        cursorRef.current + charsPerTick,
+        fullText.length
+      );
+      setDisplayed(fullText.slice(0, cursorRef.current));
+
+      if (cursorRef.current >= fullText.length) {
+        clearInterval(timer);
+      }
+    }, intervalMs);
+
+    return () => clearInterval(timer);
+  }, [fullText, isStreaming, charsPerTick, intervalMs]);
+
+  return displayed;
+}
 
 function getMessageText(message: UIMessage): string {
   return message.parts
@@ -91,13 +138,14 @@ const markdownComponents: Components = {
 
 interface ChatMessageProps {
   message: UIMessage;
+  isStreaming?: boolean;
 }
 
-export default function ChatMessage({ message }: ChatMessageProps) {
-  const text = getMessageText(message);
-  if (!text) return null;
-
+export default function ChatMessage({ message, isStreaming = false }: ChatMessageProps) {
+  const fullText = getMessageText(message);
   const isUser = message.role === "user";
+  const text = useTypewriter(fullText, !isUser && isStreaming);
+  if (!text) return null;
 
   return (
     <motion.div

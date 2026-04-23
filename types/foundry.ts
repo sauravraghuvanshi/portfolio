@@ -41,3 +41,8 @@ export interface ChatMessage {
   content: string | { type: string; text?: string }[];
   parts?: { type: string; text?: string }[];
 }
+
+/** Streaming event types yielded by streamFoundryAgent() */
+export type FoundryStreamEvent =
+  | { type: "text-delta"; text: string }
+  | { type: "done"; responseId: string };
