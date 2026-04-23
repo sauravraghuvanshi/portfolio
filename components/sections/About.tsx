@@ -30,12 +30,12 @@ export default function About({ summary, aboutLong, whatImKnownFor, headshot, ye
             transition={{ duration: 0.55 }}
           >
             {headshot && (
-              <div className="relative w-32 h-32 sm:w-40 sm:h-40 mb-8 rounded-2xl overflow-hidden ring-1 ring-white/20 dark:ring-slate-700/50 shadow-glow">
+              <div className="relative w-32 h-32 sm:w-40 sm:h-40 mb-8">
                 <ImageWithShimmer
-                  src={headshot}
+                  src={headshot.replace(/(\.[a-z]+)$/i, "-light.png")}
                   alt="Saurav Raghuvanshi"
                   fill
-                  className="object-cover"
+                  className="object-contain drop-shadow-xl"
                   sizes="(max-width: 640px) 128px, 160px"
                 />
               </div>

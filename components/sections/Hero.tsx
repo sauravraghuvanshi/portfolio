@@ -185,19 +185,14 @@ export default function Hero({ headshot }: HeroProps) {
               transition={{ duration: 0.6, delay: 0.3 }}
             >
               <div className="relative">
-                {/* Decorative gradient glow behind photo */}
-                <div
-                  className="absolute -inset-3 rounded-2xl bg-gradient-to-br from-brand-500/20 via-accent-500/10 to-brand-400/20 blur-2xl -z-10"
-                  aria-hidden="true"
-                />
-                {/* Photo container */}
-                <div className="relative w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 xl:w-96 xl:h-96 rounded-2xl overflow-hidden ring-1 ring-slate-200 dark:ring-slate-700/50 shadow-glow bg-slate-100 dark:bg-slate-800">
+                {/* Photo — transparent cutout sits directly on the page gradient in both themes */}
+                <div className="relative w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 xl:w-96 xl:h-96">
                   <ImageWithShimmer
-                    src={headshot}
+                    src={headshot.replace(/(\.[a-z]+)$/i, "-light.png")}
                     alt="Saurav Raghuvanshi — Digital Cloud Solution Architect at Microsoft"
                     fill
                     priority
-                    className="object-cover"
+                    className="object-contain drop-shadow-2xl"
                     sizes="(max-width: 640px) 256px, (max-width: 1024px) 288px, (max-width: 1280px) 320px, 384px"
                   />
                 </div>

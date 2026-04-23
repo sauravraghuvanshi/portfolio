@@ -29,14 +29,14 @@ const navEntries: NavEntry[] = [
     label: "Work",
     items: [
       { label: "Case Studies", href: "/case-studies", description: "Deep-dives into shipped cloud architectures and outcomes." },
-      { label: "Projects", href: "/projects", description: "Open-source and personal builds across Azure, AWS, GCP." },
+      { label: "Projects", href: "/projects", description: "Open-source and personal builds across cloud and AI." },
     ],
   },
   {
     label: "Writing",
     items: [
       { label: "Blog", href: "/blog", description: "Technical posts on cloud, AI, and architecture patterns." },
-      { label: "Talks", href: "/talks", description: "Conference and meetup talks with slides + recordings." },
+      { label: "Talks", href: "/talks", description: "Conference and meetup talks with recordings." },
       { label: "Events", href: "/events", description: "Bootcamps, workshops, and community events I’ve hosted." },
     ],
   },
@@ -47,14 +47,13 @@ const navEntries: NavEntry[] = [
         label: "Architecture Playground",
         href: "/playground",
         description: "Drag-and-drop Azure / AWS / GCP icons, animate sequences, export PNG · GIF · JSON.",
-        badge: "New",
       },
     ],
   },
   {
     label: "Connect",
     items: [
-      { label: "Community", href: "/community", description: "Mentorship, MVP work, and the communities I contribute to." },
+      { label: "Community", href: "/community", description: "Mentorship and the communities I contribute to." },
       { label: "Social", href: "/social", description: "LinkedIn, GitHub, X, and other public channels." },
     ],
   },
