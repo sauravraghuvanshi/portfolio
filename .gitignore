@@ -51,6 +51,9 @@ tmpclaude-*
 # claude context (local only, not tracked)
 .claude/
 
+# task planning (local only, not tracked)
+tasks/
+
 # generated RAG data (re-generate with: node scripts/extract-portfolio-rag-data.mjs)
 content/portfolio-rag.json
 content/portfolio-rag.jsonl
