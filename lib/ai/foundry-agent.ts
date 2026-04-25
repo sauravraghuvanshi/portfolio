@@ -205,7 +205,7 @@ export async function callFoundryAgent(
         previous_response_id: data.id,
         store: false,
       }),
-    });
+    }, label);
 
     if (!res.ok) {
       const errText = await res.text();
