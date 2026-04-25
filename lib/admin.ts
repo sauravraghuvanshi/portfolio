@@ -20,6 +20,37 @@ function sanitizeSlug(value: string): string {
   return value;
 }
 const caseStudiesDir = path.join(contentDir, "case-studies");
+
+/**
+ * Deletion manifest — records admin-deleted files so that sync-content.mjs
+ * knows not to restore them from the bundle on App Service restart.
+ */
+const deletedManifestPath = path.join(contentDir, "deleted.json");
+
+function readDeletedManifest(): string[] {
+  try {
+    if (!fs.existsSync(deletedManifestPath)) return [];
+    return JSON.parse(fs.readFileSync(deletedManifestPath, "utf-8").replace(/^\uFEFF/, ""));
+  } catch {
+    return [];
+  }
+}
+
+function recordDeletion(relativePath: string): void {
+  const manifest = readDeletedManifest();
+  if (!manifest.includes(relativePath)) {
+    manifest.push(relativePath);
+    fs.writeFileSync(deletedManifestPath, JSON.stringify(manifest, null, 2) + "\n", "utf-8");
+  }
+}
+
+export function removeDeletion(relativePath: string): void {
+  const manifest = readDeletedManifest();
+  const filtered = manifest.filter((p) => p !== relativePath);
+  if (filtered.length !== manifest.length) {
+    fs.writeFileSync(deletedManifestPath, JSON.stringify(filtered, null, 2) + "\n", "utf-8");
+  }
+}
 const projectsFile = path.join(contentDir, "projects.json");
 const talksFile = path.join(contentDir, "talks.json");
 const eventsFile = path.join(contentDir, "events.json");
@@ -51,6 +82,7 @@ export function saveBlogPost(meta: BlogPostMeta, content: string): void {
   ensureDirs();
   const frontmatter = matter.stringify(content, cleanUndefined(meta as unknown as Record<string, unknown>));
   fs.writeFileSync(path.join(blogDir, `${meta.slug}.mdx`), frontmatter, "utf-8");
+  removeDeletion(`blog/${meta.slug}.mdx`);
 }
 
 export function deleteBlogPost(slug: string): boolean {
@@ -58,6 +90,7 @@ export function deleteBlogPost(slug: string): boolean {
   const filePath = path.join(blogDir, `${slug}.mdx`);
   if (!fs.existsSync(filePath)) return false;
   fs.unlinkSync(filePath);
+  recordDeletion(`blog/${slug}.mdx`);
   return true;
 }
 
@@ -68,6 +101,7 @@ export function saveCaseStudy(meta: CaseStudyMeta, content: string): void {
   ensureCaseStudiesDir();
   const frontmatter = matter.stringify(content, cleanUndefined(meta as unknown as Record<string, unknown>));
   fs.writeFileSync(path.join(caseStudiesDir, `${meta.slug}.mdx`), frontmatter, "utf-8");
+  removeDeletion(`case-studies/${meta.slug}.mdx`);
 }
 
 export function deleteCaseStudy(slug: string): boolean {
@@ -75,6 +109,7 @@ export function deleteCaseStudy(slug: string): boolean {
   const filePath = path.join(caseStudiesDir, `${slug}.mdx`);
   if (!fs.existsSync(filePath)) return false;
   fs.unlinkSync(filePath);
+  recordDeletion(`case-studies/${slug}.mdx`);
   return true;
 }
 

@@ -64,8 +64,35 @@ async function get(url) {
 
 console.log("[pull-live] Checking live content...");
 let downloaded = 0;
+let deleted = 0;
+
+// Fetch deletion manifest from live — admin-deleted files to remove locally
+let liveDeleted = new Set();
+try {
+  const res = await get(`${KUDU_BASE}/deleted.json`);
+  if (res) {
+    const manifest = await res.json();
+    if (Array.isArray(manifest)) liveDeleted = new Set(manifest);
+  }
+} catch {
+  // No manifest or parse error — treat as empty
+}
 
 for (const dir of CONTENT_DIRS) {
+  // Delete local files that admin deleted on live
+  const localDir = path.join(root, "content", dir);
+  if (fs.existsSync(localDir)) {
+    for (const file of fs.readdirSync(localDir)) {
+      if (!file.endsWith(".mdx")) continue;
+      if (liveDeleted.has(`${dir}/${file}`)) {
+        fs.unlinkSync(path.join(localDir, file));
+        console.log(`[pull-live] ✕ deleted ${dir}/${file} (admin-deleted on live)`);
+        deleted++;
+      }
+    }
+  }
+
+  // Fetch live listing
   let listing;
   try {
     const res = await get(`${KUDU_BASE}/${dir}/`);
@@ -76,13 +103,17 @@ for (const dir of CONTENT_DIRS) {
     continue;
   }
 
-  const mdxFiles = listing.filter((f) => f.name?.endsWith(".mdx"));
+  const liveMdxNames = new Set(
+    listing.filter((f) => f.name?.endsWith(".mdx")).map((f) => f.name)
+  );
 
-  for (const file of mdxFiles) {
-    const localPath = path.join(root, "content", dir, file.name);
+  // Download new / update changed files (skip admin-deleted ones)
+  for (const name of liveMdxNames) {
+    if (liveDeleted.has(`${dir}/${name}`)) continue;
+    const localPath = path.join(root, "content", dir, name);
 
     try {
-      const res = await get(`${KUDU_BASE}/${dir}/${file.name}`);
+      const res = await get(`${KUDU_BASE}/${dir}/${name}`);
       if (!res) continue;
       const liveContent = await res.text();
       const localContent = fs.existsSync(localPath) ? fs.readFileSync(localPath, "utf-8") : null;
@@ -90,16 +121,17 @@ for (const dir of CONTENT_DIRS) {
       fs.mkdirSync(path.dirname(localPath), { recursive: true });
       fs.writeFileSync(localPath, liveContent, "utf-8");
       const action = localContent ? "↺ updated" : "↓ new";
-      console.log(`[pull-live] ${action} ${dir}/${file.name}`);
+      console.log(`[pull-live] ${action} ${dir}/${name}`);
       downloaded++;
     } catch (e) {
-      console.warn(`[pull-live] ⚠ Failed to download ${dir}/${file.name}: ${e.message}`);
+      console.warn(`[pull-live] ⚠ Failed to download ${dir}/${name}: ${e.message}`);
     }
   }
 }
 
-if (downloaded > 0) {
-  console.log(`[pull-live] Synced ${downloaded} admin-created file(s). Consider: git add content/ && git commit -m "chore: sync admin content"`);
+const changes = downloaded + deleted;
+if (changes > 0) {
+  console.log(`[pull-live] Synced ${changes} change(s) (${downloaded} downloaded, ${deleted} deleted). Consider: git add content/ && git commit -m "chore: sync admin content"`);
 } else {
   console.log("[pull-live] Already up to date.");
 }

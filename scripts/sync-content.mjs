@@ -128,16 +128,33 @@ function fieldMergeArrayJson(srcPath, destPath, config) {
   }
 }
 
-function syncDir(srcDir, destDir) {
+/**
+ * Deletion manifest — admin-deleted files recorded in deleted.json.
+ * These must NOT be restored from the bundle.
+ */
+const deletedManifestPath = path.join(PERSISTENT_DIR, "deleted.json");
+function readDeletedManifest() {
+  try {
+    if (!fs.existsSync(deletedManifestPath)) return new Set();
+    return new Set(JSON.parse(fs.readFileSync(deletedManifestPath, "utf-8").replace(/^\uFEFF/, "")));
+  } catch {
+    return new Set();
+  }
+}
+
+function syncDir(srcDir, destDir, deletedSet, relativeBase = "") {
   if (!fs.existsSync(srcDir)) return;
   fs.mkdirSync(destDir, { recursive: true });
 
   for (const entry of fs.readdirSync(srcDir)) {
     const srcPath = path.join(srcDir, entry);
     const destPath = path.join(destDir, entry);
+    const relativePath = relativeBase ? `${relativeBase}/${entry}` : entry;
 
     if (fs.statSync(srcPath).isDirectory()) {
-      syncDir(srcPath, destPath);
+      syncDir(srcPath, destPath, deletedSet, relativePath);
+    } else if (deletedSet.has(relativePath)) {
+      console.log(`[sync-content] SKIP ${relativePath} (admin-deleted)`);
     } else if (ALWAYS_OVERWRITE.has(entry)) {
       copyFileAlways(srcPath, destPath);
     } else if (FIELD_MERGE[entry]) {
@@ -160,5 +177,9 @@ if (!fs.existsSync(BUNDLED_DIR)) {
 }
 
 console.log(`[sync-content] Syncing ${BUNDLED_DIR} → ${PERSISTENT_DIR}`);
-syncDir(BUNDLED_DIR, PERSISTENT_DIR);
+const deletedSet = readDeletedManifest();
+if (deletedSet.size > 0) {
+  console.log(`[sync-content] ${deletedSet.size} admin-deleted file(s) will be skipped.`);
+}
+syncDir(BUNDLED_DIR, PERSISTENT_DIR, deletedSet);
 console.log("[sync-content] Done.");
