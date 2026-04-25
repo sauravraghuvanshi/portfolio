@@ -1,8 +1,5 @@
-﻿"use client";
-
-import Link from "next/link";
-import { useState } from "react";
-import { Github, Linkedin, Mail, Twitter, ExternalLink, ArrowRight } from "lucide-react";
+﻿import Link from "next/link";
+import { Github, Linkedin, Mail, Twitter, ExternalLink } from "lucide-react";
 
 interface FooterLink {
   label: string;
@@ -36,24 +33,6 @@ const socialLinks = [
 
 export default function Footer() {
   const year = new Date().getFullYear();
-  const [email, setEmail] = useState("");
-  const [subState, setSubState] = useState<"idle" | "loading" | "done" | "error">("idle");
-
-  const handleSubscribe = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email.trim()) return;
-    setSubState("loading");
-    try {
-      const res = await fetch("/api/newsletter/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim() }),
-      });
-      setSubState(res.ok ? "done" : "error");
-    } catch {
-      setSubState("error");
-    }
-  };
 
   return (
     <footer className="bg-slate-950 text-slate-400 mt-24" role="contentinfo">
@@ -87,36 +66,6 @@ export default function Footer() {
                   <Icon className="w-4 h-4" />
                 </a>
               ))}
-            </div>
-
-            {/* Compact newsletter signup */}
-            <div className="mt-6">
-              <p className="mb-2 text-xs font-semibold text-white">Cloud &amp; AI Weekly</p>
-              {subState === "done" ? (
-                <p className="text-xs text-accent-400">Subscribed! See you Saturday.</p>
-              ) : (
-                <form onSubmit={handleSubscribe} className="flex gap-2">
-                  <input
-                    type="email"
-                    placeholder="your@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    disabled={subState === "loading"}
-                    required
-                    aria-label="Email for newsletter"
-                    className="flex-1 min-w-0 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-brand-500 focus:outline-none disabled:opacity-60"
-                  />
-                  <button
-                    type="submit"
-                    disabled={subState === "loading"}
-                    aria-label="Subscribe"
-                    className="flex cursor-pointer items-center gap-1 rounded-lg bg-brand-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-brand-700 disabled:opacity-50"
-                  >
-                    <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                  </button>
-                </form>
-              )}
-              {subState === "error" && <p className="mt-1 text-xs text-red-400">Failed. Try again.</p>}
             </div>
           </div>
 
