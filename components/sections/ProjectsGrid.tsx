@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import {
@@ -40,7 +41,8 @@ const infraStats = [
 ];
 
 // ─── spotlight card ───────────────────────────────────────────────────────────
-function SpotlightProjectCard({ project }: { project: Project }) {
+function SpotlightProjectCard({ project, href }: { project: Project; href: string }) {
+  const router = useRouter();
   const containerVariants = {
     hidden: {},
     visible: { transition: { staggerChildren: 0.07 } },
@@ -56,6 +58,7 @@ function SpotlightProjectCard({ project }: { project: Project }) {
       initial="hidden"
       animate="visible"
       whileHover={{ y: -3, transition: { duration: 0.2 } }}
+      onClick={() => router.push(href)}
       className="mb-8 rounded-2xl border-2 border-brand-500 dark:border-brand-400 bg-white dark:bg-slate-800 shadow-xl shadow-brand-500/10 dark:shadow-brand-400/10 overflow-hidden cursor-pointer group"
       aria-label={project.title}
     >
@@ -216,9 +219,11 @@ export default function ProjectsGrid({ projects, showFilters = true, limit }: Pr
         {/* Spotlight card */}
         <AnimatePresence>
           {spotlightProject && (
-            <Link key={spotlightProject.id} href={`/projects/${spotlightProject.id}`} className="block">
-              <SpotlightProjectCard project={spotlightProject} />
-            </Link>
+            <SpotlightProjectCard
+              key={spotlightProject.id}
+              project={spotlightProject}
+              href={`/projects/${spotlightProject.id}`}
+            />
           )}
         </AnimatePresence>
 
