@@ -17,7 +17,10 @@
       "GitHub Actions",
       "Managed Identity"
     ],
-    "category": "AI",
+    "category": [
+      "Azure",
+      "AI"
+    ],
     "techStack": [
       "Next.js 16",
       "Azure App Service",
