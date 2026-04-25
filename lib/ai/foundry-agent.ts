@@ -78,6 +78,34 @@ function buildAgentUrl(projectEndpoint: string, agentName: string): string {
 }
 
 /**
+ * fetch() wrapper with exponential backoff for 429 rate-limit responses.
+ * Respects Retry-After header when present; otherwise uses doubling delay.
+ */
+async function fetchWithRetry(
+  url: string,
+  init: RequestInit,
+  label: string,
+  maxRetries = 3
+): Promise<Response> {
+  let delay = 5_000; // start at 5 s
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    const res = await fetch(url, init);
+    if (res.status !== 429 || attempt === maxRetries) return res;
+
+    const retryAfter = res.headers.get("retry-after");
+    const waitMs = retryAfter
+      ? Math.max(parseInt(retryAfter, 10) * 1000, delay)
+      : delay;
+
+    console.warn(`[${label}] 429 rate-limited — waiting ${waitMs / 1000}s before retry ${attempt + 1}/${maxRetries}`);
+    await new Promise((r) => setTimeout(r, waitMs));
+    delay = Math.min(delay * 2, 60_000); // cap at 60 s
+  }
+  // unreachable but satisfies TS
+  return fetch(url, init);
+}
+
+/**
  * Call the Azure AI Foundry agent with the given system prompt and messages.
  * Handles AAD token acquisition, MCP approval loops, and text extraction.
  */
@@ -128,11 +156,11 @@ export async function callFoundryAgent(
   const MAX_TURNS = 5;
 
   log(`[${label}] Agent call #1...`);
-  let res = await fetch(url, {
+  let res = await fetchWithRetry(url, {
     method: "POST",
     headers,
     body: JSON.stringify({ input, store: false }),
-  });
+  }, label);
 
   if (!res.ok) {
     const errText = await res.text();
@@ -169,7 +197,7 @@ export async function callFoundryAgent(
     }));
 
     log(`[${label}] Agent call #${turn + 1}...`);
-    res = await fetch(url, {
+    res = await fetchWithRetry(url, {
       method: "POST",
       headers,
       body: JSON.stringify({
@@ -324,11 +352,11 @@ export async function* streamFoundryAgent(
       body.previous_response_id = previousResponseId;
     }
 
-    const res = await fetch(url, {
+    const res = await fetchWithRetry(url, {
       method: "POST",
       headers,
       body: JSON.stringify(body),
-    });
+    }, label);
 
     if (!res.ok) {
       const errText = await res.text();
