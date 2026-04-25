@@ -2,7 +2,7 @@ import { createUIMessageStreamResponse, createUIMessageStream } from "ai";
 import { auth } from "@/auth";
 import { buildSystemPrompt } from "@/lib/ai/system-prompt";
 import { CONTENT_TYPES } from "@/lib/ai/content-schemas";
-import { callFoundryAgent } from "@/lib/ai/foundry-agent";
+import { streamFoundryAgent } from "@/lib/ai/foundry-agent";
 import { processImageMarkers } from "@/lib/ai/image-generator";
 import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import type { AIContentType } from "@/types/ai-writer";
@@ -72,7 +72,14 @@ export async function POST(req: Request) {
     const savedAgentName = process.env.AZURE_FOUNDRY_AGENT_NAME;
     process.env.AZURE_FOUNDRY_AGENT_NAME = agentName;
 
-    let agentResponse = await callFoundryAgent(systemPrompt, messages, "ai-writer");
+    // Buffer via streaming — keeps the SSE connection to Foundry alive during
+    // long generations (web search + file search + gpt-5.4-1), avoiding 408 timeouts
+    let agentResponse = "";
+    for await (const event of streamFoundryAgent(systemPrompt, messages, "ai-writer")) {
+      if (event.type === "text-delta") {
+        agentResponse += event.text;
+      }
+    }
 
     // Restore original agent name
     if (savedAgentName !== undefined) {
