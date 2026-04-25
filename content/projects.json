@@ -1,5 +1,39 @@
 [
   {
+    "id": "portfolio-website",
+    "title": "Portfolio Website — Azure Cloud Architecture",
+    "description": "Designed and built a production-grade portfolio website on Azure, treating it as a reference architecture. Runs on Azure App Service (B1, Central India) with a RAG-powered AI chatbot via Azure AI Foundry, GitHub Actions CI/CD, passwordless Managed Identity auth, and Application Insights monitoring. Every infrastructure decision is documented at /architecture.",
+    "outcomes": [
+      "Full Azure cloud infrastructure — App Service, AI Foundry, Blob Storage, App Insights, Managed Identity",
+      "RAG chatbot grounded on portfolio content using gpt-4o + file_search vector store",
+      "Zero API keys in production — Managed Identity with Cognitive Services User + Azure AI Developer RBAC",
+      "~3 minute git push to live CI/CD via GitHub Actions and Kudu zipdeploy"
+    ],
+    "tags": [
+      "Next.js",
+      "Azure",
+      "AI Foundry",
+      "RAG",
+      "GitHub Actions",
+      "Managed Identity"
+    ],
+    "category": "AI",
+    "techStack": [
+      "Next.js 16",
+      "Azure App Service",
+      "Azure AI Foundry",
+      "Azure Blob Storage",
+      "Application Insights",
+      "GitHub Actions",
+      "TypeScript",
+      "Tailwind CSS"
+    ],
+    "githubUrl": "https://github.com/sauravraghuvanshi/portfolio",
+    "liveUrl": "https://saurav-portfolio.azurewebsites.net/architecture",
+    "featured": true,
+    "year": 2026
+  },
+  {
     "id": "supportiq-genai",
     "title": "SupportIQ — Generative AI for Support Automation",
     "description": "Built a Generative AI solution on Azure to automate support workflows for engineering teams. Leveraged Azure OpenAI and AI Foundry to intelligently triage, route, and resolve common support issues without manual intervention.",

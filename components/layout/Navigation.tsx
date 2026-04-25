@@ -42,13 +42,18 @@ const navEntries: NavEntry[] = [
     ],
   },
    {
-    label: "Labs",
+    label: "Builds",
     items: [
       {
         label: "Architecture Playground",
         href: "https://architecture-playground.azurewebsites.net",
         description: "Drag-and-drop Azure / AWS / GCP icons, animate sequences, export PNG · GIF · JSON.",
         external: true,
+      },
+      {
+        label: "Site Architecture",
+        href: "/architecture",
+        description: "How this portfolio is built on Azure — infrastructure, AI, and CI/CD.",
       },
     ],
   },
