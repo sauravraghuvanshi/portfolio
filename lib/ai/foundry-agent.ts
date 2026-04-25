@@ -131,7 +131,7 @@ export async function callFoundryAgent(
   let res = await fetch(url, {
     method: "POST",
     headers,
-    body: JSON.stringify({ input, store: true }),
+    body: JSON.stringify({ input, store: false }),
   });
 
   if (!res.ok) {
@@ -175,7 +175,7 @@ export async function callFoundryAgent(
       body: JSON.stringify({
         input: approvalInputs,
         previous_response_id: data.id,
-        store: true,
+        store: false,
       }),
     });
 
@@ -317,7 +317,7 @@ export async function* streamFoundryAgent(
 
     const body: Record<string, unknown> = {
       input: currentInput,
-      store: true,
+      store: false,
       stream: true,
     };
     if (previousResponseId) {
