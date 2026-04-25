@@ -69,6 +69,15 @@ function findApprovalRequests(data: FoundryResponse): FoundryMcpApprovalRequest[
 }
 
 /**
+ * Build the application-scoped Responses API URL for an agent.
+ * Format: {projectEndpoint}/applications/{agentName}/protocols/openai/responses
+ */
+function buildAgentUrl(projectEndpoint: string, agentName: string): string {
+  const base = projectEndpoint.replace(/\/$/, "");
+  return `${base}/applications/${agentName}/protocols/openai/responses?api-version=2025-11-15-preview`;
+}
+
+/**
  * Call the Azure AI Foundry agent with the given system prompt and messages.
  * Handles AAD token acquisition, MCP approval loops, and text extraction.
  */
@@ -86,8 +95,7 @@ export async function callFoundryAgent(
     );
   }
 
-  const base = projectEndpoint.replace(/\/$/, "");
-  const url = `${base}/openai/responses?api-version=2025-05-15-preview`;
+  const url = buildAgentUrl(projectEndpoint, agentName);
 
   log(`[${label}] Acquiring AAD token...`);
   const credential = getCredential();
@@ -97,11 +105,6 @@ export async function callFoundryAgent(
   const headers = {
     Authorization: `Bearer ${token.token}`,
     "Content-Type": "application/json",
-  };
-
-  const agentRef = {
-    type: "agent_reference",
-    name: agentName,
   };
 
   // Build input — inject system prompt into first user message
@@ -128,11 +131,7 @@ export async function callFoundryAgent(
   let res = await fetch(url, {
     method: "POST",
     headers,
-    body: JSON.stringify({
-      input,
-      agent_reference: agentRef,
-      store: true,
-    }),
+    body: JSON.stringify({ input, store: true }),
   });
 
   if (!res.ok) {
@@ -175,7 +174,6 @@ export async function callFoundryAgent(
       headers,
       body: JSON.stringify({
         input: approvalInputs,
-        agent_reference: agentRef,
         previous_response_id: data.id,
         store: true,
       }),
@@ -232,7 +230,6 @@ async function* parseSSE(
       // SSE events are separated by blank lines — handle \r\n and \n
       const normalized = buffer.replace(/\r\n/g, "\n");
       let boundary: number;
-      // Use normalized buffer for splitting
       buffer = normalized;
       while ((boundary = buffer.indexOf("\n\n")) !== -1) {
         const block = buffer.slice(0, boundary).trim();
@@ -246,7 +243,6 @@ async function* parseSSE(
           if (line.startsWith("event:")) {
             eventType = line.slice(6).trim();
           } else if (line.startsWith("data:")) {
-            // Append with space for multi-line data fields
             data += (data ? "\n" : "") + line.slice(5).trimStart();
           }
         }
@@ -285,8 +281,7 @@ export async function* streamFoundryAgent(
     );
   }
 
-  const base = projectEndpoint.replace(/\/$/, "");
-  const url = `${base}/openai/responses?api-version=2025-05-15-preview`;
+  const url = buildAgentUrl(projectEndpoint, agentName);
 
   log(`[${label}] Acquiring AAD token...`);
   const credential = getCredential();
@@ -297,8 +292,6 @@ export async function* streamFoundryAgent(
     Authorization: `Bearer ${token.token}`,
     "Content-Type": "application/json",
   };
-
-  const agentRef = { type: "agent_reference", name: agentName };
 
   // Build input — inject system prompt into first user message
   const input: { role: string; content: string }[] = [];
@@ -324,7 +317,6 @@ export async function* streamFoundryAgent(
 
     const body: Record<string, unknown> = {
       input: currentInput,
-      agent_reference: agentRef,
       store: true,
       stream: true,
     };
@@ -348,7 +340,6 @@ export async function* streamFoundryAgent(
       throw new Error("Foundry Agent returned no response body for stream");
     }
 
-    // Parse SSE events from the stream
     const mcpApprovals: string[] = [];
     let responseId = "";
     let gotText = false;
@@ -373,14 +364,12 @@ export async function* streamFoundryAgent(
       }
     }
 
-    // If we got text, we're done
     if (gotText) {
       log(`[${label}] Stream complete after ${turn + 1} turn(s)`);
       yield { type: "done", responseId };
       return;
     }
 
-    // If we have MCP approvals to send, loop
     if (mcpApprovals.length > 0 && responseId) {
       log(`[${label}] Auto-approving ${mcpApprovals.length} MCP tool call(s)...`);
       previousResponseId = responseId;
@@ -392,7 +381,6 @@ export async function* streamFoundryAgent(
       continue;
     }
 
-    // No text and no approvals — unexpected
     console.error(`[${label}] Stream ended with no text and no approvals`);
     return;
   }
