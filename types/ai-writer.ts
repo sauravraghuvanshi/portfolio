@@ -23,6 +23,10 @@ export interface AIWriterPayload {
   slug: string;
   summary: string;
   bodyMarkdown: string;
+  coverImage?: string;        // URL — populated after image generation
+  coverImagePrompt?: string;  // DALL-E prompt used
+  inlineImagePrompts?: { placeholder: string; prompt: string }[];
+  youtubeEmbeds?: { placeholder: string; url: string; title: string }[];
   tags: string[];
   tech: string[];
   timeline?: string;

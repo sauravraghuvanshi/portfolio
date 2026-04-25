@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import {
   Eye,
   Code2,
@@ -11,6 +13,7 @@ import {
   Check,
   AlertTriangle,
   RefreshCw,
+  Image as ImageIcon,
 } from "lucide-react";
 import type { AIContentType, AIWriterPayload } from "@/types/ai-writer";
 import { CONTENT_TYPES } from "@/lib/ai/content-schemas";
@@ -111,13 +114,85 @@ export default function ContentPreview({
       <div className="flex-1 overflow-y-auto rounded-lg border border-slate-700 bg-slate-900/50 p-4 scrollbar-hide">
         {activeTab === "preview" && (
           <div className="space-y-4">
+            {/* Cover image */}
+            {payload.coverImage ? (
+              <img
+                src={payload.coverImage}
+                alt={payload.title}
+                className="w-full rounded-lg object-cover max-h-52"
+              />
+            ) : payload.coverImagePrompt ? (
+              <div className="flex items-center gap-2 rounded-lg border border-dashed border-slate-700 bg-slate-800/40 px-3 py-3 text-xs text-slate-500">
+                <ImageIcon className="h-4 w-4 flex-shrink-0 text-slate-600" />
+                <span className="truncate">Cover image pending: {payload.coverImagePrompt.slice(0, 80)}…</span>
+              </div>
+            ) : null}
+
             <h2 className="text-lg font-bold text-white">{payload.title}</h2>
             {payload.summary && (
               <p className="text-sm text-slate-400 italic">{payload.summary}</p>
             )}
-            <div className="prose prose-sm prose-invert max-w-none text-slate-300 whitespace-pre-wrap">
+
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                h1: ({ children }) => <h1 className="mt-5 mb-2 text-base font-bold text-white">{children}</h1>,
+                h2: ({ children }) => <h2 className="mt-4 mb-1.5 text-sm font-bold text-white border-b border-slate-800 pb-1">{children}</h2>,
+                h3: ({ children }) => <h3 className="mt-3 mb-1 text-sm font-semibold text-slate-200">{children}</h3>,
+                p: ({ children }) => <p className="mb-3 text-xs leading-relaxed text-slate-300">{children}</p>,
+                ul: ({ children }) => <ul className="mb-3 ml-4 list-disc space-y-1 text-xs text-slate-300">{children}</ul>,
+                ol: ({ children }) => <ol className="mb-3 ml-4 list-decimal space-y-1 text-xs text-slate-300">{children}</ol>,
+                li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+                a: ({ href, children }) => (
+                  <a href={href} target="_blank" rel="noopener noreferrer" className="text-brand-400 underline underline-offset-2 hover:text-brand-300">
+                    {children}
+                  </a>
+                ),
+                blockquote: ({ children }) => (
+                  <blockquote className="mb-3 border-l-2 border-brand-500 pl-3 text-xs italic text-slate-400">
+                    {children}
+                  </blockquote>
+                ),
+                code: ({ className, children, ...props }) => {
+                  const isBlock = className?.startsWith("language-");
+                  if (isBlock) {
+                    const lang = className?.replace("language-", "") ?? "";
+                    return (
+                      <div className="mb-3 overflow-hidden rounded-lg border border-slate-700">
+                        {lang && (
+                          <div className="bg-slate-800 px-3 py-1 text-[10px] font-mono text-slate-500 border-b border-slate-700">
+                            {lang}
+                          </div>
+                        )}
+                        <pre className="overflow-x-auto bg-slate-900 p-3">
+                          <code className="text-[11px] font-mono leading-relaxed text-slate-200">{children}</code>
+                        </pre>
+                      </div>
+                    );
+                  }
+                  return <code className="rounded bg-slate-800 px-1 py-0.5 text-[11px] font-mono text-accent-300" {...props}>{children}</code>;
+                },
+                pre: ({ children }) => <>{children}</>,
+                img: ({ src, alt }) => (
+                  src ? (
+                    <img src={src} alt={alt ?? ""} className="my-3 w-full rounded-lg border border-slate-700 object-cover" />
+                  ) : null
+                ),
+                hr: () => <hr className="my-4 border-slate-800" />,
+                strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
+                em: ({ children }) => <em className="text-slate-400">{children}</em>,
+                table: ({ children }) => (
+                  <div className="mb-3 overflow-x-auto">
+                    <table className="w-full text-xs border-collapse">{children}</table>
+                  </div>
+                ),
+                th: ({ children }) => <th className="border border-slate-700 bg-slate-800 px-2 py-1 text-left font-semibold text-white">{children}</th>,
+                td: ({ children }) => <td className="border border-slate-700 px-2 py-1 text-slate-300">{children}</td>,
+              }}
+            >
               {payload.bodyMarkdown}
-            </div>
+            </ReactMarkdown>
+
             {payload.tags.length > 0 && (
               <div className="flex flex-wrap gap-1.5 pt-2 border-t border-slate-800">
                 {payload.tags.map((tag) => (
