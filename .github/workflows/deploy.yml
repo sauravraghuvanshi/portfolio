@@ -22,44 +22,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Fetch live admin-created content
-        env:
-          DEPLOY_USER: ${{ secrets.AZURE_DEPLOY_USER }}
-          DEPLOY_PASS: ${{ secrets.AZURE_DEPLOY_PASSWORD }}
-        run: |
-          KUDU_BASE="https://saurav-portfolio.scm.azurewebsites.net/api/vfs/site/wwwroot/content"
-
-          # JSON files — live version always wins (admin edits these directly)
-          for JSON_FILE in projects.json talks.json certifications.json events-overrides.json; do
-            echo "Syncing live content/${JSON_FILE} ..."
-            curl -sf --max-time 30 \
-              -u "${DEPLOY_USER}:${DEPLOY_PASS}" \
-              "${KUDU_BASE}/${JSON_FILE}" \
-              -o "content/${JSON_FILE}" \
-              && echo "  Updated: content/${JSON_FILE}" \
-              || echo "  WARN: could not fetch ${JSON_FILE}, keeping git version"
-          done
-
-          # MDX directories — additive merge (download live-only files, keep git files)
-          for CONTENT_DIR in blog case-studies; do
-            echo "Syncing live content/${CONTENT_DIR}/ ..."
-            LISTING=$(curl -sf --max-time 30 \
-              -u "${DEPLOY_USER}:${DEPLOY_PASS}" \
-              "${KUDU_BASE}/${CONTENT_DIR}/" 2>/dev/null || echo "[]")
-            echo "$LISTING" | jq -r '.[].name // empty' 2>/dev/null | while read -r FNAME; do
-              LOCAL_PATH="content/${CONTENT_DIR}/${FNAME}"
-              if [ ! -f "$LOCAL_PATH" ]; then
-                echo "  Downloading live-only: $FNAME"
-                curl -sf --max-time 30 \
-                  -u "${DEPLOY_USER}:${DEPLOY_PASS}" \
-                  "${KUDU_BASE}/${CONTENT_DIR}/${FNAME}" \
-                  -o "$LOCAL_PATH" && echo "  Saved: $LOCAL_PATH" || echo "  WARN: failed to download $FNAME"
-              fi
-            done
-          done
-
-          echo "Content sync complete."
-
       - name: Build
         env:
           NEXT_PUBLIC_AZURE_STORAGE_URL: https://sauravportfoliomedia.blob.core.windows.net/blog-images

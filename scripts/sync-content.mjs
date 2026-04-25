@@ -36,6 +36,8 @@ const FIELD_MERGE = {
     key: "code",
     placeholderValues: { verifyUrl: ["#", "", null, undefined] },
   },
+  "projects.json": { key: "id" },
+  "talks.json": { key: "id" },
 };
 
 function copyFileIfMissing(src, dest) {
