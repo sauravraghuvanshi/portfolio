@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { getAllBlogPosts, getAllCaseStudies, getProjects, getTalks, getEvents, getCertifications } from "@/lib/content";
+import { getSubscriberStats } from "@/lib/newsletter";
 import { formatDate } from "@/lib/utils";
-import { FileText, Eye, PenSquare, Plus, BookOpen, FolderKanban, Video, Calendar, Award } from "lucide-react";
+import { FileText, Eye, PenSquare, Plus, BookOpen, FolderKanban, Video, Calendar, Award, Mail } from "lucide-react";
 
 export default function AdminDashboard() {
   const allPosts = getAllBlogPosts(true);
@@ -12,6 +13,7 @@ export default function AdminDashboard() {
   const talks = getTalks();
   const events = getEvents();
   const certifications = getCertifications();
+  const subscriberStats = getSubscriberStats();
 
   const totalPublished = publishedPosts.length + caseStudies.length + projects.length + talks.length + events.length + certifications.length;
 
@@ -24,6 +26,7 @@ export default function AdminDashboard() {
     { label: "Certifications", value: certifications.length, icon: Award },
     { label: "Published", value: totalPublished, icon: Eye },
     { label: "Drafts", value: drafts.length, icon: PenSquare },
+    { label: "Subscribers", value: subscriberStats.active, icon: Mail },
   ];
 
   return (
@@ -76,7 +79,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8">
+      <div className="grid grid-cols-3 gap-4 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-9">
         {stats.map((stat) => (
           <div
             key={stat.label}

@@ -9,6 +9,7 @@ import ProjectsGrid from "@/components/sections/ProjectsGrid";
 import Speaking from "@/components/sections/Speaking";
 import FeaturedTalks from "@/components/sections/FeaturedTalks";
 import Certifications from "@/components/sections/Certifications";
+import NewsletterSignup from "@/components/sections/NewsletterSignup";
 import Contact from "@/components/sections/Contact";
 import type { Metadata } from "next";
 
@@ -72,6 +73,7 @@ export default function HomePage() {
       <FeaturedBlogPosts posts={blogPosts} />
       <Speaking events={speakingEvents} />
       <Certifications certifications={certifications} />
+      <NewsletterSignup />
       <Contact
         email={profile.email}
         availability={profile.availability}

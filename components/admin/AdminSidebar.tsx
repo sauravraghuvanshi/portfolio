@@ -16,6 +16,7 @@ import {
   Plus,
   LogOut,
   Sparkles,
+  Mail,
 } from "lucide-react";
 
 const navSections = [
@@ -70,6 +71,12 @@ const navSections = [
     items: [
       { label: "Certifications", href: "/admin/certifications", icon: Award },
       { label: "New Certification", href: "/admin/certifications/new", icon: Plus },
+    ],
+  },
+  {
+    title: "Newsletter",
+    items: [
+      { label: "Newsletter", href: "/admin/newsletter", icon: Mail },
     ],
   },
 ];
