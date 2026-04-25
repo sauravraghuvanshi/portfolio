@@ -34,7 +34,7 @@ if (fs.existsSync(envLocalPath)) {
   for (const line of fs.readFileSync(envLocalPath, "utf-8").split("\n")) {
     const m = line.match(/^([A-Z_][A-Z0-9_]*)=(.*)$/);
     if (m && !process.env[m[1]]) {
-      process.env[m[1]] = m[2].replace(/^["']|["']$/g, "");
+      process.env[m[1]] = m[2].replace(/^["']|["']$/g, "").trim();
     }
   }
 }
@@ -62,6 +62,7 @@ async function get(url) {
   return res;
 }
 
+console.log("[pull-live] Checking live content...");
 let downloaded = 0;
 
 for (const dir of CONTENT_DIRS) {
@@ -70,8 +71,8 @@ for (const dir of CONTENT_DIRS) {
     const res = await get(`${KUDU_BASE}/${dir}/`);
     if (!res) continue;
     listing = await res.json();
-  } catch {
-    // Network issue or directory doesn't exist yet — skip quietly
+  } catch (e) {
+    console.warn(`[pull-live] ⚠ Could not list ${dir}/: ${e.message}`);
     continue;
   }
 
@@ -79,22 +80,26 @@ for (const dir of CONTENT_DIRS) {
 
   for (const file of mdxFiles) {
     const localPath = path.join(root, "content", dir, file.name);
-    if (fs.existsSync(localPath)) continue;
 
     try {
       const res = await get(`${KUDU_BASE}/${dir}/${file.name}`);
       if (!res) continue;
-      const content = await res.text();
+      const liveContent = await res.text();
+      const localContent = fs.existsSync(localPath) ? fs.readFileSync(localPath, "utf-8") : null;
+      if (localContent === liveContent) continue; // already in sync
       fs.mkdirSync(path.dirname(localPath), { recursive: true });
-      fs.writeFileSync(localPath, content, "utf-8");
-      console.log(`[pull-live] ↓ ${dir}/${file.name}`);
+      fs.writeFileSync(localPath, liveContent, "utf-8");
+      const action = localContent ? "↺ updated" : "↓ new";
+      console.log(`[pull-live] ${action} ${dir}/${file.name}`);
       downloaded++;
-    } catch {
-      // Skip individual file failures — don't block dev
+    } catch (e) {
+      console.warn(`[pull-live] ⚠ Failed to download ${dir}/${file.name}: ${e.message}`);
     }
   }
 }
 
 if (downloaded > 0) {
   console.log(`[pull-live] Synced ${downloaded} admin-created file(s). Consider: git add content/ && git commit -m "chore: sync admin content"`);
+} else {
+  console.log("[pull-live] Already up to date.");
 }
