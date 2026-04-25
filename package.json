@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "predev": "node scripts/pull-live-content.mjs",
     "prebuild": "node scripts/generate-events.mjs",
     "build": "next build",
     "postbuild": "node scripts/postbuild.mjs",
@@ -17,6 +18,7 @@
     "watch:deploy": "node scripts/watch-deploy.mjs",
     "verify:deploy": "node scripts/verify-deploy.mjs",
     "ship": "node scripts/ship.mjs",
+    "pull:live": "node scripts/pull-live-content.mjs",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui"
   },

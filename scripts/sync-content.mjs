@@ -162,18 +162,3 @@ if (!fs.existsSync(BUNDLED_DIR)) {
 console.log(`[sync-content] Syncing ${BUNDLED_DIR} → ${PERSISTENT_DIR}`);
 syncDir(BUNDLED_DIR, PERSISTENT_DIR);
 console.log("[sync-content] Done.");
-
-// Only run on Azure App Service
-if (!process.env.WEBSITE_SITE_NAME) {
-  console.log("[sync-content] Not on Azure — skipping.");
-  process.exit(0);
-}
-
-if (!fs.existsSync(BUNDLED_DIR)) {
-  console.log("[sync-content] No bundled content/ dir found — skipping.");
-  process.exit(0);
-}
-
-console.log(`[sync-content] Syncing ${BUNDLED_DIR} → ${PERSISTENT_DIR}`);
-syncDir(BUNDLED_DIR, PERSISTENT_DIR);
-console.log("[sync-content] Done.");

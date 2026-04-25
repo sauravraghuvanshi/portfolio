@@ -22,6 +22,35 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Fetch admin-created content from live server
+        env:
+          DEPLOY_USER: ${{ secrets.AZURE_DEPLOY_USER }}
+          DEPLOY_PASS: ${{ secrets.AZURE_DEPLOY_PASSWORD }}
+        run: |
+          # Fetch MDX files created via admin panel from persistent Azure storage.
+          # Correct Kudu VFS path: /api/vfs/data/ maps to /home/data/ (persistent).
+          # NOTE: /api/vfs/site/wwwroot/ is WRONG — that's the deploy dir, not persistent.
+          KUDU_BASE="https://saurav-portfolio.scm.azurewebsites.net/api/vfs/data/content"
+          for CONTENT_DIR in blog case-studies; do
+            echo "Checking live ${CONTENT_DIR}..."
+            LISTING=$(curl -sf --max-time 30 \
+              -u "${DEPLOY_USER}:${DEPLOY_PASS}" \
+              "${KUDU_BASE}/${CONTENT_DIR}/" 2>/dev/null || echo "[]")
+            echo "$LISTING" | jq -r '.[].name // empty' 2>/dev/null | \
+            while IFS= read -r FNAME; do
+              [ -z "$FNAME" ] && continue
+              LOCAL_PATH="content/${CONTENT_DIR}/${FNAME}"
+              if [ ! -f "$LOCAL_PATH" ]; then
+                echo "  Downloading admin-created: ${CONTENT_DIR}/${FNAME}"
+                mkdir -p "content/${CONTENT_DIR}"
+                curl -sf --max-time 30 -u "${DEPLOY_USER}:${DEPLOY_PASS}" \
+                  "${KUDU_BASE}/${CONTENT_DIR}/${FNAME}" -o "${LOCAL_PATH}" \
+                  && echo "  ✓ ${FNAME}" || echo "  ✗ Failed to download ${FNAME}"
+              fi
+            done
+          done
+          echo "Admin content fetch complete."
+
       - name: Build
         env:
           NEXT_PUBLIC_AZURE_STORAGE_URL: https://sauravportfoliomedia.blob.core.windows.net/blog-images
