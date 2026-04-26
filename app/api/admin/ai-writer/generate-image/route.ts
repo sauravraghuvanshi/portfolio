@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { generateAndUploadImage } from "@/lib/ai/image-generator";
 
+export const maxDuration = 300; // 5 min — gpt-image-2 can be slow
+
 export async function POST(req: NextRequest) {
   const session = await auth();
   if (!session?.user) {

@@ -103,7 +103,7 @@ export async function generateAndUploadImage(
         quality: "high",
         output_format: "png",
       }),
-      signal: AbortSignal.timeout(120_000), // 2 min — image gen can be slow
+      signal: AbortSignal.timeout(300_000), // 5 min — gpt-image-2 is slow
     });
 
     if (!res.ok) {
