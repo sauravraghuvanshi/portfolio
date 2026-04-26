@@ -78,6 +78,16 @@ function buildAgentUrl(projectEndpoint: string, agentName: string): string {
 }
 
 /**
+ * Build the project-scoped Responses API URL.
+ * Required for stateful calls that use store:true + previous_response_id (MCP approval loops).
+ * Format: {projectEndpoint}/openai/responses
+ */
+function buildProjectScopedUrl(projectEndpoint: string): string {
+  const base = projectEndpoint.replace(/\/$/, "");
+  return `${base}/openai/responses?api-version=2025-05-15-preview`;
+}
+
+/**
  * fetch() wrapper with exponential backoff for 429 rate-limit responses.
  * Respects Retry-After header when present; otherwise uses doubling delay.
  */
@@ -294,11 +304,19 @@ async function* parseSSE(
 /**
  * Stream the Azure AI Foundry agent response token-by-token.
  * Handles MCP approval loops transparently — the consumer only sees text deltas.
+ *
+ * @param stateful - When true, uses the project-scoped endpoint with store:true.
+ *   Required for agents that invoke MCP tools (Web Search, Microsoft Learn) because
+ *   the approval loop continuation uses previous_response_id, which only works when
+ *   the server has stored the prior response state. The application-scoped endpoint
+ *   is stateless and cannot process previous_response_id, causing empty responses.
+ *   Use stateful=true for AI Writer; keep default false for the chatbot.
  */
 export async function* streamFoundryAgent(
   systemPrompt: string,
   messages: ChatMessage[],
-  label = "foundry-agent-stream"
+  label = "foundry-agent-stream",
+  stateful = false
 ): AsyncGenerator<FoundryStreamEvent> {
   const projectEndpoint = process.env.AZURE_FOUNDRY_PROJECT_ENDPOINT;
   const agentName = process.env.AZURE_FOUNDRY_AGENT_NAME;
@@ -309,7 +327,9 @@ export async function* streamFoundryAgent(
     );
   }
 
-  const url = buildAgentUrl(projectEndpoint, agentName);
+  const url = stateful
+    ? buildProjectScopedUrl(projectEndpoint)
+    : buildAgentUrl(projectEndpoint, agentName);
 
   log(`[${label}] Acquiring AAD token...`);
   const credential = getCredential();
@@ -321,7 +341,9 @@ export async function* streamFoundryAgent(
     "Content-Type": "application/json",
   };
 
-  // Build input — inject system prompt into first user message
+  // Always inject system prompt into first user message — works for both stateless
+  // and stateful endpoints. The project-scoped endpoint rejects the `instructions`
+  // field when agent_reference is present (400: "Not allowed when agent is specified").
   const input: { role: string; content: string }[] = [];
   let systemInjected = false;
 
@@ -345,9 +367,12 @@ export async function* streamFoundryAgent(
 
     const body: Record<string, unknown> = {
       input: currentInput,
-      store: false,
+      store: stateful,
       stream: true,
     };
+    if (stateful) {
+      body.agent_reference = { type: "agent_reference", name: agentName };
+    }
     if (previousResponseId) {
       body.previous_response_id = previousResponseId;
     }

@@ -148,15 +148,18 @@ az cognitiveservices account create \\
 \`\`\`
 
 ## Mermaid Architecture Diagrams
-For sequence flows, decision trees, and data flows, use Mermaid:
-\`\`\`mermaid
-graph TD
-    A[Client] --> B[API Gateway]
-    B --> C[Azure OpenAI]
-    B --> D[Azure AI Search]
-    C --> E[Response]
-    D --> E
-\`\`\`
+For sequence flows, decision trees, and data flows, use Mermaid with special markers.
+
+CRITICAL: Inside the \`bodyMarkdown\` JSON string, triple backticks break the JSON code fence. Use these markers instead:
+
+\`[MERMAID]\` to start and \`[/MERMAID]\` to end. The system converts them to proper code fences automatically.
+
+Example in bodyMarkdown:
+\`[MERMAID]graph TD\\n    A[Client] --> B[API Gateway]\\n    B --> C[Azure OpenAI][/MERMAID]\`
+
+In the markdown PREVIEW section (outside JSON), use normal \`\`\`mermaid fences.
+
+Do NOT use \`<br/>\` in Mermaid node labels — use spaces instead (e.g., \`A[Azure Workload - App Service AKS Functions]\` not \`A[Azure Workload<br/>App Service]\`).
 
 ## Current Task
 Create a **${schema.label}** (content type: ${contentType}).
@@ -206,7 +209,7 @@ When generating the final draft, return:
 \`\`\`
 
 Field notes:
-- \`bodyMarkdown\`: The complete article with [GENERATE_IMAGE: "..."] markers and [YOUTUBE: "url" "title"] markers in place
+- \`bodyMarkdown\`: The complete article with [GENERATE_IMAGE: "..."] markers and [YOUTUBE: "url" "title"] markers in place. Mermaid diagrams must be inside \`\`\`mermaid fences — never as plain text.
 - \`coverImagePrompt\`: The DALL-E prompt for the cover image (extract from the first [GENERATE_IMAGE:...] marker)
 - \`inlineImagePrompts\`: Array of objects \`{placeholder: "the full marker string", prompt: "the dalle prompt"}\`
 - \`youtubeEmbeds\`: Array of objects \`{placeholder: "the full marker string", url: "youtube url", title: "video title"}\`

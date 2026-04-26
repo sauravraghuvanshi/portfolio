@@ -14,8 +14,12 @@ import {
   AlertTriangle,
   RefreshCw,
   Image as ImageIcon,
+  Loader2,
+  CheckCircle2,
+  XCircle,
+  Clock,
 } from "lucide-react";
-import type { AIContentType, AIWriterPayload } from "@/types/ai-writer";
+import type { AIContentType, AIWriterPayload, ImageTask } from "@/types/ai-writer";
 import { CONTENT_TYPES } from "@/lib/ai/content-schemas";
 
 interface ContentPreviewProps {
@@ -25,6 +29,11 @@ interface ContentPreviewProps {
   onRegenerate: () => void;
   isSaving: boolean;
   contentType: AIContentType;
+  imageTasks: ImageTask[];
+  isGeneratingImages: boolean;
+  imageProgress: string;
+  onGenerateImages: () => void;
+  onRetryImage: (taskId: string) => void;
 }
 
 type Tab = "preview" | "json" | "sources";
@@ -36,6 +45,11 @@ export default function ContentPreview({
   onRegenerate,
   isSaving,
   contentType,
+  imageTasks,
+  isGeneratingImages,
+  imageProgress,
+  onGenerateImages,
+  onRetryImage,
 }: ContentPreviewProps) {
   const [activeTab, setActiveTab] = useState<Tab>("preview");
   const [copied, setCopied] = useState(false);
@@ -127,6 +141,60 @@ export default function ContentPreview({
                 <span className="truncate">Cover image pending: {payload.coverImagePrompt.slice(0, 80)}…</span>
               </div>
             ) : null}
+
+            {/* Image generation panel */}
+            {imageTasks.length > 0 && (
+              <div className="rounded-lg border border-slate-700 bg-slate-800/30 p-3 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                    <ImageIcon className="h-3.5 w-3.5" />
+                    Images ({imageTasks.length})
+                    {imageProgress && (
+                      <span className="text-slate-500 font-normal">— {imageProgress} done</span>
+                    )}
+                  </span>
+                  {!isGeneratingImages && imageTasks.some((t) => t.status !== "done") && (
+                    <button
+                      onClick={onGenerateImages}
+                      className="flex items-center gap-1 rounded-lg bg-brand-600 px-2.5 py-1 text-[11px] font-medium text-white hover:bg-brand-500 transition-colors"
+                    >
+                      <ImageIcon className="h-3 w-3" />
+                      Generate Images
+                    </button>
+                  )}
+                </div>
+                {imageTasks.map((task) => (
+                  <div
+                    key={task.id}
+                    className="flex items-center gap-2 rounded-md bg-slate-900/50 px-2.5 py-2 text-xs"
+                  >
+                    {task.status === "pending" && <Clock className="h-3.5 w-3.5 text-slate-500 flex-shrink-0" />}
+                    {task.status === "generating" && <Loader2 className="h-3.5 w-3.5 text-brand-400 animate-spin flex-shrink-0" />}
+                    {task.status === "done" && <CheckCircle2 className="h-3.5 w-3.5 text-green-400 flex-shrink-0" />}
+                    {task.status === "error" && <XCircle className="h-3.5 w-3.5 text-red-400 flex-shrink-0" />}
+
+                    <span className="flex-1 truncate text-slate-400">
+                      <span className="text-slate-300 font-medium">{task.id === "cover" ? "Cover" : task.id}:</span>{" "}
+                      {task.prompt.slice(0, 60)}{task.prompt.length > 60 ? "…" : ""}
+                    </span>
+
+                    {task.status === "done" && task.url && (
+                      <img src={task.url} alt="" className="h-8 w-8 rounded object-cover flex-shrink-0" />
+                    )}
+                    {task.status === "error" && (
+                      <button
+                        onClick={() => onRetryImage(task.id)}
+                        disabled={isGeneratingImages}
+                        className="flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-medium text-red-400 hover:bg-red-500/10 transition-colors disabled:opacity-50"
+                      >
+                        <RefreshCw className="h-3 w-3" />
+                        Retry
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
 
             <h2 className="text-lg font-bold text-white">{payload.title}</h2>
             {payload.summary && (

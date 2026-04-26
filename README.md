@@ -45,9 +45,16 @@ _Last synced: 2026-04-21_
 - **Scroll Progress** — Reading progress bar on blog and case study detail pages
 - **Code Copy Button** — Hover-to-reveal copy button on all MDX code blocks
 - **Noise Texture** — Subtle SVG noise overlay for visual depth
-- **AI Writer (Agentic)** — AI-powered content creation assistant at `/admin/ai-writer` backed by an **Azure AI Foundry Agent** with three grounding sources: portfolio knowledge base (RAG via vector store with 12 indexed documents), Microsoft Learn MCP server (official Azure documentation), and Web Search. Uses stateful Responses API with automatic MCP tool-approval flow, AAD authentication (ManagedIdentity on production, AzureCLI on local dev), and inline source citations. Content types: Blog, Case Study, Project, Talk, Event, Social.
-- **AI Chatbot** — Public-facing floating chat bubble powered by Azure AI Foundry Agent. Visitors can ask questions about Saurav's experience, skills, and projects. Uses `lib/ai/foundry-agent.ts` (shared Foundry client) and `lib/ai/chatbot-prompt.ts` (chatbot system prompt). Streams responses via `/api/chat` route with Vercel AI SDK.
+- **AI Writer (Agentic)** — AI-powered content creation assistant at `/admin/ai-writer` backed by an **Azure AI Foundry Agent** (application-scoped Responses API, stateless `store: false`). Three grounding sources: portfolio knowledge base (RAG via vector store), Microsoft Learn MCP server, and Web Search. AAD auth (ManagedIdentity on App Service, AzureCliCredential locally). Auto-approves MCP tool calls up to 5 turns. Streams via SSE with `streamFoundryAgent()` to avoid 408 timeouts. Exponential-backoff retry on 429s. Supports an optional dedicated `AI_WRITER_AGENT_NAME` for a stronger model deployment separate from the chatbot agent. Content types: Blog, Case Study, Project, Talk, Event, Social.
+- **AI Writer ContentPreview** — Generated content rendered via `react-markdown` + `remark-gfm` with full styling: code blocks with language badge, cover image display, blockquotes, tables, inline code pills. Shows a pending chip when a cover image prompt exists but generation is queued.
+- **AI Image Generation** — AI Writer auto-generates images for `[GENERATE_IMAGE: "..."]` markers in `bodyMarkdown` using the `gpt-image-1` (or `dall-e-3`) deployment. Images upload to Azure Blob Storage and the markdown is rewritten with real `![alt](url)` syntax. Cover image is also extracted and stored separately. Configured via `AZURE_OPENAI_IMAGE_DEPLOYMENT`.
+- **AI Chatbot** — Public-facing floating chat bubble powered by Azure AI Foundry Agent. True token-by-token SSE streaming via `streamFoundryAgent()` async generator in `lib/ai/foundry-agent.ts`. Client-side `useTypewriter` hook reveals text at ~170 chars/sec for a smooth ChatGPT-like feel. Uses `experimental_throttle: 50` on `useChat` for smooth React re-renders.
 - **Auto RAG Reindex** — Automatic reindexing pipeline triggers on every content save/delete via admin panel. Extracts portfolio content → uploads to Foundry → creates vector store → updates agent → cleans up old resources. Safe ordering ensures the agent is never left pointing to deleted data.
+- **Architecture Page** — `/architecture` — Interactive "Built on Azure" infrastructure page documenting the live Azure stack: 6 services with expandable cards, request flow diagrams, CI/CD pipeline visualization, cost breakdown table, and architectural decisions — all with Framer Motion stagger animations and `useReducedMotion()` support.
+- **Architecture Playground** — Extracted to its own repo/App Service at [architecture-playground.azurewebsites.net](https://architecture-playground.azurewebsites.net). Interactive multi-cloud architecture diagram editor (Azure/AWS/GCP icons, connectable edges, animated playback, PNG/JSON/GIF export). Navigation links to it externally.
+- **Spotlight Project Card** — The portfolio website itself (`portfolio-website`) renders as a branded spotlight card in the Projects grid: brand-blue border, stagger animations, infra stat chips, and a pulsing "Live on Azure" badge.
+- **Certification Verify URLs + Click-to-Copy** — Each certification has an optional `verifyUrl` (Microsoft Learn, AWS, Udacity). A `CopyIdPill` component lets visitors click to copy the credential ID with visual feedback — particularly useful for AWS certs that require manual paste.
+- **Content Sync System** — On every App Service startup, `sync-content.mjs` merges bundled git-tracked content into `/home/data/content/` (persistent storage). Uses field-merge semantics: admin-created MDX files are never overwritten; JSON arrays receive new git-tracked records while preserving admin edits. Prevents admin content from being wiped on each deploy.
 - **Admin Panel** — Protected dashboard at `/admin` with authentication, managing blogs, case studies, projects, talks, events, and certifications
 - **Blog Editor** — Medium-style MDX editor with live preview, image upload, and drag-and-drop media
 - **Case Study Editor** — MDX editor for case studies with metrics, timeline, role, and client fields
@@ -77,9 +84,9 @@ _Last synced: 2026-04-21_
 | Auth | NextAuth v5 (Credentials provider, JWT sessions) |
 | Editor | `@uiw/react-md-editor` with custom toolbar |
 | Image Storage | Azure Blob Storage (`@azure/storage-blob`) |
-| AI | Vercel AI SDK v5 (`ai`, `@ai-sdk/react`) · Azure AI Foundry Agent (Responses API) · Public chatbot + admin AI Writer |
-| AI Backend | Azure AI Foundry (`saurav-portfolio-ai`, East US) — Agent with file_search + Web Search + Microsoft Learn MCP |
-| Deployment | Azure App Service (Linux, Node 20 LTS, F1 Free) |
+| AI | Vercel AI SDK v6 (`ai`, `@ai-sdk/react`) · Azure AI Foundry Agent (application-scoped Responses API, SSE streaming) · Public chatbot + admin AI Writer · Image generation (`gpt-image-1` / `dall-e-3`) |
+| AI Backend | Azure AI Foundry (`saurav-portfolio-ai`, East US) — Agent with file_search + Web Search + Microsoft Learn MCP · App Service Managed Identity auth (`ManagedIdentityCredential` on prod, `AzureCliCredential` on dev) |
+| Deployment | Azure App Service (Linux, Node 20 LTS, B1) |
 | CI/CD | GitHub Actions → Kudu zip-deploy |
 
 ---
@@ -105,10 +112,13 @@ npm run dev                   # http://localhost:3000
 | `AZURE_STORAGE_CONTAINER_NAME` | Yes | Container name (default: `blog-images`) |
 | `NEXT_PUBLIC_AZURE_STORAGE_URL` | Yes | Public blob URL base (build-time inlined) |
 | `AZURE_OPENAI_ENDPOINT` | No | Azure AI Foundry endpoint (for AI Writer) |
-| `AZURE_OPENAI_API_KEY` | No | Azure AI Foundry API key (for AI Writer) |
+| `AZURE_OPENAI_API_KEY` | No | Azure AI Foundry API key (fallback; prefer managed identity) |
 | `AZURE_OPENAI_DEPLOYMENT` | No | GPT-4o deployment name (default: `gpt-4o`) |
-| `AZURE_FOUNDRY_PROJECT_ENDPOINT` | No | Azure AI Foundry project endpoint (for AI Writer Agent) |
-| `AZURE_FOUNDRY_AGENT_NAME` | No | Foundry Agent name (for AI Writer Agent) |
+| `AZURE_OPENAI_IMAGE_DEPLOYMENT` | No | Image generation deployment (`gpt-image-1` or `dall-e-3`) |
+| `AZURE_FOUNDRY_PROJECT_ENDPOINT` | No | Azure AI Foundry project endpoint (for Agent calls) |
+| `AZURE_FOUNDRY_AGENT_NAME` | No | Foundry Agent name (chatbot + AI Writer fallback) |
+| `AI_WRITER_AGENT_NAME` | No | Optional dedicated agent for AI Writer (e.g. stronger model) — falls back to `AZURE_FOUNDRY_AGENT_NAME` |
+| `AZURE_TENANT_ID` | No | Tenant ID for `AzureCliCredential` on local dev |
 
 > On Azure App Service, also set `AUTH_URL` to the public site URL (required for NextAuth callback resolution).
 
@@ -261,7 +271,8 @@ portfolio/
 │   ├── ai/                           # AI Writer helpers
 │   │   ├── content-schemas.ts        # Content type configs + question sets
 │   │   ├── system-prompt.ts          # Dynamic system prompt builder
-│   │   ├── foundry-agent.ts          # Shared Foundry Agent client (used by ai-writer + chatbot)
+│   │   ├── foundry-agent.ts          # Shared Foundry Agent client — callFoundryAgent() + streamFoundryAgent() (SSE), fetchWithRetry, MCP approval loop
+│   │   ├── image-generator.ts        # processImageMarkers() — replaces [GENERATE_IMAGE:"..."] with real Blob Storage URLs
 │   │   ├── chatbot-prompt.ts         # Chatbot-specific system prompt
 │   │   └── rag-pipeline.ts           # RAG pipeline (extract → upload → index → update agent → cleanup)
 │   ├── triggerReindex.ts              # Debounced fire-and-forget reindex trigger
@@ -275,7 +286,8 @@ portfolio/
 ├── scripts/
 │   ├── generate-events.mjs           # DOCX → events.json + photos
 │   ├── build-portfolio-rag.mjs       # RAG pipeline: extract portfolio → Foundry vector store
-│   └── postbuild.mjs                 # Copies public/ + static/ into standalone/
+│   ├── sync-content.mjs              # Startup: merges bundled content → /home/data/content/ (field-merge, never overwrites admin edits)
+│   └── postbuild.mjs                 # Copies public/ + static/ + content/ into standalone/
 └── public/                           # Static assets (images, resume PDF)
 ```
 
@@ -294,8 +306,11 @@ portfolio/
 | `/case-studies` | Architecture case studies |
 | `/case-studies/[slug]` | Individual case study (MDX) |
 | `/projects` | Full project gallery with filters |
+| `/projects/[slug]` | Project detail page with outcomes, tech stack, links |
 | `/resume` | HTML resume with interactive career timeline + PDF download |
 | `/social` | Social links hub |
+| `/community` | Community impact page |
+| `/architecture` | "Built on Azure" interactive infrastructure page |
 | `/feed.xml` | RSS feed (auto-generated) |
 | `/admin` | Admin dashboard (protected) |
 | `/admin/blog` | Blog post management |
@@ -338,7 +353,7 @@ CI/CD is fully automated via GitHub Actions. Every push to `main`:
 | Blob Container | `blog-images` (public access) — organized as `blog/`, `events/`, `case-studies/`, `certifications/` subfolders |
 | AI Foundry | `saurav-portfolio-ai` (East US, AIServices, S0) — Agent: `saurav-portfolio-ai-project-agent` |
 | Region | Central India (App Service) · East US (AI Foundry) |
-| Plan | F1 Free (Linux, Node 20) |
+| Plan | B1 (Linux, Node 20) |
 
 ### GitHub Secrets
 
@@ -360,7 +375,7 @@ See [`AZURE-DEPLOY.md`](../AZURE-DEPLOY.md) for manual deployment steps and trou
 - [x] **Content-Security-Policy (CSP)** — comprehensive policy covering self, YouTube iframes, Azure Blob images, inline styles
 - [x] **Security headers** — HSTS, X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy
 - [x] **Zod input validation** — all 13 admin API routes validate request bodies at the boundary (`lib/api-schemas.ts`)
-- [x] **Rate limiting** — in-memory rate limiter for AI Writer (5/min per user) and reindex (1/min global) (`lib/rate-limit.ts`)
+- [x] **Rate limiting** — in-memory rate limiter for AI Writer (3/min per user) and reindex (1/min global) (`lib/rate-limit.ts`)
 - [x] **Brute-force protection** — exponential backoff login lockout (5 failures → 30s, doubles, max 15min) in `auth.ts`
 - [x] **Error boundaries** — global and admin-specific error/loading states (`app/error.tsx`, `app/admin/error.tsx`)
 - [x] **Skip-to-content** — accessible skip link for keyboard navigation
@@ -374,6 +389,30 @@ See [`AZURE-DEPLOY.md`](../AZURE-DEPLOY.md) for manual deployment steps and trou
 - [x] `sitemap.xml` + `robots.txt`
 - [x] OpenGraph + Twitter card metadata per page with branded OG image (1200×630)
 - [x] Admin routes protected by NextAuth middleware (covers `/admin/*` and `/api/admin/*`)
+
+---
+
+---
+
+## Developer Tooling
+
+### Claude Code Hooks (`.claude/settings.json`)
+
+Three automated hooks keep the dev loop clean:
+
+| Hook | Event | Trigger | Action |
+|---|---|---|---|
+| `pre-push-tsc.sh` | `PreToolUse` | `git push *` | Runs `tsc --noEmit --skipLibCheck` — **blocks the push** if TypeScript errors are found |
+| `pre-task-context.sh` | `UserPromptSubmit` | Every prompt | Injects reminder to read `.claude/*.md` project context before starting a task |
+| `post-commit-update.sh` | `PostToolUse` | `git commit *` | Injects reminder to update `.claude/` memory files and `README.md` after each commit |
+
+> Hooks live in `.claude/hooks/` and are registered in `.claude/settings.json`. Requires Claude Code restart to take effect after first install.
+
+### Claude Code Skills (`.claude/skills/`)
+
+10 project-specific slash commands auto-discovered at session start:
+
+`/add-blog-post` · `/add-case-study` · `/add-content-type` · `/add-section` · `/add-api-route` · `/deploy` · `/troubleshoot-deploy` · `/update-ai-agent` · `/audit` · `/refactor-component`
 
 ---
 

@@ -1,5 +1,16 @@
 export type AIContentType = "blog" | "case-study" | "project" | "talk" | "event" | "social";
 
+export type ImageStatus = "pending" | "generating" | "done" | "error";
+
+export interface ImageTask {
+  id: string;            // "cover" | "img-1" | "img-2"
+  placeholder: string;   // The full [GENERATE_IMAGE: "..."] marker
+  prompt: string;
+  status: ImageStatus;
+  url?: string;          // Blob URL after generation
+  error?: string;
+}
+
 export interface ContentTypeConfig {
   key: AIContentType;
   label: string;

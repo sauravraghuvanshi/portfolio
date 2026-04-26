@@ -24,13 +24,15 @@ import {
   Maximize2,
   Minimize2,
 } from "lucide-react";
-import type { AIContentType, AIWriterPayload } from "@/types/ai-writer";
+import type { AIContentType, AIWriterPayload, ImageTask } from "@/types/ai-writer";
 import { CONTENT_TYPES } from "@/lib/ai/content-schemas";
+import { processAllMarkers, applyImageResults } from "@/lib/ai/marker-processing";
 import { triggerReindex } from "@/lib/triggerReindex";
 import ContentTypeSelector from "./ai-writer/ContentTypeSelector";
 import ChatMessages from "./ai-writer/ChatMessages";
 import { getMessageText } from "./ai-writer/ChatMessages";
 import ContentPreview from "./ai-writer/ContentPreview";
+import { useImageGeneration } from "./ai-writer/useImageGeneration";
 
 interface Attachment {
   id: string;
@@ -71,6 +73,7 @@ export default function AIWriter() {
     useChat({ transport });
 
   const isLoading = status === "streaming" || status === "submitted";
+  const imageGen = useImageGeneration();
 
   // Auto-resize textarea
   useEffect(() => {
@@ -88,16 +91,25 @@ export default function AIWriter() {
     if (!lastAI) return { payload: null, rawJson: "" };
 
     const text = getMessageText(lastAI);
-    const jsonMatch = text.match(/```json\s*([\s\S]*?)```/);
+    const jsonMatch = text.match(/```json\n([\s\S]*)\n```\s*$/);
     if (!jsonMatch) return { payload: null, rawJson: "" };
 
     try {
       const parsed = JSON.parse(jsonMatch[1]) as AIWriterPayload;
+      // Process all markers: Mermaid → fences, YouTube → iframes, extract image tasks
+      if (parsed.bodyMarkdown) {
+        const { processed, imageTasks } = processAllMarkers(parsed.bodyMarkdown);
+        parsed.bodyMarkdown = processed;
+        // Initialize image tasks if we got new ones (only on first parse)
+        if (imageTasks.length > 0 && imageGen.tasks.length === 0) {
+          imageGen.initTasks(imageTasks);
+        }
+      }
       return { payload: parsed, rawJson: JSON.stringify(parsed, null, 2) };
     } catch {
       return { payload: null, rawJson: jsonMatch[1] };
     }
-  }, [messages]);
+  }, [messages, imageGen]);
 
   const buildMessageText = useCallback(() => {
     if (!input.trim() && attachments.length === 0) return "";
@@ -149,7 +161,8 @@ export default function AIWriter() {
     setInput("");
     setAttachments([]);
     setIsExpanded(false);
-  }, [setMessages]);
+    imageGen.reset();
+  }, [setMessages, imageGen]);
 
   const handleSave = useCallback(async () => {
     if (!payload || !contentType) return;
@@ -158,7 +171,18 @@ export default function AIWriter() {
 
     setIsSaving(true);
     try {
-      const savePayload = buildSavePayload(contentType, payload);
+      // Apply completed image results to the payload before saving
+      const finalPayload = { ...payload };
+      if (imageGen.tasks.length > 0) {
+        const { content, coverImageUrl } = applyImageResults(
+          finalPayload.bodyMarkdown,
+          imageGen.tasks
+        );
+        finalPayload.bodyMarkdown = content;
+        if (coverImageUrl) finalPayload.coverImage = coverImageUrl;
+      }
+
+      const savePayload = buildSavePayload(contentType, finalPayload);
       const res = await fetch(config.saveEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -177,15 +201,29 @@ export default function AIWriter() {
     } finally {
       setIsSaving(false);
     }
-  }, [payload, contentType, router]);
+  }, [payload, contentType, router, imageGen]);
 
   const handleRegenerate = useCallback(() => {
+    imageGen.reset();
     setMessages((prev) => {
       const idx = prev.findLastIndex((m) => m.role === "assistant");
       if (idx >= 0) return prev.slice(0, idx);
       return prev;
     });
-  }, [setMessages]);
+  }, [setMessages, imageGen]);
+
+  const handleGenerateImages = useCallback(() => {
+    if (!payload) return;
+    imageGen.generateAll(payload.slug);
+  }, [payload, imageGen]);
+
+  const handleRetryImage = useCallback(
+    (taskId: string) => {
+      if (!payload) return;
+      imageGen.retry(taskId, payload.slug);
+    },
+    [payload, imageGen]
+  );
 
   const handleFileChange = useCallback(async (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
@@ -435,6 +473,11 @@ export default function AIWriter() {
               onRegenerate={handleRegenerate}
               isSaving={isSaving}
               contentType={contentType}
+              imageTasks={imageGen.tasks}
+              isGeneratingImages={imageGen.isGenerating}
+              imageProgress={imageGen.progress}
+              onGenerateImages={handleGenerateImages}
+              onRetryImage={handleRetryImage}
             />
           </motion.div>
         )}
