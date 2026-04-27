@@ -18,7 +18,7 @@ export default function ImageWithShimmer({
   return (
     <>
       {!loaded && (
-        <div className="absolute inset-0 shimmer-placeholder rounded-[inherit]" />
+        <span className="absolute inset-0 shimmer-placeholder rounded-[inherit]" />
       )}
       <Image
         {...props}
