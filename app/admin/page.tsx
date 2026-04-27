@@ -1,389 +1,246 @@
-import Link from "next/link";
-import { getAllBlogPosts, getAllCaseStudies, getProjects, getTalks, getEvents, getCertifications } from "@/lib/content";
-import { formatDate } from "@/lib/utils";
-import { FileText, Eye, PenSquare, Plus, BookOpen, FolderKanban, Video, Calendar, Award } from "lucide-react";
+import { getAdminMetrics } from "@/lib/admin-metrics";
+import {
+  FileText,
+  BookOpen,
+  FolderKanban,
+  Video,
+  Calendar,
+  Award,
+  Eye,
+  Sparkles,
+  Activity,
+  Clock,
+  PieChart as PieIcon,
+  BarChart3,
+} from "lucide-react";
+import { StatCard } from "@/components/admin/ui/StatCard";
+import { MotionCard } from "@/components/admin/ui/MotionCard";
+import { SectionHeading } from "@/components/admin/ui/SectionHeading";
+import { ContentTimelineChart } from "@/components/admin/charts/ContentTimelineChart";
+import { StatusDonut } from "@/components/admin/charts/StatusDonut";
+import { CategoryBarChart } from "@/components/admin/charts/CategoryBarChart";
+import { ActivityFeed } from "@/components/admin/dashboard/ActivityFeed";
+import { QuickActions } from "@/components/admin/dashboard/QuickActions";
+
+export const dynamic = "force-dynamic";
 
 export default function AdminDashboard() {
-  const allPosts = getAllBlogPosts(true);
-  const caseStudies = getAllCaseStudies(true);
-  const projects = getProjects(true);
-  const talks = getTalks(true);
-  const events = getEvents(true);
-  const certifications = getCertifications(true);
+  const m = getAdminMetrics();
 
-  const allItems = [...allPosts, ...caseStudies, ...projects, ...talks, ...events, ...certifications];
-  const totalPublished = allItems.filter((i) => i.status === "published").length;
-  const totalDrafts = allItems.filter((i) => i.status === "draft").length;
+  const totalContent =
+    m.totals.blog +
+    m.totals["case-study"] +
+    m.totals.project +
+    m.totals.talk +
+    m.totals.event +
+    m.totals.certification;
 
-  const stats = [
-    { label: "Blogs", value: allPosts.length, icon: FileText },
-    { label: "Case Studies", value: caseStudies.length, icon: BookOpen },
-    { label: "Projects", value: projects.length, icon: FolderKanban },
-    { label: "Talks", value: talks.length, icon: Video },
-    { label: "Events", value: events.length, icon: Calendar },
-    { label: "Certifications", value: certifications.length, icon: Award },
-    { label: "Published", value: totalPublished, icon: Eye },
-    { label: "Drafts", value: totalDrafts, icon: PenSquare },
-  ];
+  const lastYear = m.timeline.at(-1);
+  const prevYear = m.timeline.at(-2);
+  const yoyDelta =
+    lastYear && prevYear
+      ? lastYear.Blogs +
+        lastYear["Case Studies"] +
+        lastYear.Projects +
+        lastYear.Events +
+        lastYear.Certs -
+        (prevYear.Blogs +
+          prevYear["Case Studies"] +
+          prevYear.Projects +
+          prevYear.Events +
+          prevYear.Certs)
+      : 0;
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-white">Dashboard</h1>
-        <div className="flex items-center gap-2">
-          <Link
-            href="/admin/blog/new"
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-surface-dark px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800"
-          >
-            <Plus className="h-4 w-4" />
-            New Blog
-          </Link>
-          <Link
-            href="/admin/case-studies/new"
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-surface-dark px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800"
-          >
-            <Plus className="h-4 w-4" />
-            New Case Study
-          </Link>
-          <Link
-            href="/admin/projects/new"
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-surface-dark px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800"
-          >
-            <Plus className="h-4 w-4" />
-            New Project
-          </Link>
-          <Link
-            href="/admin/talks/new"
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-surface-dark px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800"
-          >
-            <Plus className="h-4 w-4" />
-            New Talk
-          </Link>
-          <Link
-            href="/admin/events/new"
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-surface-dark px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800"
-          >
-            <Plus className="h-4 w-4" />
-            New Event
-          </Link>
-          <Link
-            href="/admin/certifications/new"
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-surface-dark px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800"
-          >
-            <Plus className="h-4 w-4" />
-            New Cert
-          </Link>
+    <div className="space-y-8">
+      {/* Hero */}
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wider text-brand-400">
+            Overview
+          </p>
+          <h1 className="mt-1 text-3xl font-bold tracking-tight text-white">
+            Dashboard
+          </h1>
+          <p className="mt-1 text-sm text-slate-400">
+            Live snapshot of every content surface. Click a card to drill in.
+          </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 sm:grid-cols-4 lg:grid-cols-8">
-        {stats.map((stat) => (
-          <div
-            key={stat.label}
-            className="rounded-xl border border-slate-800 bg-surface-dark p-5"
-          >
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-600/15">
-                <stat.icon className="h-5 w-5 text-brand-400" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-white">{stat.value}</p>
-                <p className="text-sm text-slate-400">{stat.label}</p>
-              </div>
+      {/* Hero stat row */}
+      <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
+        <StatCard
+          label="Total Content"
+          value={totalContent}
+          delta={yoyDelta}
+          deltaLabel="YoY"
+          icon={<Activity />}
+          accent="text-brand-400"
+          delay={0}
+          sparkline={m.timeline.map(
+            (t) =>
+              t.Blogs +
+              t["Case Studies"] +
+              t.Projects +
+              t.Events +
+              t.Certs,
+          )}
+        />
+        <StatCard
+          label="Published"
+          value={m.totalPublished}
+          icon={<Eye />}
+          accent="text-emerald-400"
+          delay={0.05}
+        />
+        <StatCard
+          label="Drafts"
+          value={m.totalDrafts}
+          icon={<Clock />}
+          accent="text-yellow-400"
+          delay={0.1}
+        />
+        <StatCard
+          label="Featured"
+          value={m.totalFeatured}
+          icon={<Sparkles />}
+          accent="text-amber-400"
+          delay={0.15}
+        />
+      </div>
+
+      {/* Per-kind cards */}
+      <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 xl:grid-cols-6">
+        <StatCard
+          label="Blogs"
+          value={m.totals.blog}
+          icon={<FileText />}
+          accent="text-sky-400"
+          sparkline={m.sparklines.blog}
+          delay={0.05}
+        />
+        <StatCard
+          label="Case Studies"
+          value={m.totals["case-study"]}
+          icon={<BookOpen />}
+          accent="text-cyan-400"
+          sparkline={m.sparklines["case-study"]}
+          delay={0.1}
+        />
+        <StatCard
+          label="Projects"
+          value={m.totals.project}
+          icon={<FolderKanban />}
+          accent="text-violet-400"
+          sparkline={m.sparklines.project}
+          delay={0.15}
+        />
+        <StatCard
+          label="Talks"
+          value={m.totals.talk}
+          icon={<Video />}
+          accent="text-pink-400"
+          delay={0.2}
+        />
+        <StatCard
+          label="Events"
+          value={m.totals.event}
+          icon={<Calendar />}
+          accent="text-orange-400"
+          sparkline={m.sparklines.event}
+          delay={0.25}
+        />
+        <StatCard
+          label="Certs"
+          value={m.totals.certification}
+          icon={<Award />}
+          accent="text-emerald-400"
+          sparkline={m.sparklines.certification}
+          delay={0.3}
+        />
+      </div>
+
+      {/* Quick actions */}
+      <div className="space-y-3">
+        <SectionHeading
+          icon={<Sparkles />}
+          title="Quick actions"
+          subtitle="Most common admin entry points"
+        />
+        <QuickActions />
+      </div>
+
+      {/* Charts row */}
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
+        <MotionCard className="p-5 xl:col-span-2" delay={0.1}>
+          <div className="mb-3 flex items-center justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                Publishing Timeline
+              </p>
+              <p className="text-base font-semibold text-white">
+                Output by year, all surfaces
+              </p>
             </div>
+            <BarChart3 className="h-4 w-4 text-slate-500" />
           </div>
-        ))}
+          <ContentTimelineChart data={m.timeline} />
+        </MotionCard>
+        <MotionCard className="p-5" delay={0.15}>
+          <div className="mb-3 flex items-center justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                Content Mix
+              </p>
+              <p className="text-base font-semibold text-white">By kind</p>
+            </div>
+            <PieIcon className="h-4 w-4 text-slate-500" />
+          </div>
+          <StatusDonut data={m.contentMix} centerLabel="Items" />
+        </MotionCard>
       </div>
 
-      {/* Recent Blog Posts */}
-      <div className="rounded-xl border border-slate-800 bg-surface-dark">
-        <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
-          <h2 className="font-semibold text-white">Blogs</h2>
-          <Link href="/admin/blog" className="text-xs text-brand-400 hover:underline">
-            View all
-          </Link>
-        </div>
-        {allPosts.length === 0 ? (
-          <div className="px-5 py-12 text-center text-slate-400">
-            No posts yet.{" "}
-            <Link href="/admin/blog/new" className="text-brand-400 hover:underline">
-              Create your first post
-            </Link>
+      {/* Lower row: status donut + categories */}
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
+        <MotionCard className="p-5" delay={0.1}>
+          <div className="mb-3">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+              Status
+            </p>
+            <p className="text-base font-semibold text-white">
+              Published vs draft
+            </p>
           </div>
-        ) : (
-          <div className="divide-y divide-slate-800">
-            {allPosts.slice(0, 5).map((post) => (
-              <div
-                key={post.slug}
-                className="flex items-center justify-between px-5 py-3"
-              >
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-white">
-                    {post.title}
-                  </p>
-                  <p className="text-xs text-slate-400">
-                    {formatDate(post.date)} &middot; {post.category.join(", ")}
-                  </p>
-                </div>
-                <div className="ml-4 flex items-center gap-2">
-                  <span
-                    className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                      post.status === "published"
-                        ? "bg-accent-500/15 text-accent-400"
-                        : "bg-yellow-500/15 text-yellow-400"
-                    }`}
-                  >
-                    {post.status}
-                  </span>
-                  <Link
-                    href={`/admin/blog/${post.slug}/edit`}
-                    className="rounded-md p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-white"
-                  >
-                    <PenSquare className="h-4 w-4" />
-                  </Link>
-                </div>
-              </div>
-            ))}
+          <StatusDonut data={m.statusBreakdown} centerLabel="Total" />
+        </MotionCard>
+        <MotionCard className="p-5 xl:col-span-2" delay={0.15}>
+          <div className="mb-3">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+              Top Categories
+            </p>
+            <p className="text-base font-semibold text-white">
+              Tagged across blogs, case studies and projects
+            </p>
           </div>
-        )}
+          {m.categoryDistribution.length > 0 ? (
+            <CategoryBarChart data={m.categoryDistribution} />
+          ) : (
+            <p className="py-12 text-center text-sm text-slate-500">
+              No categories yet.
+            </p>
+          )}
+        </MotionCard>
       </div>
 
-      {/* Recent Case Studies */}
-      <div className="rounded-xl border border-slate-800 bg-surface-dark">
-        <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
-          <h2 className="font-semibold text-white">Case Studies</h2>
-          <Link href="/admin/case-studies" className="text-xs text-brand-400 hover:underline">
-            View all
-          </Link>
-        </div>
-        {caseStudies.length === 0 ? (
-          <div className="px-5 py-12 text-center text-slate-400">
-            No case studies yet.{" "}
-            <Link href="/admin/case-studies/new" className="text-brand-400 hover:underline">
-              Create your first case study
-            </Link>
-          </div>
-        ) : (
-          <div className="divide-y divide-slate-800">
-            {caseStudies.slice(0, 5).map((cs) => (
-              <div
-                key={cs.slug}
-                className="flex items-center justify-between px-5 py-3"
-              >
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-white">
-                    {cs.title}
-                  </p>
-                  <p className="text-xs text-slate-400">
-                    {cs.category.join(", ")} &middot; {cs.timeline}
-                  </p>
-                </div>
-                <div className="ml-4 flex items-center gap-2">
-                  {cs.featured && (
-                    <span className="rounded-full bg-accent-500/15 px-2 py-0.5 text-xs font-medium text-accent-400">
-                      Featured
-                    </span>
-                  )}
-                  <Link
-                    href={`/admin/case-studies/${cs.slug}/edit`}
-                    className="rounded-md p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-white"
-                  >
-                    <PenSquare className="h-4 w-4" />
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Recent Projects */}
-      <div className="rounded-xl border border-slate-800 bg-surface-dark">
-        <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
-          <h2 className="font-semibold text-white">Projects</h2>
-          <Link href="/admin/projects" className="text-xs text-brand-400 hover:underline">
-            View all
-          </Link>
-        </div>
-        {projects.length === 0 ? (
-          <div className="px-5 py-12 text-center text-slate-400">
-            No projects yet.{" "}
-            <Link href="/admin/projects/new" className="text-brand-400 hover:underline">
-              Create your first project
-            </Link>
-          </div>
-        ) : (
-          <div className="divide-y divide-slate-800">
-            {projects.slice(0, 5).map((project) => (
-              <div
-                key={project.id}
-                className="flex items-center justify-between px-5 py-3"
-              >
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-white">
-                    {project.title}
-                  </p>
-                  <p className="text-xs text-slate-400">
-                    {project.category.join(", ")} &middot; {project.year}
-                  </p>
-                </div>
-                <div className="ml-4 flex items-center gap-2">
-                  {project.featured && (
-                    <span className="rounded-full bg-accent-500/15 px-2 py-0.5 text-xs font-medium text-accent-400">
-                      Featured
-                    </span>
-                  )}
-                  <Link
-                    href={`/admin/projects/${project.id}/edit`}
-                    className="rounded-md p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-white"
-                  >
-                    <PenSquare className="h-4 w-4" />
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Recent Talks */}
-      <div className="rounded-xl border border-slate-800 bg-surface-dark">
-        <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
-          <h2 className="font-semibold text-white">Talks</h2>
-          <Link href="/admin/talks" className="text-xs text-brand-400 hover:underline">
-            View all
-          </Link>
-        </div>
-        {talks.length === 0 ? (
-          <div className="px-5 py-12 text-center text-slate-400">
-            No talks yet.{" "}
-            <Link href="/admin/talks/new" className="text-brand-400 hover:underline">
-              Create your first talk
-            </Link>
-          </div>
-        ) : (
-          <div className="divide-y divide-slate-800">
-            {talks.slice(0, 5).map((talk) => (
-              <div
-                key={talk.id}
-                className="flex items-center justify-between px-5 py-3"
-              >
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-white">
-                    {talk.title}
-                  </p>
-                  <p className="text-xs text-slate-400">{talk.topic}</p>
-                </div>
-                <div className="ml-4 flex items-center gap-2">
-                  {talk.featured && (
-                    <span className="rounded-full bg-accent-500/15 px-2 py-0.5 text-xs font-medium text-accent-400">
-                      Featured
-                    </span>
-                  )}
-                  <Link
-                    href={`/admin/talks/${talk.id}/edit`}
-                    className="rounded-md p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-white"
-                  >
-                    <PenSquare className="h-4 w-4" />
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Recent Events */}
-      <div className="rounded-xl border border-slate-800 bg-surface-dark">
-        <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
-          <h2 className="font-semibold text-white">Events</h2>
-          <Link href="/admin/events" className="text-xs text-brand-400 hover:underline">
-            View all
-          </Link>
-        </div>
-        {events.length === 0 ? (
-          <div className="px-5 py-12 text-center text-slate-400">
-            No events yet.{" "}
-            <Link href="/admin/events/new" className="text-brand-400 hover:underline">
-              Create your first event
-            </Link>
-          </div>
-        ) : (
-          <div className="divide-y divide-slate-800">
-            {events.slice(0, 5).map((event) => (
-              <div
-                key={event.slug}
-                className="flex items-center justify-between px-5 py-3"
-              >
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-white">
-                    {event.title}
-                  </p>
-                  <p className="text-xs text-slate-400">
-                    {event.format} &middot; {event.year} &middot; {event.topic}
-                  </p>
-                </div>
-                <div className="ml-4 flex items-center gap-2">
-                  {event.featured && (
-                    <span className="rounded-full bg-accent-500/15 px-2 py-0.5 text-xs font-medium text-accent-400">
-                      Featured
-                    </span>
-                  )}
-                  <Link
-                    href={`/admin/events/${event.slug}/edit`}
-                    className="rounded-md p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-white"
-                  >
-                    <PenSquare className="h-4 w-4" />
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Certifications */}
-      <div className="rounded-xl border border-slate-800 bg-surface-dark">
-        <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
-          <h2 className="font-semibold text-white">Certifications</h2>
-          <Link href="/admin/certifications" className="text-xs text-brand-400 hover:underline">
-            View all
-          </Link>
-        </div>
-        {certifications.length === 0 ? (
-          <div className="px-5 py-12 text-center text-slate-400">
-            No certifications yet.{" "}
-            <Link href="/admin/certifications/new" className="text-brand-400 hover:underline">
-              Add your first certification
-            </Link>
-          </div>
-        ) : (
-          <div className="divide-y divide-slate-800">
-            {certifications.slice(0, 5).map((cert) => (
-              <div
-                key={cert.code}
-                className="flex items-center justify-between px-5 py-3"
-              >
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-white">
-                    {cert.name}
-                  </p>
-                  <p className="text-xs text-slate-400">
-                    {cert.issuer} &middot; {cert.year} &middot; <span className="font-mono">{cert.code}</span>
-                  </p>
-                </div>
-                <div className="ml-4 flex items-center gap-2">
-                  <Link
-                    href={`/admin/certifications/${cert.code}/edit`}
-                    className="rounded-md p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-white"
-                  >
-                    <PenSquare className="h-4 w-4" />
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+      {/* Recent activity */}
+      <div className="space-y-3">
+        <SectionHeading
+          icon={<Activity />}
+          title="Recent activity"
+          subtitle="Newest items across every content type"
+        />
+        <ActivityFeed items={m.recent} />
       </div>
     </div>
   );
