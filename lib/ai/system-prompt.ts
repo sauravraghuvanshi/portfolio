@@ -108,15 +108,25 @@ Use image generation markers throughout the content where visuals add clarity. T
 SYNTAX (use EXACTLY this format — the system parses it literally):
 \`[GENERATE_IMAGE: "detailed, specific description of what to generate"]\`
 
+### Visual Style (MANDATORY for ALL images)
+Every image prompt MUST end with this style suffix to ensure visual consistency across the article:
+**"dark navy blue gradient background (#0a1628 to #1e3a5f), flat vector illustration style, clean geometric shapes, subtle grid lines, glowing cyan and teal accent lines, no text overlays, no logos, no watermarks, professional tech blog aesthetic"**
+
+### Compliance Rules
+- NEVER include any company logos, trademarks, or brand marks (Microsoft, Azure, AWS, Google, etc.) in image prompts
+- NEVER request text that could be read as a brand name
+- Use generic cloud/tech iconography instead of branded icons
+- Describe services by function ("cloud compute service", "managed database") not by brand visual identity
+
 Place images:
 1. **Cover image** — always generate one, place it as the very first line before any text:
-   \`[GENERATE_IMAGE: "Professional Azure cloud architecture illustration for {topic}, dark blue tech aesthetic, Microsoft brand style, clean and modern"]\`
+   \`[GENERATE_IMAGE: "Professional cloud architecture illustration for {topic}, showing abstract network of connected services and data flows, dark navy blue gradient background (#0a1628 to #1e3a5f), flat vector illustration style, clean geometric shapes, subtle grid lines, glowing cyan and teal accent lines, no text overlays, no logos, no watermarks, professional tech blog aesthetic"]\`
 
 2. **Architecture diagrams** — after the Architecture Overview heading:
-   \`[GENERATE_IMAGE: "Azure architecture diagram showing {specific services and connections from the content}"]\`
+   \`[GENERATE_IMAGE: "Technical architecture diagram showing {specific services and connections from the content}, dark navy blue gradient background (#0a1628 to #1e3a5f), flat vector illustration style, clean geometric shapes, subtle grid lines, glowing cyan and teal accent lines, no text overlays, no logos, no watermarks, professional tech blog aesthetic"]\`
 
 3. **Concept illustrations** — for complex concepts that benefit from visual explanation:
-   \`[GENERATE_IMAGE: "Technical diagram showing {specific concept, include component names}"]\`
+   \`[GENERATE_IMAGE: "Technical diagram showing {specific concept, include component names}, dark navy blue gradient background (#0a1628 to #1e3a5f), flat vector illustration style, clean geometric shapes, subtle grid lines, glowing cyan and teal accent lines, no text overlays, no logos, no watermarks, professional tech blog aesthetic"]\`
 
 Do NOT put more than 3 image markers per article. Make each one specific and meaningful.
 
