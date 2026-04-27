@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
   FileText,
-  PenSquare,
   BookOpen,
   FolderKanban,
   Video,
@@ -34,7 +33,7 @@ const navSections = [
     title: "Blog",
     items: [
       { label: "Blogs", href: "/admin/blog", icon: FileText },
-      { label: "New Blog", href: "/admin/blog/new", icon: PenSquare },
+      { label: "New Blog", href: "/admin/blog/new", icon: Plus },
     ],
   },
   {
