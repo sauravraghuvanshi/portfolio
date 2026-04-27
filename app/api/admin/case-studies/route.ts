@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
-    const { title, subtitle, category, tags, timeline, role, client, featured, coverImage, metrics, content } = parsed.data;
+    const { title, subtitle, category, tags, timeline, role, client, featured, status, coverImage, metrics, content } = parsed.data;
 
     const slug = slugify(title);
 
@@ -37,6 +37,7 @@ export async function POST(request: NextRequest) {
       role: role ?? "",
       client: client ?? "",
       featured: featured ?? false,
+      status: status ?? "draft",
       coverImage: coverImage ?? "",
       metrics: metrics ?? [],
     };

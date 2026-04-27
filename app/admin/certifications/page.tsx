@@ -4,7 +4,7 @@ import { Plus, PenSquare } from "lucide-react";
 import DeleteItemButton from "@/components/admin/DeleteItemButton";
 
 export default function AdminCertificationsListPage() {
-  const certifications = getCertifications();
+  const certifications = getCertifications(true);
 
   return (
     <div className="space-y-6">
@@ -39,6 +39,8 @@ export default function AdminCertificationsListPage() {
                 <th className="px-5 py-3 font-medium">Issuer</th>
                 <th className="px-5 py-3 font-medium">Year</th>
                 <th className="px-5 py-3 font-medium">Color</th>
+                <th className="px-5 py-3 font-medium">Status</th>
+                <th className="px-5 py-3 font-medium">Featured</th>
                 <th className="px-5 py-3 font-medium text-right">Actions</th>
               </tr>
             </thead>
@@ -57,6 +59,24 @@ export default function AdminCertificationsListPage() {
                     <span className="rounded-full bg-slate-800 px-2 py-0.5 text-xs font-medium capitalize text-slate-300">
                       {cert.color}
                     </span>
+                  </td>
+                  <td className="px-5 py-3">
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                        cert.status === "published"
+                          ? "bg-accent-500/15 text-accent-400"
+                          : "bg-yellow-500/15 text-yellow-400"
+                      }`}
+                    >
+                      {cert.status}
+                    </span>
+                  </td>
+                  <td className="px-5 py-3">
+                    {cert.featured && (
+                      <span className="rounded-full bg-accent-500/15 px-2 py-0.5 text-xs font-medium text-accent-400">
+                        Featured
+                      </span>
+                    )}
                   </td>
                   <td className="px-5 py-3">
                     <div className="flex items-center justify-end gap-1">

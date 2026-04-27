@@ -4,7 +4,7 @@ import { Plus, PenSquare } from "lucide-react";
 import DeleteItemButton from "@/components/admin/DeleteItemButton";
 
 export default function AdminEventsListPage() {
-  const allEvents = getEvents();
+  const allEvents = getEvents(true);
 
   return (
     <div className="space-y-6">
@@ -39,6 +39,7 @@ export default function AdminEventsListPage() {
                 <th className="px-5 py-3 font-medium">Format</th>
                 <th className="px-5 py-3 font-medium">Topic</th>
                 <th className="px-5 py-3 font-medium">Location</th>
+                <th className="px-5 py-3 font-medium">Status</th>
                 <th className="px-5 py-3 font-medium">Featured</th>
                 <th className="px-5 py-3 font-medium text-right">Actions</th>
               </tr>
@@ -61,6 +62,17 @@ export default function AdminEventsListPage() {
                     ) : (
                       <span className="text-slate-500 italic">Virtual</span>
                     )}
+                  </td>
+                  <td className="px-5 py-3">
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                        event.status === "published"
+                          ? "bg-accent-500/15 text-accent-400"
+                          : "bg-yellow-500/15 text-yellow-400"
+                      }`}
+                    >
+                      {event.status}
+                    </span>
                   </td>
                   <td className="px-5 py-3">
                     {event.featured && (

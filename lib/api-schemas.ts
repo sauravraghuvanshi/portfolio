@@ -26,6 +26,7 @@ export const CaseStudySchema = z.object({
   role: z.string().max(200).optional().default(""),
   client: z.string().max(200).optional().default(""),
   featured: z.boolean().optional().default(false),
+  status: z.enum(["draft", "published"]).optional().default("draft"),
   coverImage: z.string().max(500).optional().default(""),
   metrics: z
     .array(z.object({ label: z.string(), value: z.string() }))
@@ -48,6 +49,7 @@ export const ProjectSchema = z.object({
   githubUrl: z.string().max(500).optional().default("#"),
   liveUrl: z.string().max(500).optional().default("#"),
   featured: z.boolean().optional().default(false),
+  status: z.enum(["draft", "published"]).optional().default("draft"),
   year: z.number().int().min(2000).max(2100).optional(),
 });
 
@@ -60,6 +62,7 @@ export const TalkSchema = z.object({
   topic: z.string().max(200).optional().default(""),
   description: z.string().max(1000).optional(),
   featured: z.boolean().optional().default(false),
+  status: z.enum(["draft", "published"]).optional().default("draft"),
 });
 
 export const TalkUpdateSchema = TalkSchema.partial();
@@ -88,6 +91,7 @@ export const EventSchema = z.object({
   coverImagePosition: z.enum(["top", "center", "bottom"]).optional(),
   images: z.array(z.string().max(500)).max(50).optional().default([]),
   featured: z.boolean().optional().default(false),
+  status: z.enum(["draft", "published"]).optional().default("draft"),
   location: LocationSchema,
 });
 
@@ -103,6 +107,8 @@ export const CertificationSchema = z.object({
   badge: z.string().max(500).optional().default(""),
   color: z.string().max(30).optional().default("blue"),
   credentialId: z.string().max(100).optional(),
+  featured: z.boolean().optional().default(false),
+  status: z.enum(["draft", "published"]).optional().default("draft"),
 });
 
 export const CertificationUpdateSchema = CertificationSchema.partial();

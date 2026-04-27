@@ -21,6 +21,7 @@ export interface CaseStudyMeta {
   role: string;
   client: string;
   featured: boolean;
+  status: "published" | "draft";
   coverImage: string;
   metrics: { value: string; label: string }[];
 }
@@ -43,14 +44,18 @@ export function getCaseStudy(slug: string): CaseStudy | null {
   if (!fs.existsSync(filePath)) return null;
   const raw = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(raw);
-  return { ...(data as CaseStudyMeta), category: normalizeCategory(data.category), content };
+  return { ...(data as CaseStudyMeta), category: normalizeCategory(data.category), status: (data.status as "published" | "draft") ?? "published", content };
 }
 
-export const getAllCaseStudies = cache(function getAllCaseStudies(): CaseStudy[] {
+export const getAllCaseStudies = cache(function getAllCaseStudies(includeDrafts = false): CaseStudy[] {
   const slugs = getCaseStudySlugs();
   return slugs
     .map((slug) => getCaseStudy(slug))
-    .filter((cs): cs is CaseStudy => cs !== null)
+    .filter((cs): cs is CaseStudy => {
+      if (!cs) return false;
+      if (!includeDrafts && cs.status === "draft") return false;
+      return true;
+    })
     .sort((a, b) => (a.featured === b.featured ? 0 : a.featured ? -1 : 1));
 });
 
@@ -76,17 +81,21 @@ export interface Project {
   githubUrl: string;
   liveUrl: string;
   featured: boolean;
+  status: "published" | "draft";
   year: number;
 }
 
-export const getProjects = cache(function getProjects(): Project[] {
+export const getProjects = cache(function getProjects(includeDrafts = false): Project[] {
   const filePath = path.join(contentDir, "projects.json");
   if (!fs.existsSync(filePath)) return [];
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
-  return (JSON.parse(raw) as Project[]).map((p) => ({
-    ...p,
-    category: normalizeCategory(p.category),
-  }));
+  return (JSON.parse(raw) as Project[])
+    .map((p) => ({
+      ...p,
+      category: normalizeCategory(p.category),
+      status: p.status ?? "published" as const,
+    }))
+    .filter((p) => includeDrafts || p.status !== "draft");
 });
 
 export function getFeaturedProjects(): Project[] {
@@ -110,14 +119,22 @@ export interface Certification {
   badge: string;
   color: string;
   credentialId?: string;
+  featured: boolean;
+  status: "published" | "draft";
 }
 
-export const getCertifications = cache(function getCertifications(): Certification[] {
+export const getCertifications = cache(function getCertifications(includeDrafts = false): Certification[] {
   ensureContentSynced("certifications.json");
   const filePath = path.join(contentDir, "certifications.json");
   if (!fs.existsSync(filePath)) return [];
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
-  return JSON.parse(raw) as Certification[];
+  return (JSON.parse(raw) as Certification[])
+    .map((c) => ({
+      ...c,
+      featured: c.featured ?? false,
+      status: c.status ?? "published" as const,
+    }))
+    .filter((c) => includeDrafts || c.status !== "draft");
 });
 
 // ---------------------------------------------------------------------------
@@ -145,6 +162,7 @@ export interface EventMeta {
   coverImagePosition?: "top" | "center" | "bottom";
   images: string[];
   featured?: boolean;
+  status?: "published" | "draft";
   location?: EventLocation | null;
 }
 
@@ -177,11 +195,16 @@ export function getEventClusters(events: Event[]): CityCluster[] {
   return Array.from(map.values());
 }
 
-export const getEvents = cache(function getEvents(): Event[] {
+export const getEvents = cache(function getEvents(includeDrafts = false): Event[] {
   const filePath = path.join(contentDir, "events.json");
   if (!fs.existsSync(filePath)) return [];
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
-  return JSON.parse(raw) as Event[];
+  return (JSON.parse(raw) as Event[])
+    .map((e) => ({
+      ...e,
+      status: e.status ?? "published" as const,
+    }))
+    .filter((e) => includeDrafts || e.status !== "draft");
 });
 
 export function getEvent(slug: string): Event | null {
@@ -198,13 +221,19 @@ export interface Talk {
   topic: string;
   description?: string;
   featured: boolean;
+  status: "published" | "draft";
 }
 
-export const getTalks = cache(function getTalks(): Talk[] {
+export const getTalks = cache(function getTalks(includeDrafts = false): Talk[] {
   const filePath = path.join(contentDir, "talks.json");
   if (!fs.existsSync(filePath)) return [];
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
-  return JSON.parse(raw) as Talk[];
+  return (JSON.parse(raw) as Talk[])
+    .map((t) => ({
+      ...t,
+      status: t.status ?? "published" as const,
+    }))
+    .filter((t) => includeDrafts || t.status !== "draft");
 });
 
 // ---------------------------------------------------------------------------

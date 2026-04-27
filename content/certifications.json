@@ -6,7 +6,9 @@
     "year": 2025,
     "verifyUrl": "#",
     "badge": "/images/certs/udacity.png",
-    "color": "purple"
+    "color": "purple",
+    "featured": false,
+    "status": "published"
   },
   {
     "name": "Azure AI Fundamentals",
@@ -16,7 +18,9 @@
     "verifyUrl": "https://learn.microsoft.com/en-us/users/SauravRaghuvanshi-8368/credentials/63E74425F3D92153",
     "credentialId": "63E74425F3D92153",
     "badge": "/images/certs/ai-900.png",
-    "color": "blue"
+    "color": "blue",
+    "featured": false,
+    "status": "published"
   },
   {
     "name": "Product Manager Nanodegree",
@@ -25,7 +29,9 @@
     "year": 2025,
     "verifyUrl": "#",
     "badge": "/images/certs/udacity.png",
-    "color": "purple"
+    "color": "purple",
+    "featured": false,
+    "status": "published"
   },
   {
     "name": "Azure Cloud Architect Nanodegree",
@@ -34,7 +40,9 @@
     "year": 2024,
     "verifyUrl": "#",
     "badge": "/images/certs/udacity.png",
-    "color": "purple"
+    "color": "purple",
+    "featured": false,
+    "status": "published"
   },
   {
     "name": "AWS Certified Solutions Architect",
@@ -44,7 +52,9 @@
     "verifyUrl": "https://aws.amazon.com/verification",
     "credentialId": "ZXNTTFQC51Q4Q0WB",
     "badge": "/images/certs/aws-sa.png",
-    "color": "orange"
+    "color": "orange",
+    "featured": false,
+    "status": "published"
   },
   {
     "name": "DevOps Engineer Expert",
@@ -54,7 +64,9 @@
     "verifyUrl": "https://learn.microsoft.com/en-us/users/SauravRaghuvanshi-8368/credentials/254F3754087D451D",
     "credentialId": "254F3754087D451D",
     "badge": "/images/certs/az-400.png",
-    "color": "blue"
+    "color": "blue",
+    "featured": false,
+    "status": "published"
   },
   {
     "name": "Azure Administrator Associate",
@@ -64,7 +76,9 @@
     "verifyUrl": "https://learn.microsoft.com/en-us/users/SauravRaghuvanshi-8368/credentials/C5BAAA2FA02CC998",
     "credentialId": "C5BAAA2FA02CC998",
     "badge": "/images/certs/az-104.png",
-    "color": "blue"
+    "color": "blue",
+    "featured": false,
+    "status": "published"
   },
   {
     "name": "AWS Certified Cloud Practitioner",
@@ -74,7 +88,9 @@
     "verifyUrl": "https://aws.amazon.com/verification",
     "credentialId": "MFGRVNVDG24E113X",
     "badge": "/images/certs/aws-cp.png",
-    "color": "orange"
+    "color": "orange",
+    "featured": false,
+    "status": "published"
   },
   {
     "name": "Azure Fundamentals",
@@ -84,7 +100,9 @@
     "verifyUrl": "https://learn.microsoft.com/en-us/users/SauravRaghuvanshi-8368/credentials/DC85F7586668EE6E",
     "credentialId": "DC85F7586668EE6E",
     "badge": "/images/certs/az-900.png",
-    "color": "blue"
+    "color": "blue",
+    "featured": false,
+    "status": "published"
   },
   {
     "name": "Computer Vision Nanodegree",
@@ -94,7 +112,9 @@
     "verifyUrl": "https://confirm.udacity.com/6C4CP3P7",
     "credentialId": "6C4CP3P7",
     "badge": "/images/certs/udacity.png",
-    "color": "purple"
+    "color": "purple",
+    "featured": false,
+    "status": "published"
   },
   {
     "name": "Programming for Data Science with Python Nanodegree",
@@ -104,7 +124,9 @@
     "verifyUrl": "https://confirm.udacity.com/CNNCJEE",
     "credentialId": "CNNCJEE",
     "badge": "/images/certs/udacity.png",
-    "color": "purple"
+    "color": "purple",
+    "featured": false,
+    "status": "published"
   },
   {
     "name": "Deep Learning Nanodegree",
@@ -114,6 +136,8 @@
     "verifyUrl": "https://confirm.udacity.com/EGMKJ4ME",
     "credentialId": "EGMKJ4ME",
     "badge": "/images/certs/udacity.png",
-    "color": "purple"
+    "color": "purple",
+    "featured": false,
+    "status": "published"
   }
 ]

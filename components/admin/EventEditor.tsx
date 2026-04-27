@@ -86,6 +86,7 @@ export default function EventEditor({ mode, initialData }: EventEditorProps) {
   );
   const [images, setImages] = useState(initialData?.images?.join(", ") ?? "");
   const [featured, setFeatured] = useState(initialData?.featured ?? false);
+  const [status, setStatus] = useState<"draft" | "published">(initialData?.status ?? "draft");
   const [isVirtual, setIsVirtual] = useState(!initialData?.location);
   const [locationCity, setLocationCity] = useState(initialData?.location?.city ?? "");
   const [locationCountry, setLocationCountry] = useState(initialData?.location?.country ?? "");
@@ -200,6 +201,7 @@ export default function EventEditor({ mode, initialData }: EventEditorProps) {
         .map((i) => i.trim())
         .filter(Boolean),
       featured,
+      status,
       location: isVirtual
         ? null
         : {
@@ -306,6 +308,18 @@ export default function EventEditor({ mode, initialData }: EventEditorProps) {
             />
             Featured Event
           </label>
+        </div>
+
+        <div>
+          <label className="mb-1 block text-xs font-medium uppercase text-slate-400">Status</label>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value as "draft" | "published")}
+            className="w-full rounded-lg border border-slate-700 bg-surface-dark-2 px-3 py-2.5 text-sm text-white outline-none transition focus:border-brand-500"
+          >
+            <option value="draft">Draft</option>
+            <option value="published">Published</option>
+          </select>
         </div>
 
         {/* Location */}

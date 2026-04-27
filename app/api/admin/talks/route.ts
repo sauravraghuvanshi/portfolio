@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
-    const { id, title, topic, description, featured } = parsed.data;
+    const { id, title, topic, description, featured, status } = parsed.data;
 
     const existing = getTalks().find((t) => t.id === id);
     if (existing) {
@@ -31,6 +31,7 @@ export async function POST(request: NextRequest) {
       topic: topic ?? "",
       description: description ?? undefined,
       featured: featured ?? false,
+      status: status ?? "draft",
     };
 
     saveTalk(talk);

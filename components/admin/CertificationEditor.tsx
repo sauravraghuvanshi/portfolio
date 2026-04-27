@@ -24,6 +24,8 @@ export default function CertificationEditor({ mode, initialData }: Certification
   const [badge, setBadge] = useState(initialData?.badge ?? "");
   const [color, setColor] = useState(initialData?.color ?? "blue");
   const [credentialId, setCredentialId] = useState(initialData?.credentialId ?? "");
+  const [featured, setFeatured] = useState(initialData?.featured ?? false);
+  const [status, setStatus] = useState<"draft" | "published">(initialData?.status ?? "draft");
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -77,6 +79,8 @@ export default function CertificationEditor({ mode, initialData }: Certification
       badge: badge.trim(),
       color,
       credentialId: credentialId.trim() || undefined,
+      featured,
+      status,
     };
 
     const url =
@@ -241,6 +245,30 @@ export default function CertificationEditor({ mode, initialData }: Certification
             className={inputClass}
             placeholder="ZXNTTFQC51Q4Q0WB"
           />
+        </div>
+
+        <div className="flex items-end">
+          <label className="flex items-center gap-2 text-sm text-slate-300">
+            <input
+              type="checkbox"
+              checked={featured}
+              onChange={(e) => setFeatured(e.target.checked)}
+              className="h-4 w-4 rounded border-slate-700 bg-surface-dark-2 accent-brand-600"
+            />
+            Featured certification
+          </label>
+        </div>
+
+        <div>
+          <label className="mb-1 block text-xs font-medium uppercase text-slate-400">Status</label>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value as "draft" | "published")}
+            className="w-full rounded-lg border border-slate-700 bg-surface-dark-2 px-3 py-2.5 text-sm text-white outline-none transition focus:border-brand-500"
+          >
+            <option value="draft">Draft</option>
+            <option value="published">Published</option>
+          </select>
         </div>
 
         <div className="md:col-span-2 lg:col-span-3">

@@ -68,6 +68,7 @@ export default function CaseStudyEditor({ mode, initialData }: CaseStudyEditorPr
   const [client, setClient] = useState(initialData?.client ?? "");
   const [coverImage, setCoverImage] = useState(initialData?.coverImage ?? "");
   const [featured, setFeatured] = useState(initialData?.featured ?? false);
+  const [status, setStatus] = useState<"draft" | "published">(initialData?.status ?? "draft");
   const [metrics, setMetrics] = useState<{ value: string; label: string }[]>(
     initialData?.metrics ?? [{ value: "", label: "" }]
   );
@@ -231,6 +232,7 @@ export default function CaseStudyEditor({ mode, initialData }: CaseStudyEditorPr
       client,
       coverImage,
       featured,
+      status,
       metrics: metrics.filter((m) => m.value || m.label),
       content,
     };
@@ -512,6 +514,18 @@ export default function CaseStudyEditor({ mode, initialData }: CaseStudyEditorPr
               />
               Featured case study
             </label>
+          </div>
+
+          <div>
+            <label className="mb-1 block text-xs font-medium uppercase text-slate-400">Status</label>
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value as "draft" | "published")}
+              className="w-full rounded-lg border border-slate-700 bg-surface-dark-2 px-3 py-2.5 text-sm text-white outline-none transition focus:border-brand-500"
+            >
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+            </select>
           </div>
 
           {/* Metrics */}

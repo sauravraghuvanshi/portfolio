@@ -4,7 +4,7 @@ import { Plus, PenSquare, Eye } from "lucide-react";
 import DeleteItemButton from "@/components/admin/DeleteItemButton";
 
 export default function AdminCaseStudiesListPage() {
-  const allStudies = getAllCaseStudies();
+  const allStudies = getAllCaseStudies(true);
 
   return (
     <div className="space-y-6">
@@ -37,6 +37,7 @@ export default function AdminCaseStudiesListPage() {
                 <th className="px-5 py-3 font-medium">Title</th>
                 <th className="px-5 py-3 font-medium">Category</th>
                 <th className="px-5 py-3 font-medium">Timeline</th>
+                <th className="px-5 py-3 font-medium">Status</th>
                 <th className="px-5 py-3 font-medium">Featured</th>
                 <th className="px-5 py-3 font-medium text-right">Actions</th>
               </tr>
@@ -49,6 +50,17 @@ export default function AdminCaseStudiesListPage() {
                   </td>
                   <td className="px-5 py-3">{cs.category.join(", ")}</td>
                   <td className="px-5 py-3 text-slate-400">{cs.timeline}</td>
+                  <td className="px-5 py-3">
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                        cs.status === "published"
+                          ? "bg-accent-500/15 text-accent-400"
+                          : "bg-yellow-500/15 text-yellow-400"
+                      }`}
+                    >
+                      {cs.status}
+                    </span>
+                  </td>
                   <td className="px-5 py-3">
                     {cs.featured && (
                       <span className="rounded-full bg-accent-500/15 px-2 py-0.5 text-xs font-medium text-accent-400">

@@ -36,6 +36,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       verifyUrl: parsed.data.verifyUrl ?? existing.verifyUrl,
       badge: parsed.data.badge ?? existing.badge,
       color: parsed.data.color ?? existing.color,
+      featured: parsed.data.featured ?? existing.featured ?? false,
+      status: parsed.data.status ?? existing.status ?? "published",
     };
     const nextCredentialId = parsed.data.credentialId ?? existing.credentialId;
     if (nextCredentialId) cert.credentialId = nextCredentialId;

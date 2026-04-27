@@ -39,6 +39,7 @@ export default function AdminBlogListPage() {
                 <th className="px-5 py-3 font-medium">Category</th>
                 <th className="px-5 py-3 font-medium">Date</th>
                 <th className="px-5 py-3 font-medium">Status</th>
+                <th className="px-5 py-3 font-medium">Featured</th>
                 <th className="px-5 py-3 font-medium text-right">Actions</th>
               </tr>
             </thead>
@@ -65,6 +66,13 @@ export default function AdminBlogListPage() {
                     >
                       {post.status}
                     </span>
+                  </td>
+                  <td className="px-5 py-3">
+                    {post.featured && (
+                      <span className="rounded-full bg-accent-500/15 px-2 py-0.5 text-xs font-medium text-accent-400">
+                        Featured
+                      </span>
+                    )}
                   </td>
                   <td className="px-5 py-3">
                     <div className="flex items-center justify-end gap-1">

@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
-    const { title, year, format, topic, tags, summary, highlights, impact, coverImage, coverImagePosition, images, featured, location } = parsed.data;
+    const { title, year, format, topic, tags, summary, highlights, impact, coverImage, coverImagePosition, images, featured, status, location } = parsed.data;
 
     const slug = slugify(title);
 
@@ -42,6 +42,7 @@ export async function POST(request: NextRequest) {
       coverImagePosition: coverImagePosition ?? undefined,
       images: images ?? [],
       featured: featured ?? false,
+      status: status ?? "draft",
       location: location ?? null,
     };
 

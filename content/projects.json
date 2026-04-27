@@ -34,7 +34,8 @@
     "githubUrl": "https://github.com/sauravraghuvanshi/portfolio",
     "liveUrl": "https://saurav-portfolio.azurewebsites.net/architecture",
     "featured": true,
-    "year": 2026
+    "year": 2026,
+    "status": "published"
   },
   {
     "id": "supportiq-genai",
@@ -62,7 +63,8 @@
     "githubUrl": "#",
     "liveUrl": "#",
     "featured": true,
-    "year": 2024
+    "year": 2024,
+    "status": "published"
   },
   {
     "id": "cloud-ready-academy",
@@ -89,7 +91,8 @@
     "githubUrl": "#",
     "liveUrl": "#",
     "featured": true,
-    "year": 2024
+    "year": 2024,
+    "status": "published"
   },
   {
     "id": "cloud-native-platform",
@@ -119,7 +122,8 @@
     "githubUrl": "#",
     "liveUrl": "#",
     "featured": false,
-    "year": 2023
+    "year": 2023,
+    "status": "published"
   },
   {
     "id": "agentic-ai-workflows",
@@ -147,7 +151,8 @@
     "githubUrl": "#",
     "liveUrl": "#",
     "featured": false,
-    "year": 2024
+    "year": 2024,
+    "status": "published"
   },
   {
     "id": "startup-landing-zone",
@@ -176,7 +181,8 @@
     "githubUrl": "#",
     "liveUrl": "#",
     "featured": true,
-    "year": 2023
+    "year": 2023,
+    "status": "published"
   },
   {
     "id": "devops-platform",
@@ -205,6 +211,7 @@
     "githubUrl": "#",
     "liveUrl": "#",
     "featured": false,
-    "year": 2023
+    "year": 2023,
+    "status": "published"
   }
 ]

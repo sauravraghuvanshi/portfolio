@@ -39,6 +39,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       githubUrl: parsed.data.githubUrl ?? existing.githubUrl,
       liveUrl: parsed.data.liveUrl ?? existing.liveUrl,
       featured: parsed.data.featured ?? existing.featured,
+      status: parsed.data.status ?? existing.status ?? "published",
       year: parsed.data.year ?? existing.year,
     };
 

@@ -3,74 +3,86 @@
     "id": "akZUKGwA4hE",
     "title": "Enhancing Cloud Engineering with GitHub Copilot",
     "topic": "GitHub Copilot",
-    "featured": true
+    "featured": true,
+    "status": "published"
   },
   {
     "id": "lry3EXmKsJo",
     "title": "Introduction to Cloud Computing",
     "description": "Azure Learning Series",
     "topic": "Cloud Fundamentals",
-    "featured": false
+    "featured": false,
+    "status": "published"
   },
   {
     "id": "Wb4nzibutiM",
     "title": "Get Started with Azure AI Services",
     "topic": "Azure AI",
-    "featured": true
+    "featured": true,
+    "status": "published"
   },
   {
     "id": "En_0-P7dkEA",
     "title": "AZ-104 Bootcamp — Day 1",
     "topic": "AZ-104",
-    "featured": false
+    "featured": false,
+    "status": "published"
   },
   {
     "id": "z8zCX0U-yGE",
     "title": "AZ-104 Bootcamp — Day 2",
     "topic": "AZ-104",
-    "featured": false
+    "featured": false,
+    "status": "published"
   },
   {
     "id": "3_yRuplWfhk",
     "title": "AZ-104 Bootcamp — Day 3",
     "topic": "AZ-104",
-    "featured": false
+    "featured": false,
+    "status": "published"
   },
   {
     "id": "An3LH1GLtiA",
     "title": "AZ-104 Bootcamp — Day 4",
     "topic": "AZ-104",
-    "featured": false
+    "featured": false,
+    "status": "published"
   },
   {
     "id": "eUrBff0kdaA",
     "title": "AZ-104 Bootcamp — Day 5 — Azure VM",
     "topic": "AZ-104",
-    "featured": false
+    "featured": false,
+    "status": "published"
   },
   {
     "id": "Rw1Q3w3vuhM",
     "title": "AZ-104 Bootcamp — Day 6 — Azure Monitoring",
     "topic": "AZ-104",
-    "featured": false
+    "featured": false,
+    "status": "published"
   },
   {
     "id": "TWkBxlI00ck",
     "title": "AZ-104 Bootcamp — Day 7 — Connectivity & Web App",
     "topic": "AZ-104",
-    "featured": false
+    "featured": false,
+    "status": "published"
   },
   {
     "id": "SzR1FAgKoUY",
     "title": "AZ-104 Bootcamp — Day 8 — Wrap Up",
     "topic": "AZ-104",
-    "featured": false
+    "featured": false,
+    "status": "published"
   },
   {
     "id": "Y7JrWcnnRY4",
     "title": "CI/CD Pipeline in Azure DevOps",
     "description": "Whizlabs Webinar",
     "topic": "DevOps",
-    "featured": true
+    "featured": true,
+    "status": "published"
   }
 ]

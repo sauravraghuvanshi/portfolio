@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
-    const { title, description, outcomes, tags, category, techStack, githubUrl, liveUrl, featured, year } = parsed.data;
+    const { title, description, outcomes, tags, category, techStack, githubUrl, liveUrl, featured, status, year } = parsed.data;
 
     const id = slugify(title);
 
@@ -39,6 +39,7 @@ export async function POST(request: NextRequest) {
       githubUrl: githubUrl ?? "#",
       liveUrl: liveUrl ?? "#",
       featured: featured ?? false,
+      status: status ?? "draft",
       year: year ?? new Date().getFullYear(),
     };
 

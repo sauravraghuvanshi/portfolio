@@ -34,6 +34,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       topic: parsed.data.topic ?? existing.topic,
       description: parsed.data.description ?? existing.description,
       featured: parsed.data.featured ?? existing.featured,
+      status: parsed.data.status ?? existing.status ?? "published",
     };
 
     saveTalk(talk);

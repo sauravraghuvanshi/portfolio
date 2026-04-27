@@ -4,7 +4,7 @@ import { Plus, PenSquare } from "lucide-react";
 import DeleteItemButton from "@/components/admin/DeleteItemButton";
 
 export default function AdminTalksListPage() {
-  const allTalks = getTalks();
+  const allTalks = getTalks(true);
 
   return (
     <div className="space-y-6">
@@ -36,6 +36,7 @@ export default function AdminTalksListPage() {
               <tr className="border-b border-slate-800 text-left text-xs uppercase text-slate-400">
                 <th className="px-5 py-3 font-medium">Title</th>
                 <th className="px-5 py-3 font-medium">Topic</th>
+                <th className="px-5 py-3 font-medium">Status</th>
                 <th className="px-5 py-3 font-medium">Featured</th>
                 <th className="px-5 py-3 font-medium text-right">Actions</th>
               </tr>
@@ -47,6 +48,17 @@ export default function AdminTalksListPage() {
                     {talk.title}
                   </td>
                   <td className="px-5 py-3">{talk.topic}</td>
+                  <td className="px-5 py-3">
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                        talk.status === "published"
+                          ? "bg-accent-500/15 text-accent-400"
+                          : "bg-yellow-500/15 text-yellow-400"
+                      }`}
+                    >
+                      {talk.status}
+                    </span>
+                  </td>
                   <td className="px-5 py-3">
                     {talk.featured && (
                       <span className="rounded-full bg-accent-500/15 px-2 py-0.5 text-xs font-medium text-accent-400">

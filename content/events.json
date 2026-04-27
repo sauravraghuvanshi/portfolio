@@ -29,7 +29,8 @@
       "country": "India",
       "lat": 12.9716,
       "lng": 77.5946
-    }
+    },
+    "status": "published"
   },
   {
     "slug": "az-104-microsoft-azure-administrator-bootcamp",
@@ -61,7 +62,8 @@
       "country": "India",
       "lat": 12.9716,
       "lng": 77.5946
-    }
+    },
+    "status": "published"
   },
   {
     "slug": "azure-ai-engineer-associate-bootcamp-ai-102",
@@ -86,7 +88,8 @@
     "impact": [],
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/azure-ai-engineer-associate-bootcamp-ai-102/cover.jpg",
     "images": [],
-    "location": null
+    "location": null,
+    "status": "published"
   },
   {
     "slug": "azure-aiml-day",
@@ -120,7 +123,8 @@
       "country": "India",
       "lat": 12.9716,
       "lng": 77.5946
-    }
+    },
+    "status": "published"
   },
   {
     "slug": "azure-developer-day-in-bengaluru-by-msa-cit-chapter",
@@ -154,7 +158,8 @@
       "country": "India",
       "lat": 12.9716,
       "lng": 77.5946
-    }
+    },
+    "status": "published"
   },
   {
     "slug": "azure-devops-day",
@@ -194,7 +199,8 @@
       "country": "India",
       "lat": 12.9716,
       "lng": 77.5946
-    }
+    },
+    "status": "published"
   },
   {
     "slug": "microsoft-azure-networking",
@@ -219,7 +225,8 @@
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/microsoft-azure-networking/cover.jpg",
     "images": [],
     "coverImagePosition": "bottom",
-    "location": null
+    "location": null,
+    "status": "published"
   },
   {
     "slug": "build-your-own-personal-brand-in-the-age-of-ai",
@@ -244,7 +251,8 @@
     "impact": [],
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/build-your-own-personal-brand-in-the-age-of-ai/cover.jpg",
     "images": [],
-    "location": null
+    "location": null,
+    "status": "published"
   },
   {
     "slug": "code-without-barriers-mentorship-circle",
@@ -270,7 +278,8 @@
     "impact": [],
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/code-without-barriers-mentorship-circle/cover.jpg",
     "images": [],
-    "location": null
+    "location": null,
+    "status": "published"
   },
   {
     "slug": "code-without-barriers",
@@ -296,7 +305,8 @@
     "images": [
       "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/code-without-barriers/photo-1.jpg"
     ],
-    "location": null
+    "location": null,
+    "status": "published"
   },
   {
     "slug": "how-to-work-with-cicd-pipeline-in-azure-devops",
@@ -332,7 +342,8 @@
       "country": "India",
       "lat": 11.059821,
       "lng": 78.387451
-    }
+    },
+    "status": "published"
   },
   {
     "slug": "the-present-and-future-of-it-industry",
@@ -363,7 +374,8 @@
       "country": "India",
       "lat": 12.9716,
       "lng": 77.5946
-    }
+    },
+    "status": "published"
   },
   {
     "slug": "mentor-for-the-highly-esteemed-fastest-coder-first-hackathon-organized-by-microsoft",
@@ -396,7 +408,8 @@
       "country": "India",
       "lat": 12.9716,
       "lng": 77.5946
-    }
+    },
+    "status": "published"
   },
   {
     "slug": "mentor-at-hashtag-includeher-cohort-4-0-a-cohort-on-generative-ai",
@@ -436,7 +449,8 @@
       "country": "India",
       "lat": 28.6139,
       "lng": 77.209
-    }
+    },
+    "status": "published"
   },
   {
     "slug": "microsoft-ai-tour-bangalore",
@@ -482,7 +496,8 @@
       "country": "India",
       "lat": 12.9716,
       "lng": 77.5946
-    }
+    },
+    "status": "published"
   },
   {
     "slug": "microsoft-future-ready-technology-summit",
@@ -519,7 +534,8 @@
       "country": "India",
       "lat": 12.9716,
       "lng": 77.5946
-    }
+    },
+    "status": "published"
   },
   {
     "slug": "the-past-few-months-at-microsoft-have-been-nothing-short-of-incredible",
@@ -551,7 +567,8 @@
       "country": "India",
       "lat": 12.9716,
       "lng": 77.5946
-    }
+    },
+    "status": "published"
   },
   {
     "slug": "microsoft-india-town-hall-meet-mlsa-edition",
@@ -586,7 +603,8 @@
       "country": "India",
       "lat": 12.9716,
       "lng": 77.5946
-    }
+    },
+    "status": "published"
   },
   {
     "slug": "azure-developer-day",
@@ -622,7 +640,8 @@
       "country": "India",
       "lat": 12.9716,
       "lng": 77.5946
-    }
+    },
+    "status": "published"
   },
   {
     "slug": "building-your-own-copilot-using-azure-openai",
@@ -654,7 +673,8 @@
       "country": "India",
       "lat": 12.9716,
       "lng": 77.5946
-    }
+    },
+    "status": "published"
   },
   {
     "slug": "enhancing-cloud-engineering-with-github-copilot",
@@ -686,7 +706,8 @@
       "country": "India",
       "lat": 12.9716,
       "lng": 77.5946
-    }
+    },
+    "status": "published"
   },
   {
     "slug": "microsoft-ai-skills-fest",
@@ -719,7 +740,8 @@
       "country": "India",
       "lat": 12.9716,
       "lng": 77.5946
-    }
+    },
+    "status": "published"
   },
   {
     "slug": "azure-dev-day-2024-recap-a-journey-into-azure-generative-ai",
@@ -754,7 +776,8 @@
       "country": "India",
       "lat": 12.9716,
       "lng": 77.5946
-    }
+    },
+    "status": "published"
   },
   {
     "slug": "wrapping-up-2024-with-azure-devday-bangalore",
@@ -790,7 +813,8 @@
       "country": "India",
       "lat": 12.9716,
       "lng": 77.5946
-    }
+    },
+    "status": "published"
   },
   {
     "slug": "cloud-computing-as-a-career-and-journey-to-microsoft",
@@ -822,7 +846,8 @@
       "country": "India",
       "lat": 28.5355,
       "lng": 77.391
-    }
+    },
+    "status": "published"
   },
   {
     "slug": "azure-generative-ai-day",
@@ -853,7 +878,8 @@
       "country": "India",
       "lat": 12.9716,
       "lng": 77.5946
-    }
+    },
+    "status": "published"
   },
   {
     "slug": "introduction-to-cloud-computing",
@@ -879,7 +905,8 @@
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/introduction-to-cloud-computing/cover.jpg",
     "images": [],
     "coverImagePosition": "bottom",
-    "location": null
+    "location": null,
+    "status": "published"
   },
   {
     "slug": "code-without-barriers-initiative-as-a-mentor",
@@ -916,7 +943,8 @@
       "country": "India",
       "lat": 28.6139,
       "lng": 77.209
-    }
+    },
+    "status": "published"
   },
   {
     "slug": "aws-community-builders",
@@ -942,7 +970,8 @@
     ],
     "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/aws-community-builders/cover.jpg",
     "images": [],
-    "location": null
+    "location": null,
+    "status": "published"
   },
   {
     "slug": "aws-community-day-india-2020",
@@ -975,7 +1004,8 @@
       "country": "India",
       "lat": 28.6139,
       "lng": 77.209
-    }
+    },
+    "status": "published"
   },
   {
     "slug": "aws-educate-student-ambassador",
@@ -1010,7 +1040,8 @@
       "country": "India",
       "lat": 28.6139,
       "lng": 77.209
-    }
+    },
+    "status": "published"
   },
   {
     "slug": "aws-user-group-dehradun",
@@ -1044,6 +1075,7 @@
       "country": "India",
       "lat": 30.3165,
       "lng": 78.0322
-    }
+    },
+    "status": "published"
   }
 ]

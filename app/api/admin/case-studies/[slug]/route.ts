@@ -38,6 +38,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       role: parsed.data.role ?? existing.role,
       client: parsed.data.client ?? existing.client,
       featured: parsed.data.featured ?? existing.featured,
+      status: parsed.data.status ?? existing.status ?? "published",
       coverImage: parsed.data.coverImage ?? existing.coverImage,
       metrics: parsed.data.metrics ?? existing.metrics,
     };

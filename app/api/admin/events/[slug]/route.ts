@@ -42,6 +42,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       coverImagePosition: parsed.data.coverImagePosition ?? existing.coverImagePosition,
       images: parsed.data.images ?? existing.images,
       featured: parsed.data.featured ?? existing.featured ?? false,
+      status: parsed.data.status ?? existing.status ?? "published",
       location: parsed.data.location !== undefined ? parsed.data.location : existing.location,
     };
 
