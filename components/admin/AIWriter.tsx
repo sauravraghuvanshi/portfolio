@@ -51,6 +51,7 @@ export default function AIWriter() {
   const [input, setInput] = useState("");
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [bodyMarkdownOverride, setBodyMarkdownOverride] = useState<string | null>(null);
   const contentTypeRef = useRef<AIContentType | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -161,6 +162,7 @@ export default function AIWriter() {
     setInput("");
     setAttachments([]);
     setIsExpanded(false);
+    setBodyMarkdownOverride(null);
     imageGen.reset();
   }, [setMessages, imageGen]);
 
@@ -173,6 +175,10 @@ export default function AIWriter() {
     try {
       // Apply completed image results to the payload before saving
       const finalPayload = { ...payload };
+      // Use bodyMarkdownOverride if section rewrites have been applied
+      if (bodyMarkdownOverride) {
+        finalPayload.bodyMarkdown = bodyMarkdownOverride;
+      }
       if (imageGen.tasks.length > 0) {
         const { content, coverImageUrl } = applyImageResults(
           finalPayload.bodyMarkdown,
@@ -201,10 +207,11 @@ export default function AIWriter() {
     } finally {
       setIsSaving(false);
     }
-  }, [payload, contentType, router, imageGen]);
+  }, [payload, contentType, router, imageGen, bodyMarkdownOverride]);
 
   const handleRegenerate = useCallback(() => {
     imageGen.reset();
+    setBodyMarkdownOverride(null);
     setMessages((prev) => {
       const idx = prev.findLastIndex((m) => m.role === "assistant");
       if (idx >= 0) return prev.slice(0, idx);
@@ -223,6 +230,36 @@ export default function AIWriter() {
       imageGen.retry(taskId, payload.slug);
     },
     [payload, imageGen]
+  );
+
+  const handleRegenImageWithFeedback = useCallback(
+    (taskId: string, feedback: string) => {
+      if (!payload) return;
+      imageGen.regenWithFeedback(taskId, payload.slug, feedback);
+    },
+    [payload, imageGen]
+  );
+
+  const handleRewriteSection = useCallback(
+    async (start: number, end: number, selectedText: string, feedback: string) => {
+      if (!payload) return;
+      const currentMarkdown = bodyMarkdownOverride ?? payload.bodyMarkdown;
+      const res = await fetch("/api/admin/ai-writer/rewrite-section", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ selectedText, feedback, title: payload.title }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: "Rewrite failed" }));
+        alert(err.error || "Rewrite failed");
+        return;
+      }
+      const { rewritten } = await res.json();
+      const newMarkdown =
+        currentMarkdown.slice(0, start) + rewritten + currentMarkdown.slice(end);
+      setBodyMarkdownOverride(newMarkdown);
+    },
+    [payload, bodyMarkdownOverride]
   );
 
   const handleFileChange = useCallback(async (e: ChangeEvent<HTMLInputElement>) => {
@@ -478,6 +515,9 @@ export default function AIWriter() {
               imageProgress={imageGen.progress}
               onGenerateImages={handleGenerateImages}
               onRetryImage={handleRetryImage}
+              onRegenImageWithFeedback={handleRegenImageWithFeedback}
+              onRewriteSection={handleRewriteSection}
+              bodyMarkdownOverride={bodyMarkdownOverride ?? undefined}
             />
           </motion.div>
         )}

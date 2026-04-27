@@ -10,6 +10,7 @@ interface UseImageGenerationReturn {
   initTasks: (tasks: ImageTask[]) => void;
   generateAll: (slug: string) => Promise<void>;
   retry: (taskId: string, slug: string) => Promise<void>;
+  regenWithFeedback: (taskId: string, slug: string, feedback: string) => Promise<void>;
   reset: () => void;
 }
 
@@ -124,11 +125,38 @@ export function useImageGeneration(): UseImageGenerationReturn {
     [tasks, generateOne]
   );
 
+  const regenWithFeedback = useCallback(
+    async (taskId: string, slug: string, feedback: string) => {
+      const task = tasks.find((t) => t.id === taskId);
+      if (!task) return;
+
+      const index = tasks.indexOf(task);
+      const enhancedPrompt = `${task.prompt}. Revision: ${feedback}`;
+      const modifiedTask: ImageTask = {
+        ...task,
+        prompt: enhancedPrompt,
+        status: "pending",
+        url: undefined,
+        error: undefined,
+      };
+
+      setIsGenerating(true);
+      abortRef.current = new AbortController();
+      try {
+        await generateOne(modifiedTask, slug, index);
+      } finally {
+        setIsGenerating(false);
+        abortRef.current = null;
+      }
+    },
+    [tasks, generateOne]
+  );
+
   const reset = useCallback(() => {
     if (abortRef.current) abortRef.current.abort();
     setTasks([]);
     setIsGenerating(false);
   }, []);
 
-  return { tasks, isGenerating, progress, initTasks, generateAll, retry, reset };
+  return { tasks, isGenerating, progress, initTasks, generateAll, retry, regenWithFeedback, reset };
 }
