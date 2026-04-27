@@ -43,7 +43,9 @@ function extractVideoId(url: string): string | null {
 }
 
 /**
- * Convert [YOUTUBE: "url" "title"] markers to responsive iframe embeds.
+ * Convert [YOUTUBE: "url" "title"] markers to MDX-compatible YouTubeEmbed components.
+ * Uses the <YouTubeEmbed> component registered in mdx-components.tsx instead of
+ * raw HTML iframes (which crash MDX compilation due to JSX parsing).
  */
 export function convertYoutubeMarkers(markdown: string): string {
   return markdown.replace(YOUTUBE_MARKER_RE, (_match, url: string, title: string) => {
@@ -52,11 +54,7 @@ export function convertYoutubeMarkers(markdown: string): string {
       // Fallback: render as a styled link
       return `[${title}](${url})`;
     }
-    return [
-      `<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;margin:1rem 0">`,
-      `<iframe src="https://www.youtube.com/embed/${videoId}" title="${title}" style="position:absolute;top:0;left:0;width:100%;height:100%" frameborder="0" allowfullscreen></iframe>`,
-      `</div>`,
-    ].join("");
+    return `<YouTubeEmbed videoId="${videoId}" title="${title}" />`;
   });
 }
 
