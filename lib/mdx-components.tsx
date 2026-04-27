@@ -1,4 +1,3 @@
-import Image from "next/image";
 import YouTubeEmbed from "@/components/ui/YouTubeEmbed";
 import CodeBlock from "@/components/ui/CodeBlock";
 import type { MDXComponents } from "mdx/types";
@@ -147,15 +146,13 @@ export const sharedMDXComponents: MDXComponents = {
         className="block my-8"
         style={hasCustomWidth ? { maxWidth: width, margin: "0 auto" } : undefined}
       >
-        <span className="block relative aspect-video">
-          <Image
-            src={src}
-            alt={alt || ""}
-            fill
-            sizes="(max-width: 768px) 100vw, 700px"
-            className="rounded-xl object-cover"
-          />
-        </span>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={src}
+          alt={alt || ""}
+          className="w-full rounded-xl"
+          loading="lazy"
+        />
         {alt && (
           <span className="block text-center text-xs text-slate-500 dark:text-slate-400 mt-2">
             {alt}
