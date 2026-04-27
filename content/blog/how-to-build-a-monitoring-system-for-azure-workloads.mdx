@@ -140,24 +140,17 @@ To ground this in real practice, I’ve built production Azure systems with Appl
 
 Here is the reference flow in Mermaid:
 
-```mermaid
-flowchart LR
-    A[Azure Workloads App Service AKS Functions VMs APIs] --> B[Instrumentation Structured Logs Traces Metrics]
-    B --> C[Azure Monitor]
-    A --> C
-    C --> D[Application Insights]
-    C --> E[Log Analytics Workspace]
-    C --> F[Azure Monitor Metrics]
-    E --> G[Workbooks and KQL Analysis]
-    D --> G
-    F --> H[Metric Alerts]
-    E --> I[Log Alerts]
-    H --> J[Action Groups]
-    I --> J
-    A --> K[VM Insights Container Insights Network Watcher]
-    K --> E
-    J --> L[Email Teams Webhook Automation]
-```
+**Reference flow:**
+
+Azure Workloads (App Service / AKS / Functions / VMs / APIs)
+→ Instrumentation (Structured Logs, Traces, Metrics)
+→ Azure Monitor
+→ Application Insights, Log Analytics Workspace, Azure Monitor Metrics
+→ Workbooks & KQL Analysis, Metric Alerts, Log Alerts
+→ Action Groups
+→ Email / Teams / Webhook / Automation
+
+Specialist agents (VM Insights, Container Insights, Network Watcher) feed directly into Log Analytics alongside the core workload telemetry.
 
 For the official service guidance, I’d point readers to [Azure Monitor](https://learn.microsoft.com/en-us/azure/azure-monitor/overview), [Application Insights](https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview), [Log Analytics](https://learn.microsoft.com/en-us/azure/azure-monitor/log-query/log-query-overview), [Azure Workbooks](https://learn.microsoft.com/en-us/azure/azure-monitor/platform/workbooks-overview), and [Alerts](https://learn.microsoft.com/en-us/azure/azure-monitor/platform/alerts-overview).
 
