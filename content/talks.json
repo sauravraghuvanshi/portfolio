@@ -2,6 +2,7 @@
   {
     "id": "akZUKGwA4hE",
     "title": "Enhancing Cloud Engineering with GitHub Copilot",
+    "description": "Practical session on weaving GitHub Copilot into a Cloud Engineer's daily workflow — real-world prompts for IaC, scripting and review, and how AI-assisted suggestions reduce errors and ship infrastructure changes faster.",
     "topic": "GitHub Copilot",
     "featured": true,
     "status": "published"
@@ -9,7 +10,7 @@
   {
     "id": "lry3EXmKsJo",
     "title": "Introduction to Cloud Computing",
-    "description": "Azure Learning Series",
+    "description": "Azure Learning Series — a beginner-friendly walkthrough of cloud fundamentals: deployment models, service tiers (IaaS / PaaS / SaaS) and how Azure maps to them.",
     "topic": "Cloud Fundamentals",
     "featured": false,
     "status": "published"
@@ -17,6 +18,7 @@
   {
     "id": "Wb4nzibutiM",
     "title": "Get Started with Azure AI Services",
+    "description": "A guided tour of the Azure AI Services portfolio — Vision, Language, Speech, Document Intelligence and OpenAI — with live demos of how to call them from a real app and pick the right service per use case.",
     "topic": "Azure AI",
     "featured": true,
     "status": "published"
@@ -24,6 +26,7 @@
   {
     "id": "En_0-P7dkEA",
     "title": "AZ-104 Bootcamp — Day 1",
+    "description": "Kick-off of the community AZ-104 bootcamp — exam blueprint, prep strategy and a foundational walk through Azure architecture, subscriptions and the portal/CLI/PowerShell tooling you'll use across the series.",
     "topic": "AZ-104",
     "featured": false,
     "status": "published"
@@ -31,6 +34,7 @@
   {
     "id": "z8zCX0U-yGE",
     "title": "AZ-104 Bootcamp — Day 2",
+    "description": "Governance & identity deep dive: managing subscriptions and tags, Azure Policy, management groups, RBAC with built-in and custom roles, and Microsoft Entra ID basics for AZ-104.",
     "topic": "AZ-104",
     "featured": false,
     "status": "published"
@@ -38,6 +42,7 @@
   {
     "id": "3_yRuplWfhk",
     "title": "AZ-104 Bootcamp — Day 3",
+    "description": "Azure Storage end-to-end: storage accounts, Blob object replication and lifecycle management, Azure Files with File Sync, share snapshots, and securing storage with network access controls.",
     "topic": "AZ-104",
     "featured": false,
     "status": "published"
@@ -45,6 +50,7 @@
   {
     "id": "An3LH1GLtiA",
     "title": "AZ-104 Bootcamp — Day 4",
+    "description": "Networking on Azure: designing VNets and subnets, Azure DNS and service endpoints, plus traffic management with Azure Load Balancer and Application Gateway — including a CLI walkthrough.",
     "topic": "AZ-104",
     "featured": false,
     "status": "published"
@@ -52,6 +58,7 @@
   {
     "id": "eUrBff0kdaA",
     "title": "AZ-104 Bootcamp — Day 5 — Azure VM",
+    "description": "Hands-on with Azure Virtual Machines for the AZ-104 exam: provisioning and sizing VMs, availability sets and zones, scale sets, disks, and day-2 ops like start/stop, resize and backup.",
     "topic": "AZ-104",
     "featured": false,
     "status": "published"
@@ -59,6 +66,7 @@
   {
     "id": "Rw1Q3w3vuhM",
     "title": "AZ-104 Bootcamp — Day 6 — Azure Monitoring",
+    "description": "Monitoring and observability for Azure administrators: Azure Monitor, metrics and Log Analytics with KQL, alert rules, action groups and the basics of Application Insights for app-level signals.",
     "topic": "AZ-104",
     "featured": false,
     "status": "published"
@@ -66,6 +74,7 @@
   {
     "id": "TWkBxlI00ck",
     "title": "AZ-104 Bootcamp — Day 7 — Connectivity & Web App",
+    "description": "Hybrid connectivity and PaaS hosting: VNet peering and VPN gateway concepts, plus deploying and scaling apps on Azure App Service with deployment slots and configuration.",
     "topic": "AZ-104",
     "featured": false,
     "status": "published"
@@ -73,6 +82,7 @@
   {
     "id": "SzR1FAgKoUY",
     "title": "AZ-104 Bootcamp — Day 8 — Wrap Up",
+    "description": "Final session of the AZ-104 bootcamp — recap of every domain (identity, governance, storage, compute, networking, monitoring), an exam-day checklist and the most-asked Q&A from the series.",
     "topic": "AZ-104",
     "featured": false,
     "status": "published"
@@ -80,7 +90,7 @@
   {
     "id": "Y7JrWcnnRY4",
     "title": "CI/CD Pipeline in Azure DevOps",
-    "description": "Whizlabs Webinar",
+    "description": "Whizlabs Webinar — building a real CI/CD pipeline in Azure DevOps: connecting a repo, multi-stage YAML pipelines, environments and approvals, and deploying to Azure with service connections.",
     "topic": "DevOps",
     "featured": true,
     "status": "published"
