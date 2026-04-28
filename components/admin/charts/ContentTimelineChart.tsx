@@ -33,7 +33,7 @@ const SERIES: { key: keyof Omit<TimelinePoint, "year">; color: string }[] = [
 export function ContentTimelineChart({ data }: { data: TimelinePoint[] }) {
   return (
     <div className="h-72 w-full">
-      <ResponsiveContainer>
+      <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data} margin={{ top: 10, right: 16, left: -8, bottom: 0 }}>
           <defs>
             {SERIES.map((s) => (

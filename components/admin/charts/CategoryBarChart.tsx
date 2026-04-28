@@ -30,7 +30,7 @@ const PALETTE = [
 export function CategoryBarChart({ data }: { data: CategoryDatum[] }) {
   return (
     <div className="h-72 w-full">
-      <ResponsiveContainer>
+      <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
           layout="vertical"

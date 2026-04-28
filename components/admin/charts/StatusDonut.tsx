@@ -27,7 +27,7 @@ export function StatusDonut({
   const total = data.reduce((s, d) => s + d.value, 0);
   return (
     <div className="relative h-64 w-full">
-      <ResponsiveContainer>
+      <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
             data={data}
