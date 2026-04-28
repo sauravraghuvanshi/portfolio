@@ -15,6 +15,7 @@ import {
   Plus,
   LogOut,
   Sparkles,
+  Crosshair,
 } from "lucide-react";
 
 const navSections = [
@@ -69,6 +70,13 @@ const navSections = [
     items: [
       { label: "Certifications", href: "/admin/certifications", icon: Award },
       { label: "New Certification", href: "/admin/certifications/new", icon: Plus },
+    ],
+  },
+  {
+    title: "Tech Radar",
+    items: [
+      { label: "Tech Radar", href: "/admin/tech-radar", icon: Crosshair },
+      { label: "New Entry", href: "/admin/tech-radar/new", icon: Plus },
     ],
   },
 ];

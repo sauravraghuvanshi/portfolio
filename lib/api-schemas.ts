@@ -113,6 +113,21 @@ export const CertificationSchema = z.object({
 
 export const CertificationUpdateSchema = CertificationSchema.partial();
 
+// ---------- Tech Radar ----------
+export const RadarEntrySchema = z.object({
+  id: z.string().min(1, "ID is required").max(100).regex(/^[a-z0-9-]+$/, "ID must be lowercase alphanumeric with hyphens"),
+  name: z.string().min(1, "Name is required").max(100),
+  quadrant: z.enum(["languages", "platforms", "tools", "techniques"]),
+  ring: z.enum(["adopt", "trial", "assess", "hold"]),
+  summary: z.string().min(1, "Summary is required").max(1000),
+  useWhen: z.string().max(500).optional(),
+  avoidWhen: z.string().max(500).optional(),
+  movedFrom: z.enum(["adopt", "trial", "assess", "hold"]).optional(),
+  tags: z.array(z.string().max(50)).max(20).optional().default([]),
+});
+
+export const RadarEntryUpdateSchema = RadarEntrySchema.partial();
+
 // ---------- Upload params ----------
 export const UploadParamsSchema = z.object({
   folder: z

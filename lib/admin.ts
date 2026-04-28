@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import type { BlogPostMeta, CaseStudyMeta, Project, Talk, EventMeta, Certification } from "./content";
+import type { BlogPostMeta, CaseStudyMeta, Project, Talk, EventMeta, Certification, RadarEntry, TechRadar } from "./content";
 import { uploadToBlob } from "./azure-storage";
 import { contentDir } from "./content-dir";
 const blogDir = path.join(contentDir, "blog");
@@ -266,6 +266,44 @@ export function deleteCertification(code: string): boolean {
   const filtered = certs.filter((c) => c.code !== code);
   if (filtered.length === certs.length) return false;
   writeCertifications(filtered);
+  return true;
+}
+
+// --- Tech Radar ---
+
+const techRadarFile = path.join(contentDir, "tech-radar.json");
+
+function readTechRadar(): TechRadar {
+  if (!fs.existsSync(techRadarFile)) {
+    return { edition: "2026-Q2", publishedAt: new Date().toISOString().slice(0, 10), summary: "", entries: [] };
+  }
+  const raw = fs.readFileSync(techRadarFile, "utf-8").replace(/^\uFEFF/, "");
+  return JSON.parse(raw) as TechRadar;
+}
+
+function writeTechRadar(radar: TechRadar): void {
+  fs.writeFileSync(techRadarFile, JSON.stringify(radar, null, 2) + "\n", "utf-8");
+}
+
+export function saveRadarEntry(entry: RadarEntry): void {
+  sanitizeSlug(entry.id);
+  const radar = readTechRadar();
+  const idx = radar.entries.findIndex((e) => e.id === entry.id);
+  if (idx >= 0) {
+    radar.entries[idx] = entry;
+  } else {
+    radar.entries.push(entry);
+  }
+  writeTechRadar(radar);
+}
+
+export function deleteRadarEntry(id: string): boolean {
+  sanitizeSlug(id);
+  const radar = readTechRadar();
+  const filtered = radar.entries.filter((e) => e.id !== id);
+  if (filtered.length === radar.entries.length) return false;
+  radar.entries = filtered;
+  writeTechRadar(radar);
   return true;
 }
 
