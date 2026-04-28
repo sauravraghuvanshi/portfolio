@@ -8,9 +8,8 @@ const fs = require("fs");
 const path = require("path");
 
 const repoRoot = path.resolve(__dirname, "..", "..");
-const workspaceRoot = path.resolve(repoRoot, "..");
-const memoryPath = path.join(workspaceRoot, ".claude", "project-memory.md");
-const lessonsPath = path.join(workspaceRoot, ".claude", "lessons.md");
+const memoryPath = path.join(repoRoot, ".claude", "project-memory.md");
+const lessonsPath = path.join(repoRoot, ".claude", "lessons.md");
 
 let context = "";
 
