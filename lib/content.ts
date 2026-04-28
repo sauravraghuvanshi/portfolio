@@ -237,6 +237,39 @@ export const getTalks = cache(function getTalks(includeDrafts = false): Talk[] {
 });
 
 // ---------------------------------------------------------------------------
+// Tech Radar
+// ---------------------------------------------------------------------------
+
+export type RadarQuadrant = "languages" | "platforms" | "tools" | "techniques";
+export type RadarRing = "adopt" | "trial" | "assess" | "hold";
+
+export interface RadarEntry {
+  id: string;
+  name: string;
+  quadrant: RadarQuadrant;
+  ring: RadarRing;
+  summary: string;
+  useWhen?: string;
+  avoidWhen?: string;
+  movedFrom?: RadarRing;
+  tags?: string[];
+}
+
+export interface TechRadar {
+  edition: string;
+  publishedAt: string;
+  summary: string;
+  entries: RadarEntry[];
+}
+
+export const getTechRadar = cache(function getTechRadar(): TechRadar | null {
+  const filePath = path.join(contentDir, "tech-radar.json");
+  if (!fs.existsSync(filePath)) return null;
+  const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
+  return JSON.parse(raw) as TechRadar;
+});
+
+// ---------------------------------------------------------------------------
 // Blog
 // ---------------------------------------------------------------------------
 

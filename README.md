@@ -51,6 +51,7 @@ _Last synced: 2026-04-21_
 - **AI Chatbot** — Public-facing floating chat bubble powered by Azure AI Foundry Agent. True token-by-token SSE streaming via `streamFoundryAgent()` async generator in `lib/ai/foundry-agent.ts`. Client-side `useTypewriter` hook reveals text at ~170 chars/sec for a smooth ChatGPT-like feel. Uses `experimental_throttle: 50` on `useChat` for smooth React re-renders.
 - **Auto RAG Reindex** — Automatic reindexing pipeline triggers on every content save/delete via admin panel. Extracts portfolio content → uploads to Foundry → creates vector store → updates agent → cleans up old resources. Safe ordering ensures the agent is never left pointing to deleted data.
 - **Architecture Page** — `/architecture` — Interactive "Built on Azure" infrastructure page documenting the live Azure stack: 6 services with expandable cards, request flow diagrams, CI/CD pipeline visualization, cost breakdown table, and architectural decisions — all with Framer Motion stagger animations and `useReducedMotion()` support.
+- **Tech Radar** — `/tech-radar` — ThoughtWorks-style interactive radar with 50 entries across 4 quadrants (Languages & Frameworks · Platforms · Tools · Techniques) and 4 rings (Adopt · Trial · Assess · Hold). Custom SVG (no chart library) with deterministic FNV-1a hash–seeded dot positions, quadrant filter chips, ring-movement ▲/▼ indicators, accessible quadrant lists rendered below the radar (mobile + screen-reader fallback), and a Framer Motion right-side detail drawer showing summary, "Use when," "Avoid when," and tags. Data lives in `content/tech-radar.json` with edition + `publishedAt` so future revisions can show ring movements.
 - **Architecture Playground** — Extracted to its own repo/App Service at [architecture-playground.azurewebsites.net](https://architecture-playground.azurewebsites.net). Interactive multi-cloud architecture diagram editor (Azure/AWS/GCP icons, connectable edges, animated playback, PNG/JSON/GIF export). Navigation links to it externally.
 - **Spotlight Project Card** — The portfolio website itself (`portfolio-website`) renders as a branded spotlight card in the Projects grid: brand-blue border, stagger animations, infra stat chips, and a pulsing "Live on Azure" badge.
 - **Certification Verify URLs + Click-to-Copy** — Each certification has an optional `verifyUrl` (Microsoft Learn, AWS, Udacity). A `CopyIdPill` component lets visitors click to copy the credential ID with visual feedback — particularly useful for AWS certs that require manual paste.
@@ -311,6 +312,7 @@ portfolio/
 | `/social` | Social links hub |
 | `/community` | Community impact page |
 | `/architecture` | "Built on Azure" interactive infrastructure page |
+| `/tech-radar` | ThoughtWorks-style tech radar — 50 entries × 4 quadrants × 4 rings (Adopt/Trial/Assess/Hold) |
 | `/feed.xml` | RSS feed (auto-generated) |
 | `/admin` | Admin dashboard (protected) |
 | `/admin/blog` | Blog post management |

@@ -41,7 +41,7 @@ const navEntries: NavEntry[] = [
       { label: "Events", href: "/events", description: "Bootcamps, workshops, and community events I’ve hosted." },
     ],
   },
-   {
+  {
     label: "Builds",
     items: [
       {
@@ -54,6 +54,11 @@ const navEntries: NavEntry[] = [
         label: "Site Architecture",
         href: "/architecture",
         description: "How this portfolio is built on Azure — infrastructure, AI, and CI/CD.",
+      },
+      {
+        label: "Tech Radar",
+        href: "/tech-radar",
+        description: "My opinions on 50+ cloud, AI, and platform technologies — Adopt, Trial, Assess, Hold.",
       },
     ],
   },

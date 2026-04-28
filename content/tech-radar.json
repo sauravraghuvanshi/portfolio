@@ -1,0 +1,421 @@
+{
+  "edition": "2026-Q2",
+  "publishedAt": "2026-04-27",
+  "summary": "My current opinions on the technologies I work with as a Cloud Solution Architect. Each entry reflects production experience, not blog reading. Updated quarterly.",
+  "entries": [
+    {
+      "id": "typescript",
+      "name": "TypeScript",
+      "quadrant": "languages",
+      "ring": "adopt",
+      "summary": "Default for any JS work. Type-driven design catches a class of bugs that no test ever will.",
+      "useWhen": "Anything beyond a 50-line script. Especially APIs, shared schemas, and React.",
+      "avoidWhen": "Tiny one-off automation where setup overhead outweighs the safety net.",
+      "tags": ["frontend", "backend"]
+    },
+    {
+      "id": "python-311",
+      "name": "Python 3.11+",
+      "quadrant": "languages",
+      "ring": "adopt",
+      "summary": "Goto for AI workloads, data work, and FastAPI services. 3.11's faster interpreter is real in production.",
+      "useWhen": "AI / LLM apps, data pipelines, FastAPI backends, scripting.",
+      "avoidWhen": "CPU-bound hot paths or anywhere you need single-binary deploys.",
+      "tags": ["backend", "ai"]
+    },
+    {
+      "id": "bicep",
+      "name": "Bicep",
+      "quadrant": "languages",
+      "ring": "adopt",
+      "summary": "Best DSL for Azure-only IaC. Cleaner than ARM, native deployment, no state file headaches.",
+      "useWhen": "Single-cloud Azure shops. Anything that lives entirely in ARM's resource model.",
+      "avoidWhen": "Multi-cloud, or when you need Pulumi-style real programming primitives.",
+      "tags": ["azure", "iac"]
+    },
+    {
+      "id": "go",
+      "name": "Go",
+      "quadrant": "languages",
+      "ring": "trial",
+      "summary": "Reaching for it more often for CLIs and high-throughput services. Cold start beats Python by 10x.",
+      "useWhen": "CLIs, sidecars, networked services where binary size and start time matter.",
+      "avoidWhen": "Heavy data work or AI — ecosystem isn't there yet."
+    },
+    {
+      "id": "rust",
+      "name": "Rust",
+      "quadrant": "languages",
+      "ring": "assess",
+      "summary": "Watching the Azure SDK story. Compelling for WASM edge functions and crypto-heavy paths.",
+      "useWhen": "Edge / WASM workloads, perf-critical libraries.",
+      "avoidWhen": "App-layer business logic where compile-times slow iteration."
+    },
+    {
+      "id": "csharp-net8",
+      "name": "C# / .NET 8",
+      "quadrant": "languages",
+      "ring": "trial",
+      "summary": "AOT + minimal APIs make it genuinely competitive with Go for Azure Functions cold starts now.",
+      "useWhen": "Enterprise Azure shops, Functions where AOT matters, large team Microsoft stacks.",
+      "avoidWhen": "Tiny serverless or anything where you'd rather skip JVM-style ceremony."
+    },
+    {
+      "id": "nextjs-app-router",
+      "name": "Next.js App Router",
+      "quadrant": "languages",
+      "ring": "adopt",
+      "summary": "Server components plus streaming have changed how I structure frontends. This site runs on it.",
+      "useWhen": "Marketing + dashboard hybrids, any SSR/SSG mix, anything needing edge rendering.",
+      "avoidWhen": "Pure SPAs where Vite is simpler, or extreme low-bundle requirements."
+    },
+    {
+      "id": "fastapi",
+      "name": "FastAPI",
+      "quadrant": "languages",
+      "ring": "adopt",
+      "summary": "Pydantic-typed APIs with auto-OpenAPI is the productivity peak for Python services.",
+      "useWhen": "Python backends, AI service wrappers, anything that needs a typed contract fast.",
+      "avoidWhen": "If your team is already on Django REST Framework and happy."
+    },
+    {
+      "id": "react-server-components",
+      "name": "React Server Components",
+      "quadrant": "languages",
+      "ring": "trial",
+      "summary": "Real productivity wins for content-heavy sites once you internalize the server/client split.",
+      "useWhen": "Content + dashboard apps, anywhere data fetching dominates render."
+    },
+    {
+      "id": "tailwind-v4",
+      "name": "Tailwind CSS v4",
+      "quadrant": "languages",
+      "ring": "adopt",
+      "summary": "Oxide engine is fast, CSS-first config is sane. I no longer write component-level CSS.",
+      "useWhen": "Any new web project.",
+      "avoidWhen": "Design systems with strict token + theming requirements that need a CSS-in-JS lib."
+    },
+    {
+      "id": "kotlin",
+      "name": "Kotlin",
+      "quadrant": "languages",
+      "ring": "hold",
+      "summary": "Not where I'd start a new backend in 2026 unless the team is already JVM-deep."
+    },
+    {
+      "id": "azure-container-apps",
+      "name": "Azure Container Apps",
+      "quadrant": "platforms",
+      "ring": "adopt",
+      "summary": "My default for stateless services in 2026. KEDA, revisions, managed identity, and Dapr — all built in.",
+      "useWhen": "HTTP APIs, event-driven workers, anything that doesn't need full AKS knobs.",
+      "avoidWhen": "DaemonSets, custom CNI, or sub-100ms cold starts.",
+      "tags": ["azure", "compute"]
+    },
+    {
+      "id": "azure-functions-flex",
+      "name": "Azure Functions (Flex Consumption)",
+      "quadrant": "platforms",
+      "ring": "adopt",
+      "summary": "The cold-start story is finally good. VNet integration on Consumption is the real unlock.",
+      "useWhen": "Event triggers, glue code, scheduled jobs, anything spiky.",
+      "avoidWhen": "Long-running workloads or when Container Apps' richer model fits better."
+    },
+    {
+      "id": "azure-foundry",
+      "name": "Microsoft Foundry",
+      "quadrant": "platforms",
+      "ring": "trial",
+      "summary": "Hosted agents + evals + prompt optimizer is the most cohesive AI platform on Azure right now.",
+      "useWhen": "Production agents, RAG systems where you want managed evals.",
+      "avoidWhen": "Tiny prototypes — overhead vs. just hitting the SDK directly."
+    },
+    {
+      "id": "aks",
+      "name": "Azure Kubernetes Service (AKS)",
+      "quadrant": "platforms",
+      "ring": "trial",
+      "summary": "Still the right answer when Container Apps' constraints bite. AKS Automatic narrows the ops gap.",
+      "useWhen": "Multi-tenant platforms, GPU workloads, custom networking, sidecar-heavy apps.",
+      "avoidWhen": "Small teams without dedicated platform engineers."
+    },
+    {
+      "id": "azure-ai-search",
+      "name": "Azure AI Search",
+      "quadrant": "platforms",
+      "ring": "adopt",
+      "summary": "Hybrid + semantic ranker has become the default RAG retrieval layer in my designs.",
+      "useWhen": "Production RAG, enterprise search, anywhere you need vector + keyword fusion.",
+      "avoidWhen": "Toy projects — pgvector or Qdrant are cheaper to start with."
+    },
+    {
+      "id": "cosmos-db",
+      "name": "Azure Cosmos DB (NoSQL)",
+      "quadrant": "platforms",
+      "ring": "trial",
+      "summary": "Global distribution + vector index is genuinely useful. Pricing still demands careful partition design.",
+      "useWhen": "Global, multi-region writes; document workloads that need low-latency reads everywhere.",
+      "avoidWhen": "Predictable single-region OLTP — Postgres Flex is half the cost."
+    },
+    {
+      "id": "postgres-flex",
+      "name": "Azure Postgres Flexible Server",
+      "quadrant": "platforms",
+      "ring": "adopt",
+      "summary": "Default relational store. pgvector + read replicas + private endpoints solves 80% of needs.",
+      "useWhen": "Most apps with relational data, OLTP, RAG with pgvector at small/medium scale.",
+      "avoidWhen": "Truly global multi-region writes — that's Cosmos territory."
+    },
+    {
+      "id": "azure-static-web-apps",
+      "name": "Azure Static Web Apps",
+      "quadrant": "platforms",
+      "ring": "trial",
+      "summary": "Great for marketing sites + small APIs. Hits limits fast for anything needing real Node runtime.",
+      "useWhen": "Static sites with light API needs, hackathons, demos.",
+      "avoidWhen": "Anything needing background jobs, websockets, or heavy SSR."
+    },
+    {
+      "id": "app-service-classic",
+      "name": "App Service (Web Apps for Code)",
+      "quadrant": "platforms",
+      "ring": "hold",
+      "summary": "Still works, still pays the bills — but Container Apps is where I'd start any new workload."
+    },
+    {
+      "id": "service-bus",
+      "name": "Azure Service Bus",
+      "quadrant": "platforms",
+      "ring": "adopt",
+      "summary": "The boring, correct answer for enterprise messaging. Sessions + dead-letter + dup-detect are gold.",
+      "useWhen": "Order processing, command queues, anything needing FIFO + transactions.",
+      "avoidWhen": "High-throughput telemetry — that's Event Hubs."
+    },
+    {
+      "id": "event-hubs",
+      "name": "Azure Event Hubs",
+      "quadrant": "platforms",
+      "ring": "adopt",
+      "summary": "Kafka-compatible without operating Kafka. Default ingress for telemetry and event sourcing.",
+      "useWhen": "Log ingestion, IoT, event sourcing pipelines."
+    },
+    {
+      "id": "azure-redis",
+      "name": "Azure Cache for Redis",
+      "quadrant": "platforms",
+      "ring": "adopt",
+      "summary": "Indispensable for session, rate-limiting, and Celery brokers. Enterprise tier when you need geo-rep."
+    },
+    {
+      "id": "key-vault",
+      "name": "Azure Key Vault",
+      "quadrant": "platforms",
+      "ring": "adopt",
+      "summary": "Pair with managed identity and you can almost forget secrets exist.",
+      "useWhen": "Always — it's the baseline.",
+      "tags": ["security"]
+    },
+    {
+      "id": "github-actions",
+      "name": "GitHub Actions",
+      "quadrant": "tools",
+      "ring": "adopt",
+      "summary": "OIDC to Azure made this the obvious choice. Reusable workflows + matrix builds cover 95% of pipelines.",
+      "useWhen": "Any CI/CD that targets Azure or GitHub-hosted code.",
+      "avoidWhen": "Heavy self-hosted needs where Azure DevOps' agent pools are still better."
+    },
+    {
+      "id": "azd",
+      "name": "Azure Developer CLI (azd)",
+      "quadrant": "tools",
+      "ring": "adopt",
+      "summary": "`azd up` is the right level of abstraction for app teams who want to skip infra ceremony.",
+      "useWhen": "Greenfield Azure apps, hackathons, app-team self-service.",
+      "avoidWhen": "Platform teams who need full Bicep / Terraform control."
+    },
+    {
+      "id": "claude-code",
+      "name": "Claude Code",
+      "quadrant": "tools",
+      "ring": "adopt",
+      "summary": "Daily driver for everything except trivial edits. Skill files + memory are the productivity multiplier.",
+      "useWhen": "Multi-step coding, research, refactors, architecture work.",
+      "avoidWhen": "30-second snippet edits — autocomplete still wins on latency."
+    },
+    {
+      "id": "github-copilot",
+      "name": "GitHub Copilot",
+      "quadrant": "tools",
+      "ring": "adopt",
+      "summary": "Inline completion is a baseline. Agent mode is closing the gap with Claude Code fast.",
+      "useWhen": "Always on for daily coding.",
+      "tags": ["ai"]
+    },
+    {
+      "id": "playwright",
+      "name": "Playwright",
+      "quadrant": "tools",
+      "ring": "adopt",
+      "summary": "End of the conversation about E2E testing. Trace viewer alone justifies it.",
+      "useWhen": "Any E2E or cross-browser testing.",
+      "avoidWhen": "Pure unit tests — Vitest is faster."
+    },
+    {
+      "id": "pulumi",
+      "name": "Pulumi",
+      "quadrant": "tools",
+      "ring": "trial",
+      "summary": "Real programming primitives in IaC are addictive. State management is the friction.",
+      "useWhen": "Complex multi-cloud topologies; teams already strong in TS/Python."
+    },
+    {
+      "id": "terraform",
+      "name": "Terraform",
+      "quadrant": "tools",
+      "ring": "trial",
+      "summary": "Still the lingua franca for multi-cloud and platform teams. AzureRM provider has mostly caught up to Bicep.",
+      "useWhen": "Multi-cloud, regulated shops, large platform teams with existing Terraform investment.",
+      "avoidWhen": "Single-cloud Azure with no Terraform tax already paid."
+    },
+    {
+      "id": "vitest",
+      "name": "Vitest",
+      "quadrant": "tools",
+      "ring": "adopt",
+      "summary": "Default test runner for anything Vite or modern Node. Jest can finally retire."
+    },
+    {
+      "id": "azure-cli",
+      "name": "Azure CLI",
+      "quadrant": "tools",
+      "ring": "adopt",
+      "summary": "Still the most reliable way to script Azure. JMESPath queries are underrated."
+    },
+    {
+      "id": "azure-portal",
+      "name": "Azure Portal",
+      "quadrant": "tools",
+      "ring": "trial",
+      "summary": "For exploration and breakglass only. Everything that ships should be code."
+    },
+    {
+      "id": "mcp-servers",
+      "name": "MCP servers",
+      "quadrant": "tools",
+      "ring": "trial",
+      "summary": "The standard for tool surfaces in 2026. Already shipping in my agent workflows.",
+      "useWhen": "Exposing internal tools to Claude/Copilot/Cursor."
+    },
+    {
+      "id": "lighthouse-ci",
+      "name": "Lighthouse CI",
+      "quadrant": "tools",
+      "ring": "trial",
+      "summary": "Wire it into PRs and treat web vitals as a build gate. Performance regressions become impossible to merge."
+    },
+    {
+      "id": "passlib",
+      "name": "passlib (bcrypt)",
+      "quadrant": "tools",
+      "ring": "hold",
+      "summary": "Incompatible with bcrypt 4.1+. Use the bcrypt library directly — burned by this once already."
+    },
+    {
+      "id": "rag-hybrid",
+      "name": "RAG with hybrid retrieval",
+      "quadrant": "techniques",
+      "ring": "adopt",
+      "summary": "Keyword + vector + semantic ranker is the default. Pure-vector RAG is a 2023 mistake.",
+      "useWhen": "Any production RAG over heterogeneous content.",
+      "tags": ["ai"]
+    },
+    {
+      "id": "ai-evals",
+      "name": "Continuous AI evals",
+      "quadrant": "techniques",
+      "ring": "adopt",
+      "summary": "If you're shipping agents without evals you're flying blind. Foundry / Promptflow make this trivial.",
+      "useWhen": "Always when an LLM is in the request path."
+    },
+    {
+      "id": "managed-identity",
+      "name": "Managed Identity everywhere",
+      "quadrant": "techniques",
+      "ring": "adopt",
+      "summary": "Connection strings are a smell. System or user-assigned MI + RBAC is the only acceptable pattern.",
+      "useWhen": "Always, no exceptions for greenfield Azure apps.",
+      "tags": ["security"]
+    },
+    {
+      "id": "zero-trust",
+      "name": "Zero Trust networking",
+      "quadrant": "techniques",
+      "ring": "adopt",
+      "summary": "Private endpoints + NSGs + Entra Conditional Access. The new baseline for anything touching prod data."
+    },
+    {
+      "id": "finops-tagging",
+      "name": "FinOps tagging discipline",
+      "quadrant": "techniques",
+      "ring": "trial",
+      "summary": "Boring, but cost-by-tag is the only scalable way to attribute cloud spend. Enforce via Azure Policy."
+    },
+    {
+      "id": "platform-engineering",
+      "name": "Internal Developer Platforms",
+      "quadrant": "techniques",
+      "ring": "trial",
+      "summary": "Backstage + golden path templates pay off above ~30 engineers. Below that it's overhead."
+    },
+    {
+      "id": "agentic-workflows",
+      "name": "Agentic coding workflows",
+      "quadrant": "techniques",
+      "ring": "trial",
+      "summary": "Plan → execute → verify loops with skill files reliably outperform single-shot prompting on real tasks.",
+      "tags": ["ai"]
+    },
+    {
+      "id": "byom",
+      "name": "Bring Your Own Model (BYOM)",
+      "quadrant": "techniques",
+      "ring": "assess",
+      "summary": "Compelling for cost + sovereignty. Tooling around OSS models on Azure ML is improving fast."
+    },
+    {
+      "id": "event-sourcing",
+      "name": "Event sourcing",
+      "quadrant": "techniques",
+      "ring": "assess",
+      "summary": "Right answer for audit-heavy domains. Wrong default for everything else."
+    },
+    {
+      "id": "openTelemetry",
+      "name": "OpenTelemetry",
+      "quadrant": "techniques",
+      "ring": "trial",
+      "summary": "Vendor-neutral telemetry is the future, and the Azure Monitor exporter is finally production-ready."
+    },
+    {
+      "id": "iac-as-product",
+      "name": "Treat IaC as a product",
+      "quadrant": "techniques",
+      "ring": "adopt",
+      "summary": "Versioned modules, semantic releases, what-if as a CI gate. Stop copy-pasting Bicep snippets."
+    },
+    {
+      "id": "manual-secret-rotation",
+      "name": "Manual secret rotation",
+      "quadrant": "techniques",
+      "ring": "hold",
+      "summary": "If a human has to remember to rotate a secret, it's already expired in spirit. Automate or kill it."
+    },
+    {
+      "id": "monolith-by-default",
+      "name": "Microservices for small teams",
+      "quadrant": "techniques",
+      "ring": "hold",
+      "summary": "Below ~20 engineers, microservices buy you complexity, not scale. Modular monolith first."
+    }
+  ]
+}
