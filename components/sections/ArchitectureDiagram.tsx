@@ -22,6 +22,7 @@ import {
   DollarSign,
   Lock,
   Layers,
+  PenLine,
 } from "lucide-react";
 
 // ─── types ────────────────────────────────────────────────────────────────────
@@ -171,11 +172,13 @@ const serviceGroups: ServiceGroup[] = [
         region: "East US",
         purpose:
           "Hosts the AI agent powering the RAG chatbot and admin AI Writer. The agent uses file_search (vector store) for portfolio RAG grounding and Microsoft Learn MCP for Azure documentation.",
-        cost: "Pay-per-token (gpt-4o)",
+        cost: "Pay-per-token",
         details: [
           "Project: saurav-portfolio-ai-project (East US)",
           "Agent: saurav-portfolio-ai-project-agent",
-          "Model: gpt-4o GlobalStandard (2024-08-06), 10K TPM quota",
+          "Deployment: gpt-5.4-1 (model: gpt-5.4, 2026-03-05) — GlobalStandard, 1M TPM",
+          "Deployment: gpt-4o (model: gpt-4o, 2024-08-06) — GlobalStandard, 10K TPM",
+          "Embedding: text-embedding-3-small — Standard, 120K TPM (RAG vector store)",
           "Tools: file_search (RAG), web_search, microsoft_learn_mcp, code_interpreter",
           "RAG: vector store rebuilt via /api/admin/reindex, auto-triggered on content saves",
           "Streaming: project-scoped Responses API with SSE — true token-by-token output",
@@ -184,6 +187,26 @@ const serviceGroups: ServiceGroup[] = [
         icon: <Sparkles size={20} />,
         color: "purple",
         docsUrl: "https://learn.microsoft.com/en-us/azure/ai-foundry/",
+      },
+      {
+        id: "image-gen",
+        name: "Azure OpenAI · Image Gen",
+        tier: "gpt-image-2 · East US 2",
+        region: "East US 2",
+        purpose:
+          "Generates cover images and inline visuals for AI Writer drafts. Integrated into the admin AI Writer flow — one click produces a contextually relevant cover image sized for OG and blog headers.",
+        cost: "Pay-per-image",
+        details: [
+          "Model: gpt-image-2 · Deployment: gpt-image-2-1 (East US 2)",
+          "Endpoint: AZURE_OPENAI_IMAGE_ENDPOINT env var",
+          "Used in: AI Writer → generate cover image button",
+          "Output: 1792×1024 PNG uploaded to Azure Blob Storage (blog-images container)",
+          "Auth: API key (separate from Foundry — different endpoint)",
+          "Rate: images generated on demand, not in a batch pipeline",
+        ],
+        icon: <Upload size={20} />,
+        color: "orange",
+        docsUrl: "https://learn.microsoft.com/en-us/azure/ai-services/openai/dall-e-quickstart",
       },
       {
         id: "app-insights",
@@ -258,7 +281,8 @@ const serviceGroups: ServiceGroup[] = [
 const costRows = [
   { service: "Azure App Service (B1)", tier: "B1 · asp-saurav-portfolio", cost: "~$13.00" },
   { service: "Azure Blob Storage", tier: "Standard LRS, < 1 GB", cost: "~$0.01" },
-  { service: "Azure AI Foundry", tier: "gpt-4o, pay-per-token", cost: "Variable" },
+  { service: "Azure AI Foundry", tier: "gpt-5.4 + gpt-4o, pay-per-token", cost: "Variable" },
+  { service: "Azure OpenAI · Image Gen", tier: "gpt-image-2, pay-per-image", cost: "Variable" },
   { service: "Application Insights", tier: "Free (< 5 GB/day)", cost: "$0.00" },
   { service: "GitHub Actions", tier: "Free tier", cost: "$0.00" },
   { service: "Azure Managed Identity", tier: "Free", cost: "$0.00" },
@@ -514,7 +538,7 @@ export default function ArchitectureDiagram() {
               className="flex flex-wrap gap-3"
             >
               {[
-                { label: "6 Azure services", icon: <Zap size={14} /> },
+                { label: "7 Azure services", icon: <Zap size={14} /> },
                 { label: "~$13 / month running cost", icon: <DollarSign size={14} /> },
                 { label: "Managed Identity — zero API keys", icon: <Shield size={14} /> },
                 { label: "~3 min deploy on git push", icon: <RefreshCw size={14} /> },
@@ -702,6 +726,83 @@ export default function ArchitectureDiagram() {
               </p>
             </motion.div>
           </div>
+
+          {/* AI Writer flow — full width USP card */}
+          <motion.div
+            initial={{ opacity: 0, y: reduce ? 0 : 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.45, delay: 0.14 }}
+            className="mt-8 bg-gradient-to-br from-purple-50/70 to-pink-50/70 dark:from-purple-950/30 dark:to-pink-950/20 border border-purple-200 dark:border-purple-800 rounded-2xl p-6"
+          >
+            <div className="flex items-center gap-2 mb-1">
+              <PenLine size={16} className="text-purple-500" />
+              <h3 className="font-semibold text-slate-900 dark:text-white text-sm">
+                AI Writer Flow
+              </h3>
+              <span className="ml-1 inline-flex items-center text-xs font-semibold bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded-full border border-purple-200 dark:border-purple-700">
+                USP
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-5">
+              Admin-only — drafts complete blog posts and case studies end-to-end, then publishes with AI-generated cover images.
+            </p>
+
+            {/* Content generation branch */}
+            <div className="mb-4">
+              <span className="text-xs font-medium text-purple-600 dark:text-purple-400 uppercase tracking-wider mb-3 block">
+                Content generation
+              </span>
+              <motion.div
+                variants={staggerContainerFast}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="flex flex-wrap items-center gap-2"
+              >
+                <FlowStep icon={<MessageSquare size={16} />} label="Topic prompt" sub="/admin/ai-writer" step={1} reduce={reduce} />
+                <FlowStep icon={<Shield size={16} />} label="Auth + rate limit" sub="NextAuth · 3/min" step={2} reduce={reduce} />
+                <FlowStep icon={<Sparkles size={16} />} label="Foundry Agent" sub="gpt-5.4 stream" step={3} reduce={reduce} />
+                <FlowStep icon={<Zap size={16} />} label="SSE draft" sub="typewriter UI" step={4} reduce={reduce} />
+                <FlowStep icon={<Search size={16} />} label="Edit + save" sub="MDX filesystem" step={5} reduce={reduce} />
+                <FlowStep icon={<RefreshCw size={16} />} label="Reindex RAG" sub="vector store" step={6} isLast reduce={reduce} />
+              </motion.div>
+            </div>
+
+            {/* Branch divider */}
+            <div className="flex items-center gap-3 my-4">
+              <div className="flex-1 h-px bg-purple-200 dark:bg-purple-800" />
+              <span className="text-xs text-purple-500 dark:text-purple-400 font-medium whitespace-nowrap">
+                + optional image generation branch
+              </span>
+              <div className="flex-1 h-px bg-purple-200 dark:bg-purple-800" />
+            </div>
+
+            {/* Image generation branch */}
+            <div>
+              <span className="text-xs font-medium text-pink-600 dark:text-pink-400 uppercase tracking-wider mb-3 block">
+                Cover image (on demand)
+              </span>
+              <motion.div
+                variants={staggerContainerFast}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="flex flex-wrap items-center gap-2"
+              >
+                <FlowStep icon={<Upload size={16} />} label="Generate cover" sub="one-click" step={1} reduce={reduce} />
+                <FlowStep icon={<Sparkles size={16} />} label="gpt-image-2-1" sub="East US 2" step={2} reduce={reduce} />
+                <FlowStep icon={<Database size={16} />} label="Blob Storage" sub="blog-images/" step={3} reduce={reduce} />
+                <FlowStep icon={<Globe size={16} />} label="Public URL" sub="embedded in MDX" step={4} isLast reduce={reduce} />
+              </motion.div>
+            </div>
+
+            <p className="mt-5 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              The AI Writer calls the same Azure AI Foundry agent as the chatbot, but with a structured system prompt scoped to the selected content type (blog post, case study, etc.). Content streams token-by-token via AI SDK v6 SSE. The image branch calls a separate Azure OpenAI endpoint (deployment{" "}
+              <code className="font-mono bg-slate-100 dark:bg-slate-800 px-1 rounded">gpt-image-2-1</code>
+              , East US 2), uploads the PNG to Blob Storage, and injects the public URL into the draft — all in one click.
+            </p>
+          </motion.div>
         </div>
       </section>
 
@@ -915,9 +1016,9 @@ export default function ArchitectureDiagram() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="mt-4 text-xs text-slate-500 dark:text-slate-400"
           >
-            AI token costs vary with chatbot usage. The gpt-4o GlobalStandard
-            deployment is capped at 10K TPM to prevent runaway spend. App Service
-            runs on a B1 plan (~$13/month); all other services are free tier or pay-per-use.
+          AI token costs vary with chatbot usage. gpt-5.4 (primary) and gpt-4o
+          (secondary) are used in the Foundry project; image generation uses gpt-image-2
+          separately. App Service runs on a B1 plan (~$13/month); all other services are free tier or pay-per-use.
           </motion.p>
         </div>
       </section>

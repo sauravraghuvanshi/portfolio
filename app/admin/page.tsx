@@ -12,6 +12,7 @@ import {
   Clock,
   PieChart as PieIcon,
   BarChart3,
+  Crosshair,
 } from "lucide-react";
 import { StatCard } from "@/components/admin/ui/StatCard";
 import { MotionCard } from "@/components/admin/ui/MotionCard";
@@ -33,7 +34,8 @@ export default function AdminDashboard() {
     m.totals.project +
     m.totals.talk +
     m.totals.event +
-    m.totals.certification;
+    m.totals.certification +
+    m.radarCount;
 
   const lastYear = m.timeline.at(-1);
   const prevYear = m.timeline.at(-2);
@@ -111,7 +113,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Per-kind cards */}
-      <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 xl:grid-cols-6">
+      <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 xl:grid-cols-7">
         <StatCard
           label="Blogs"
           value={m.totals.blog}
@@ -158,6 +160,13 @@ export default function AdminDashboard() {
           accent="text-emerald-400"
           sparkline={m.sparklines.certification}
           delay={0.3}
+        />
+        <StatCard
+          label="Tech Radar"
+          value={m.radarCount}
+          icon={<Crosshair />}
+          accent="text-teal-400"
+          delay={0.35}
         />
       </div>
 

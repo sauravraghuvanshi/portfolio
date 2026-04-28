@@ -38,15 +38,6 @@ function envKeysFor(keys: string[]): { key: string; present: boolean }[] {
   return keys.map((key) => ({ key, present: present(key) }));
 }
 
-function deriveStatus(keys: { key: string; present: boolean }[]): InfraService["status"] {
-  if (keys.length === 0) return "configured";
-  const allPresent = keys.every((k) => k.present);
-  const somePresent = keys.some((k) => k.present);
-  if (allPresent) return "operational";
-  if (somePresent) return "configured";
-  return "missing";
-}
-
 let cachedNextVersion: string | null = null;
 function readNextVersion(): string {
   if (cachedNextVersion !== null) return cachedNextVersion;
@@ -68,7 +59,7 @@ export function getInfraMetrics(): InfraMetrics {
       name: "Azure App Service",
       category: "compute",
       region: process.env.WEBSITE_REGION ?? "Central India",
-      tier: process.env.WEBSITE_SKU ?? process.env.APP_SERVICE_TIER ?? "Free F1",
+      tier: process.env.WEBSITE_SKU ?? process.env.APP_SERVICE_TIER ?? "B1",
       endpoint:
         process.env.WEBSITE_HOSTNAME
           ? `https://${process.env.WEBSITE_HOSTNAME}`
@@ -83,7 +74,7 @@ export function getInfraMetrics(): InfraMetrics {
       name: "Azure AI Foundry",
       category: "ai",
       region: process.env.AZURE_FOUNDRY_REGION ?? "East US 2",
-      tier: "GPT-5.4 + GPT-4o-mini · MCP enabled",
+      tier: "gpt-5.4 · gpt-4o · MCP enabled",
       endpoint: process.env.AZURE_FOUNDRY_ENDPOINT ?? null,
       notes:
         "Powers the RAG chatbot and AI Writer. Application-scoped Responses API; stateless mode.",
@@ -100,8 +91,8 @@ export function getInfraMetrics(): InfraMetrics {
       id: "imagegen",
       name: "Azure OpenAI · Image",
       category: "ai",
-      region: process.env.AZURE_OPENAI_IMAGE_REGION ?? "East US",
-      tier: process.env.AZURE_OPENAI_IMAGE_DEPLOYMENT ?? "gpt-image-2",
+      region: process.env.AZURE_OPENAI_IMAGE_REGION ?? "East US 2",
+      tier: process.env.AZURE_OPENAI_IMAGE_DEPLOYMENT ?? "gpt-image-2-1",
       endpoint: process.env.AZURE_OPENAI_IMAGE_ENDPOINT ?? null,
       notes: "Cover image + inline image generation for AI Writer drafts.",
       envKeys: envKeysFor([
@@ -169,11 +160,6 @@ export function getInfraMetrics(): InfraMetrics {
       status: "operational",
     },
   ];
-
-  // derive status from env presence (best-effort).
-  for (const s of services) {
-    if (s.envKeys.length > 0) s.status = deriveStatus(s.envKeys);
-  }
 
   const techStack: InfraMetrics["techStack"] = [
     { name: "Next.js", version: readNextVersion(), role: "App Router · React 19 · standalone build" },

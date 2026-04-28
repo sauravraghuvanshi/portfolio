@@ -8,6 +8,7 @@ import {
   getTalks,
   getEvents,
   getCertifications,
+  getTechRadar,
   type BlogPost,
   type CaseStudy,
   type Project,
@@ -40,6 +41,7 @@ export interface AdminMetrics {
   totalDrafts: number;
   totalFeatured: number;
   blogReadingMinutes: number; // sum of reading minutes across published blogs
+  radarCount: number; // total tech radar entries
   recent: ActivityItem[]; // newest 12
   timeline: TimelinePoint[];
   categoryDistribution: { name: string; value: number }[];
@@ -84,6 +86,7 @@ export function getAdminMetrics(): AdminMetrics {
   const talks = getTalks(true);
   const events = getEvents(true);
   const certs = getCertifications(true);
+  const radar = getTechRadar();
 
   const totals: Record<ContentKind, number> = {
     blog: blogs.length,
@@ -249,6 +252,7 @@ export function getAdminMetrics(): AdminMetrics {
     blogReadingMinutes: blogs
       .filter((b) => b.status === "published")
       .reduce((s, b) => s + readingMinutes(b), 0),
+    radarCount: radar?.entries.length ?? 0,
     recent,
     timeline,
     categoryDistribution,

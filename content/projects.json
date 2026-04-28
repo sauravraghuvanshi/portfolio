@@ -2,18 +2,21 @@
   {
     "id": "portfolio-website",
     "title": "Portfolio Website — Azure Cloud Architecture",
-    "description": "Designed and built a production-grade portfolio website on Azure, treating it as a reference architecture. Runs on Azure App Service (B1, Central India) with a RAG-powered AI chatbot via Azure AI Foundry, GitHub Actions CI/CD, passwordless Managed Identity auth, and Application Insights monitoring. Every infrastructure decision is documented at /architecture.",
+    "description": "Production-grade portfolio built on Azure as a living reference architecture. Runs on Azure App Service (B1, Central India) with a RAG-powered AI chatbot and an AI Writer that drafts complete blog posts end-to-end — including AI-generated cover images via gpt-image-2. Powered by Azure AI Foundry (gpt-5.4 primary · gpt-4o secondary · text-embedding-3-small RAG), passwordless Managed Identity auth, GitHub Actions CI/CD, and Application Insights monitoring. Every infrastructure decision is documented at /architecture.",
     "outcomes": [
-      "Full Azure cloud infrastructure — App Service, AI Foundry, Blob Storage, App Insights, Managed Identity",
-      "RAG chatbot grounded on portfolio content using gpt-4o + file_search vector store",
+      "7 Azure services: App Service B1, AI Foundry (gpt-5.4), Azure OpenAI Image Gen (gpt-image-2), Blob Storage, App Insights, Managed Identity, GitHub Actions",
+      "AI Writer — drafts full blog posts and case studies end-to-end with AI-generated cover images (gpt-image-2-1, East US 2) in one click",
+      "RAG chatbot grounded on portfolio content using gpt-5.4 + file_search vector store + Microsoft Learn MCP tool",
       "Zero API keys in production — Managed Identity with Cognitive Services User + Azure AI Developer RBAC",
-      "~3 minute git push to live CI/CD via GitHub Actions and Kudu zipdeploy"
+      "~3 minute git push to live via GitHub Actions standalone zip deploy + automated smoke tests across 13 routes"
     ],
     "tags": [
       "Next.js",
       "Azure",
       "AI Foundry",
       "RAG",
+      "AI Writer",
+      "gpt-image-2",
       "GitHub Actions",
       "Managed Identity"
     ],
@@ -25,11 +28,12 @@
       "Next.js 16",
       "Azure App Service",
       "Azure AI Foundry",
+      "Azure OpenAI Image Gen",
       "Azure Blob Storage",
       "Application Insights",
       "GitHub Actions",
       "TypeScript",
-      "Tailwind CSS"
+      "Tailwind CSS v4"
     ],
     "githubUrl": "https://github.com/sauravraghuvanshi/portfolio",
     "liveUrl": "https://saurav-portfolio.azurewebsites.net/architecture",

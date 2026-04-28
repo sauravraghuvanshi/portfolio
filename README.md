@@ -47,7 +47,7 @@ _Last synced: 2026-04-21_
 - **Noise Texture** — Subtle SVG noise overlay for visual depth
 - **AI Writer (Agentic)** — AI-powered content creation assistant at `/admin/ai-writer` backed by an **Azure AI Foundry Agent** (application-scoped Responses API, stateless `store: false`). Three grounding sources: portfolio knowledge base (RAG via vector store), Microsoft Learn MCP server, and Web Search. AAD auth (ManagedIdentity on App Service, AzureCliCredential locally). Auto-approves MCP tool calls up to 5 turns. Streams via SSE with `streamFoundryAgent()` to avoid 408 timeouts. Exponential-backoff retry on 429s. Supports an optional dedicated `AI_WRITER_AGENT_NAME` for a stronger model deployment separate from the chatbot agent. Content types: Blog, Case Study, Project, Talk, Event, Social.
 - **AI Writer ContentPreview** — Generated content rendered via `react-markdown` + `remark-gfm` with full styling: code blocks with language badge, cover image display, blockquotes, tables, inline code pills. Shows a pending chip when a cover image prompt exists but generation is queued.
-- **AI Image Generation** — AI Writer auto-generates images for `[GENERATE_IMAGE: "..."]` markers in `bodyMarkdown` using the `gpt-image-1` (or `dall-e-3`) deployment. Images upload to Azure Blob Storage and the markdown is rewritten with real `![alt](url)` syntax. Cover image is also extracted and stored separately. Configured via `AZURE_OPENAI_IMAGE_DEPLOYMENT`.
+- **AI Image Generation** — AI Writer auto-generates images for `[GENERATE_IMAGE: "..."]` markers in `bodyMarkdown` using the `gpt-image-2` (or `dall-e-3`) deployment. Images upload to Azure Blob Storage and the markdown is rewritten with real `![alt](url)` syntax. Cover image is also extracted and stored separately. Configured via `AZURE_OPENAI_IMAGE_DEPLOYMENT`.
 - **AI Chatbot** — Public-facing floating chat bubble powered by Azure AI Foundry Agent. True token-by-token SSE streaming via `streamFoundryAgent()` async generator in `lib/ai/foundry-agent.ts`. Client-side `useTypewriter` hook reveals text at ~170 chars/sec for a smooth ChatGPT-like feel. Uses `experimental_throttle: 50` on `useChat` for smooth React re-renders.
 - **Auto RAG Reindex** — Automatic reindexing pipeline triggers on every content save/delete via admin panel. Extracts portfolio content → uploads to Foundry → creates vector store → updates agent → cleans up old resources. Safe ordering ensures the agent is never left pointing to deleted data.
 - **Architecture Page** — `/architecture` — Interactive "Built on Azure" infrastructure page documenting the live Azure stack: 6 services with expandable cards, request flow diagrams, CI/CD pipeline visualization, cost breakdown table, and architectural decisions — all with Framer Motion stagger animations and `useReducedMotion()` support.
@@ -85,7 +85,7 @@ _Last synced: 2026-04-21_
 | Auth | NextAuth v5 (Credentials provider, JWT sessions) |
 | Editor | `@uiw/react-md-editor` with custom toolbar |
 | Image Storage | Azure Blob Storage (`@azure/storage-blob`) |
-| AI | Vercel AI SDK v6 (`ai`, `@ai-sdk/react`) · Azure AI Foundry Agent (application-scoped Responses API, SSE streaming) · Public chatbot + admin AI Writer · Image generation (`gpt-image-1` / `dall-e-3`) |
+| AI | Vercel AI SDK v6 (`ai`, `@ai-sdk/react`) · Azure AI Foundry Agent (application-scoped Responses API, SSE streaming) · Public chatbot + admin AI Writer · Image generation (`gpt-image-2` / `dall-e-3`) |
 | AI Backend | Azure AI Foundry (`saurav-portfolio-ai`, East US) — Agent with file_search + Web Search + Microsoft Learn MCP · App Service Managed Identity auth (`ManagedIdentityCredential` on prod, `AzureCliCredential` on dev) |
 | Deployment | Azure App Service (Linux, Node 20 LTS, B1) |
 | CI/CD | GitHub Actions → Kudu zip-deploy |
@@ -115,7 +115,7 @@ npm run dev                   # http://localhost:3000
 | `AZURE_OPENAI_ENDPOINT` | No | Azure AI Foundry endpoint (for AI Writer) |
 | `AZURE_OPENAI_API_KEY` | No | Azure AI Foundry API key (fallback; prefer managed identity) |
 | `AZURE_OPENAI_DEPLOYMENT` | No | GPT-4o deployment name (default: `gpt-4o`) |
-| `AZURE_OPENAI_IMAGE_DEPLOYMENT` | No | Image generation deployment (`gpt-image-1` or `dall-e-3`) |
+| `AZURE_OPENAI_IMAGE_DEPLOYMENT` | No | Image generation deployment (`gpt-image-2` or `dall-e-3`) |
 | `AZURE_FOUNDRY_PROJECT_ENDPOINT` | No | Azure AI Foundry project endpoint (for Agent calls) |
 | `AZURE_FOUNDRY_AGENT_NAME` | No | Foundry Agent name (chatbot + AI Writer fallback) |
 | `AI_WRITER_AGENT_NAME` | No | Optional dedicated agent for AI Writer (e.g. stronger model) — falls back to `AZURE_FOUNDRY_AGENT_NAME` |

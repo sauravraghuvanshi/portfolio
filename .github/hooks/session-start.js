@@ -3,6 +3,7 @@
  * Reads project-memory.md and outputs a systemMessage so the agent
  * automatically has full context without the user asking.
  */
+/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require("fs");
 const path = require("path");
 
