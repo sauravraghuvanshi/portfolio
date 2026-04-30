@@ -52,6 +52,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       ...((parsed.data.avoidWhen ?? existing.avoidWhen) && { avoidWhen: parsed.data.avoidWhen ?? existing.avoidWhen }),
       ...((parsed.data.movedFrom ?? existing.movedFrom) && { movedFrom: parsed.data.movedFrom ?? existing.movedFrom }),
       ...((parsed.data.tags ?? existing.tags)?.length && { tags: parsed.data.tags ?? existing.tags }),
+      status: parsed.data.status ?? existing.status ?? "draft",
     };
 
     saveRadarEntry(entry);

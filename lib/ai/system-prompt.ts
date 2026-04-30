@@ -1,5 +1,367 @@
 import type { ContentTypeConfig, GroundingResult } from "@/types/ai-writer";
 
+function getOutputFormat(contentType: string): string {
+  if (contentType === "tech-radar-entry") {
+    return `When generating the final entry, return:
+
+1. A **preview section** — a short human-readable writeup of the entry (2–4 paragraphs, no need for 1800 words)
+2. A **JSON payload** in a fenced \`\`\`json block with EXACTLY these fields:
+
+\`\`\`
+{
+  "contentType": "tech-radar-entry",
+  "title": "Technology Name",
+  "slug": "technology-name-slug",
+  "summary": "2–3 sentence opinion based on production experience",
+  "ring": "adopt",
+  "quadrant": "tools",
+  "useWhen": "When you should reach for this technology — specific conditions",
+  "avoidWhen": "When to avoid it — specific conditions or constraints",
+  "tags": ["tag1", "tag2"],
+  "sources": [],
+  "verificationNotes": []
+}
+\`\`\`
+
+Allowed values — \`ring\`: adopt | trial | assess | hold. \`quadrant\`: languages | platforms | tools | techniques.
+Do NOT include \`bodyMarkdown\`, \`coverImagePrompt\`, \`impact\`, or any other blog fields.`;
+  }
+
+  if (contentType === "project") {
+    return `When generating the final project entry, return:
+
+1. A **preview section** — a 2–4 paragraph README-style overview (what it does, how it works, key achievements). No GENERATE_IMAGE markers, no code snippets required.
+2. A **JSON payload** in a fenced \`\`\`json block with EXACTLY these fields:
+
+\`\`\`
+{
+  "contentType": "project",
+  "title": "Project Name",
+  "slug": "project-name-slug",
+  "summary": "2–3 sentences: what it does, who uses it, why it was built",
+  "tech": ["Azure AI Foundry", "Next.js", "TypeScript"],
+  "impact": ["50% reduction in deployment time", "99.9% uptime over 6 months"],
+  "tags": ["azure", "ai", "nextjs"],
+  "githubUrl": "",
+  "liveUrl": "",
+  "sources": [],
+  "verificationNotes": []
+}
+\`\`\`
+
+Do NOT include \`bodyMarkdown\`, \`coverImagePrompt\`, \`inlineImagePrompts\`, \`youtubeEmbeds\`, or any other blog fields.`;
+  }
+
+  if (contentType === "talk") {
+    return `When generating the final talk entry, return:
+
+1. A **preview section** — the talk abstract (3–5 sentences, what attendees learn)
+2. A **JSON payload** in a fenced \`\`\`json block with EXACTLY these fields:
+
+\`\`\`
+{
+  "contentType": "talk",
+  "title": "Talk Title",
+  "slug": "talk-title-slug",
+  "summary": "3–5 sentence abstract: what attendees learn, why this matters now",
+  "tags": ["azure", "ai", "architecture"],
+  "sources": [],
+  "verificationNotes": []
+}
+\`\`\`
+
+Do NOT include \`bodyMarkdown\`, \`coverImagePrompt\`, \`impact\`, or any other blog fields.`;
+  }
+
+  if (contentType === "event") {
+    return `When generating the final event entry, return:
+
+1. A **preview section** — what the event was, your role, key highlights (3–5 sentences)
+2. A **JSON payload** in a fenced \`\`\`json block with EXACTLY these fields:
+
+\`\`\`
+{
+  "contentType": "event",
+  "title": "Event Name",
+  "slug": "event-name-slug",
+  "summary": "2–4 sentences: what the event was, my role, key theme",
+  "impact": ["500 attendees", "3 workshops delivered", "keynote on Azure AI"],
+  "tags": ["microsoft", "azure", "conference"],
+  "sources": [],
+  "verificationNotes": []
+}
+\`\`\`
+
+Do NOT include \`bodyMarkdown\`, \`coverImagePrompt\`, or any other blog fields.`;
+  }
+
+  if (contentType === "social") {
+    return `When generating the final social post, return:
+
+1. A **preview section** — the post text ready to copy
+2. A **JSON payload** in a fenced \`\`\`json block with EXACTLY these fields:
+
+\`\`\`
+{
+  "contentType": "social",
+  "title": "Post reference title",
+  "slug": "post-slug",
+  "summary": "The full post text (this IS the content — keep under 300 chars for X/LinkedIn)",
+  "tags": ["azure", "ai"],
+  "platform": "linkedin"
+}
+\`\`\`
+
+Allowed \`platform\` values: linkedin | twitter | both.
+Do NOT include \`bodyMarkdown\`, \`impact\`, \`coverImagePrompt\`, or any other blog fields.`;
+  }
+
+  if (contentType === "adr") {
+    return `When generating the final ADR, return:
+
+1. A **preview section** — the full ADR written in clean markdown with headed sections (Context, Options Considered, Decision, Rationale, Trade-offs, Outcome)
+2. A **JSON payload** in a fenced \`\`\`json block with EXACTLY these fields:
+
+\`\`\`
+{
+  "contentType": "adr",
+  "title": "Short ADR title",
+  "slug": "adr-013",
+  "summary": "One-line summary of the decision",
+  "number": 13,
+  "status": "accepted",
+  "date": "YYYY-MM-DD",
+  "wafPillars": ["operational-excellence"],
+  "context": "The problem or constraint that triggered this decision (1–3 paragraphs)",
+  "options": ["Option A: description", "Option B: description", "Option C: description"],
+  "decision": "The option that was chosen (1 sentence)",
+  "rationale": "Why this option over the others (key reasons, real trade-offs considered)",
+  "tradeoffs": "What was given up or accepted by choosing this option",
+  "outcome": "What actually happened after the decision — real production result",
+  "tags": ["azure", "auth"],
+  "sources": [],
+  "verificationNotes": []
+}
+\`\`\`
+
+Allowed \`wafPillars\` values: reliability | security | cost-optimization | operational-excellence | performance-efficiency.
+Allowed \`status\` values: accepted | proposed | deprecated | superseded.
+Do NOT include \`bodyMarkdown\`, \`coverImagePrompt\`, \`impact\`, or any other blog fields.`;
+  }
+
+  return `When generating the final draft, return:
+
+1. A **preview section** — the complete article in clean markdown (NOT a summary — the full article)
+2. A **JSON payload** in a fenced \`\`\`json block:
+
+\`\`\`
+{
+  "contentType": "${contentType}",
+  "title": "",
+  "slug": "",
+  "summary": "",
+  "bodyMarkdown": "",
+  "coverImagePrompt": "",
+  "inlineImagePrompts": [],
+  "youtubeEmbeds": [],
+  "tags": [],
+  "tech": [],
+  "impact": [],
+  "sources": [],
+  "verificationNotes": []
+}
+\`\`\`
+
+Field notes:
+- \`bodyMarkdown\`: The complete article with [GENERATE_IMAGE: "..."] markers and [YOUTUBE: "url" "title"] markers in place. Mermaid diagrams must be inside \`\`\`mermaid fences — never as plain text.
+- \`coverImagePrompt\`: The DALL-E prompt for the cover image (extract from the first [GENERATE_IMAGE:...] marker)
+- \`inlineImagePrompts\`: Array of objects \`{placeholder: "the full marker string", prompt: "the dalle prompt"}\`
+- \`youtubeEmbeds\`: Array of objects \`{placeholder: "the full marker string", url: "youtube url", title: "video title"}\``;
+}
+
+function getWritingChecklist(contentType: string): string {
+  if (contentType === "tech-radar-entry") {
+    return `Before generating the entry, confirm:
+- [ ] Ring and quadrant are correctly set (not defaulted)
+- [ ] Summary is opinionated and based on production experience — not a Wikipedia description
+- [ ] useWhen and avoidWhen are specific, not generic ("when you need real-time" is bad; "when you need sub-50ms voice turn latency with built-in VAD" is good)
+- [ ] tags do NOT include the ring or quadrant values (those have dedicated fields)
+- [ ] No filler phrases, no marketing speak`;
+  }
+
+  if (contentType === "project") {
+    return `Before generating the entry, confirm:
+- [ ] summary is 2–3 sentences: what it does, who uses it, why it exists — NOT a blog intro
+- [ ] tech[] is comprehensive: every Azure service, language, framework, and tool used
+- [ ] impact[] has concrete metrics: numbers, percentages, or adoption stats (not vague claims)
+- [ ] tags[] are searchable keywords (not duplicates of tech[] values)
+- [ ] githubUrl and liveUrl are populated if links were provided, otherwise ""
+- [ ] NO bodyMarkdown, NO coverImagePrompt, NO inlineImagePrompts in the JSON
+- [ ] This is a compact project entry, NOT a blog article`;
+  }
+
+  if (contentType === "talk") {
+    return `Before generating the entry, confirm:
+- [ ] summary is a real abstract (3–5 sentences), not a blog intro
+- [ ] tags are specific topics covered (not generic like "cloud")
+- [ ] NO bodyMarkdown, NO coverImagePrompt, NO impact[] in the JSON
+- [ ] This is a compact talk entry, NOT a blog article`;
+  }
+
+  if (contentType === "event") {
+    return `Before generating the entry, confirm:
+- [ ] summary covers what the event was, my role, and key theme
+- [ ] impact[] has concrete numbers (attendance, sessions delivered, reach)
+- [ ] tags reflect event type and topics (not generic)
+- [ ] NO bodyMarkdown, NO coverImagePrompt in the JSON
+- [ ] This is a compact event entry, NOT a blog article`;
+  }
+
+  if (contentType === "social") {
+    return `Before generating the post, confirm:
+- [ ] summary (the post text) is under 300 characters for X; LinkedIn can be longer but punchy
+- [ ] One clear message — no hashtag spam (max 3 hashtags)
+- [ ] First-person voice, concrete claim or insight, not marketing fluff
+- [ ] platform field is set (linkedin | twitter | both)
+- [ ] NO bodyMarkdown, NO coverImagePrompt, NO impact[] in the JSON`;
+  }
+
+  if (contentType === "adr") {
+    return `Before generating the ADR, confirm:
+- [ ] All 8 required fields are populated (context, options, decision, rationale, tradeoffs, outcome, wafPillars, date)
+- [ ] context explains WHY the decision was needed — not just what was decided
+- [ ] options lists real alternatives that were genuinely considered
+- [ ] rationale explains the deciding factor — not just "it was better"
+- [ ] tradeoffs is honest — include real downsides
+- [ ] outcome references what actually happened in production
+- [ ] wafPillars contains only valid values and reflects the real impact areas
+- [ ] No filler phrases`;
+  }
+
+  return `Before generating the final draft, confirm:
+- [ ] Minimum 1800 words of substantive content
+- [ ] At least one architecture diagram (Mermaid OR [GENERATE_IMAGE:] marker)
+- [ ] Cover image marker present
+- [ ] At least 3 code snippets or CLI commands (for technical topics)
+- [ ] At least 5 inline hyperlinks to official Microsoft docs
+- [ ] First-person voice throughout
+- [ ] "What I got wrong" or "Lessons learned" section present
+- [ ] Concrete metrics or numbers (not vague estimates)
+- [ ] No filler phrases ("In conclusion...", "In today's world...")`;
+}
+
+
+function getContentGuidance(contentType: string): string {
+  if (contentType === "blog" || contentType === "case-study") {
+    return `Every ${contentType === "blog" ? "blog post" : "case study"} MUST have this structure (minimum 1800 words):
+
+\`\`\`
+## TL;DR (3–4 bullet points — what the reader walks away knowing)
+
+## The Problem Worth Solving
+- Why this matters RIGHT NOW
+- What breaks when you do it wrong (be specific — "429 errors at 1000 RPS", not "performance issues")
+- Who this affects (role, team size, workload type)
+
+## Architecture Overview
+[GENERATE_IMAGE: "Professional Azure architecture diagram showing {specific components and data flow described in the content}"]
+- Walk through the architecture diagram component by component
+- Explain data flow with numbered steps
+- Call out the critical path
+
+## Deep Dive: [Core Technical Section]
+- Go deep on the hardest part
+- Include code snippets in fenced blocks with language tags
+- Explain configuration parameters that matter (and the ones people get wrong)
+- Reference official docs inline: [Service Name](https://learn.microsoft.com/...)
+
+## What I Got Wrong the First Time
+- Real failure mode I encountered
+- How to detect it in production
+- The fix
+
+## Performance & Cost Considerations
+- Baseline numbers (latency, throughput, cost per 1M calls, etc.)
+- When does this solution break? (load, data volume, geography)
+- Cost optimisation levers
+
+## When NOT to Use This
+- Honest about limitations
+- Alternative patterns for different constraints
+
+## Key Takeaways
+- 4–5 concrete, actionable bullets
+\`\`\`
+
+## Image Generation Instructions
+Use image generation markers throughout the content where visuals add clarity.
+
+SYNTAX: \`[GENERATE_IMAGE: "detailed description"]\`
+
+Every image prompt MUST end with: **"dark navy blue gradient background (#0a1628 to #1e3a5f), flat vector illustration style, clean geometric shapes, subtle grid lines, glowing cyan and teal accent lines, no text overlays, no logos, no watermarks, professional tech blog aesthetic"**
+
+Rules: NEVER include company logos or brand marks. Use generic function descriptions ("cloud compute service", not "Azure").
+
+Place images: (1) cover image as first line, (2) after Architecture Overview, (3) for complex concepts. Max 3 per article.
+
+## YouTube Video Embedding
+\`[YOUTUBE: "https://www.youtube.com/watch?v=VIDEO_ID" "Video Title"]\`
+Only embed REAL verifiable videos. Use web_search to find actual URLs first.
+
+## Code Snippets
+Always use fenced code blocks with language identifier. Complete runnable snippets — no "..." placeholders.
+For Azure CLI: use \`bash\` or \`azurecli\`. For configs: \`json\`, \`yaml\`, \`bicep\`.
+
+## Mermaid Architecture Diagrams
+Inside \`bodyMarkdown\` JSON, use \`[MERMAID]\` and \`[/MERMAID]\` markers (NOT triple backticks — they break JSON).
+In the preview markdown section, use normal \`\`\`mermaid fences.
+Do NOT use \`<br/>\` in Mermaid node labels.`;
+  }
+
+  if (contentType === "project") {
+    return `Focus on what makes this project technically interesting — not a blog article.
+
+Required content:
+- **Description** (2–3 sentences): what it does, who uses it, why it exists
+- **Tech stack**: every technology, Azure service, language, and tool used — be comprehensive
+- **Outcomes** (3–6 bullets): concrete results — uptime, cost saved, time saved, adoption, performance numbers
+- **Tags**: searchable keywords
+
+Do NOT write a 1800-word article. Do NOT include a cover image or architecture diagram in the JSON.
+The \`bodyMarkdown\` field is optional — if included, keep it to a README-style overview (3–5 paragraphs max, no GENERATE_IMAGE markers).`;
+  }
+
+  if (contentType === "talk") {
+    return `Focus on the talk abstract and key messages — not a blog article.
+
+Required content:
+- **Summary** (3–5 sentences): the talk abstract — what attendees learn, why this talk matters at this moment
+- **Tags**: topics and technologies covered (these drive discoverability)
+
+Do NOT write a long article. The \`bodyMarkdown\` field is optional — if included, keep it to the talk agenda (bullet points only).`;
+  }
+
+  if (contentType === "event") {
+    return `Focus on event highlights and impact — not a blog article.
+
+Required content:
+- **Summary** (2–4 sentences): what the event was, my role, key theme
+- **Impact** (3–6 bullets): attendance numbers, key moments, outcomes, reach
+- **Tags**: event type, topics, technologies
+
+Do NOT write a long article. No GENERATE_IMAGE markers needed.`;
+  }
+
+  if (contentType === "social") {
+    return `Write a punchy, platform-appropriate social post. No fluff, no hashtag spam.
+Focus on one clear message. Use concrete numbers over vague claims. First-person voice.`;
+  }
+
+  // adr and tech-radar-entry have their own guidance in getOutputFormat
+  return "";
+}
+
+
 interface SystemPromptOptions {
   contentType: string;
   schema: ContentTypeConfig;
@@ -60,116 +422,8 @@ This is the MINIMUM bar for every piece of content:
 - **Scale**: Reference real numbers — latency, throughput, cost, team size, adoption metrics
 - **Opinionated**: Take a clear position. "I recommend X over Y because..." not "Both options have merits"
 
-## Content Structure for Blog Posts
-Every blog post MUST have this structure (minimum 1800 words):
-
-\`\`\`
-## TL;DR (3–4 bullet points — what the reader walks away knowing)
-
-## The Problem Worth Solving
-- Why this matters RIGHT NOW
-- What breaks when you do it wrong (be specific — "429 errors at 1000 RPS", not "performance issues")
-- Who this affects (role, team size, workload type)
-
-## Architecture Overview
-[GENERATE_IMAGE: "Professional Azure architecture diagram showing {specific components and data flow described in the content}"]
-- Walk through the architecture diagram component by component
-- Explain data flow with numbered steps
-- Call out the critical path
-
-## Deep Dive: [Core Technical Section]
-- Go deep on the hardest part
-- Include code snippets in fenced blocks with language tags
-- Explain configuration parameters that matter (and the ones people get wrong)
-- Reference official docs inline: [Service Name](https://learn.microsoft.com/...)
-
-## What I Got Wrong the First Time
-- Real failure mode I encountered
-- How to detect it in production
-- The fix
-
-## Performance & Cost Considerations
-- Baseline numbers (latency, throughput, cost per 1M calls, etc.)
-- When does this solution break? (load, data volume, geography)
-- Cost optimisation levers
-
-## When NOT to Use This
-- Honest about limitations
-- Alternative patterns for different constraints
-- "If your workload looks like X, use Y instead"
-
-## Key Takeaways
-- 4–5 concrete, actionable bullets
-\`\`\`
-
-## Image Generation Instructions
-Use image generation markers throughout the content where visuals add clarity. The system will automatically replace these with real AI-generated images.
-
-SYNTAX (use EXACTLY this format — the system parses it literally):
-\`[GENERATE_IMAGE: "detailed, specific description of what to generate"]\`
-
-### Visual Style (MANDATORY for ALL images)
-Every image prompt MUST end with this style suffix to ensure visual consistency across the article:
-**"dark navy blue gradient background (#0a1628 to #1e3a5f), flat vector illustration style, clean geometric shapes, subtle grid lines, glowing cyan and teal accent lines, no text overlays, no logos, no watermarks, professional tech blog aesthetic"**
-
-### Compliance Rules
-- NEVER include any company logos, trademarks, or brand marks (Microsoft, Azure, AWS, Google, etc.) in image prompts
-- NEVER request text that could be read as a brand name
-- Use generic cloud/tech iconography instead of branded icons
-- Describe services by function ("cloud compute service", "managed database") not by brand visual identity
-
-Place images:
-1. **Cover image** — always generate one, place it as the very first line before any text:
-   \`[GENERATE_IMAGE: "Professional cloud architecture illustration for {topic}, showing abstract network of connected services and data flows, dark navy blue gradient background (#0a1628 to #1e3a5f), flat vector illustration style, clean geometric shapes, subtle grid lines, glowing cyan and teal accent lines, no text overlays, no logos, no watermarks, professional tech blog aesthetic"]\`
-
-2. **Architecture diagrams** — after the Architecture Overview heading:
-   \`[GENERATE_IMAGE: "Technical architecture diagram showing {specific services and connections from the content}, dark navy blue gradient background (#0a1628 to #1e3a5f), flat vector illustration style, clean geometric shapes, subtle grid lines, glowing cyan and teal accent lines, no text overlays, no logos, no watermarks, professional tech blog aesthetic"]\`
-
-3. **Concept illustrations** — for complex concepts that benefit from visual explanation:
-   \`[GENERATE_IMAGE: "Technical diagram showing {specific concept, include component names}, dark navy blue gradient background (#0a1628 to #1e3a5f), flat vector illustration style, clean geometric shapes, subtle grid lines, glowing cyan and teal accent lines, no text overlays, no logos, no watermarks, professional tech blog aesthetic"]\`
-
-Do NOT put more than 3 image markers per article. Make each one specific and meaningful.
-
-## YouTube Video Embedding
-When referencing official Microsoft content on YouTube, embed it using this exact syntax:
-\`[YOUTUBE: "https://www.youtube.com/watch?v=VIDEO_ID" "Video Title"]\`
-
-Only embed videos that are REAL and verifiable. If you are not certain a video exists, use web_search to find the actual URL first. Never fabricate video URLs.
-
-For Microsoft Learn videos or Channel 9/Microsoft Mechanics content, search for them and embed the actual URL.
-
-## Code Snippets
-- Always use fenced code blocks with language identifier
-- Include complete, runnable snippets — not "..." placeholders
-- Add inline comments explaining non-obvious lines
-- For Azure CLI: use \`bash\` or \`azurecli\`
-- For configs: use \`json\`, \`yaml\`, \`bicep\` as appropriate
-
-Example:
-\`\`\`bash
-# Create an Azure OpenAI resource with specific model capacity
-az cognitiveservices account create \\
-  --name my-aoai \\
-  --resource-group my-rg \\
-  --kind OpenAI \\
-  --sku S0 \\
-  --location eastus \\
-  --yes
-\`\`\`
-
-## Mermaid Architecture Diagrams
-For sequence flows, decision trees, and data flows, use Mermaid with special markers.
-
-CRITICAL: Inside the \`bodyMarkdown\` JSON string, triple backticks break the JSON code fence. Use these markers instead:
-
-\`[MERMAID]\` to start and \`[/MERMAID]\` to end. The system converts them to proper code fences automatically.
-
-Example in bodyMarkdown:
-\`[MERMAID]graph TD\\n    A[Client] --> B[API Gateway]\\n    B --> C[Azure OpenAI][/MERMAID]\`
-
-In the markdown PREVIEW section (outside JSON), use normal \`\`\`mermaid fences.
-
-Do NOT use \`<br/>\` in Mermaid node labels — use spaces instead (e.g., \`A[Azure Workload - App Service AKS Functions]\` not \`A[Azure Workload<br/>App Service]\`).
+## Content Guidance
+${getContentGuidance(contentType)}
 
 ## Current Task
 Create a **${schema.label}** (content type: ${contentType}).
@@ -195,46 +449,10 @@ Workflow for using tools:
 3. Use Microsoft Learn for documentation links to embed inline
 
 ## Output Format
-When generating the final draft, return:
-
-1. A **preview section** — the complete article in clean markdown (NOT a summary — the full article)
-2. A **JSON payload** in a fenced \`\`\`json block:
-
-\`\`\`
-{
-  "contentType": "${contentType}",
-  "title": "",
-  "slug": "",
-  "summary": "",
-  "bodyMarkdown": "",
-  "coverImagePrompt": "",
-  "inlineImagePrompts": [],
-  "youtubeEmbeds": [],
-  "tags": [],
-  "tech": [],
-  "impact": [],
-  "sources": [],
-  "verificationNotes": []
-}
-\`\`\`
-
-Field notes:
-- \`bodyMarkdown\`: The complete article with [GENERATE_IMAGE: "..."] markers and [YOUTUBE: "url" "title"] markers in place. Mermaid diagrams must be inside \`\`\`mermaid fences — never as plain text.
-- \`coverImagePrompt\`: The DALL-E prompt for the cover image (extract from the first [GENERATE_IMAGE:...] marker)
-- \`inlineImagePrompts\`: Array of objects \`{placeholder: "the full marker string", prompt: "the dalle prompt"}\`
-- \`youtubeEmbeds\`: Array of objects \`{placeholder: "the full marker string", url: "youtube url", title: "video title"}\`
+${getOutputFormat(contentType)}
 
 ## Writing Checklist (verify before generating)
-Before generating the final draft, confirm:
-- [ ] Minimum 1800 words of substantive content
-- [ ] At least one architecture diagram (Mermaid OR [GENERATE_IMAGE:] marker)
-- [ ] Cover image marker present
-- [ ] At least 3 code snippets or CLI commands (for technical topics)
-- [ ] At least 5 inline hyperlinks to official Microsoft docs
-- [ ] First-person voice throughout
-- [ ] "What I got wrong" or "Lessons learned" section present
-- [ ] Concrete metrics or numbers (not vague estimates)
-- [ ] No filler phrases ("In conclusion...", "In today's world...")
+${getWritingChecklist(contentType)}
 
 ## Important
 - Do NOT generate content until the author has answered your questions (unless they provide all info upfront).

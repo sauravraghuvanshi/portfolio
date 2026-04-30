@@ -1,0 +1,235 @@
+{
+  "publishedAt": "2026-04-28",
+  "summary": "Architecture Decision Records documenting the key technical choices made when building this portfolio — a production Next.js 16 app on Azure. Each ADR captures the context, options evaluated, the decision made, and the real-world outcome.",
+  "entries": [
+    {
+      "id": "adr-001",
+      "number": 1,
+      "title": "Azure App Service over Container Apps, Static Web Apps, and Vercel",
+      "status": "accepted",
+      "date": "2025-12-01",
+      "wafPillars": ["cost-optimization", "operational-excellence"],
+      "context": "Needed a hosting target for a Next.js 16 standalone Node.js app that integrates with Azure AI Foundry via Managed Identity. The app requires server-side rendering, API routes, and a persistent process (not serverless cold-starts per-request). As a Cloud Solution Architect at Microsoft, choosing Azure was a given — but which Azure service?",
+      "options": [
+        "Azure Container Apps — container-based, scales to zero, but requires a Docker image and a container registry",
+        "Azure App Service B1 — PaaS, Node runtime, Managed Identity built-in, zip-deploy",
+        "Azure Static Web Apps — free, but Next.js SSR support is limited and requires API routes as Azure Functions",
+        "Vercel — best-in-class DX for Next.js, but not Azure; no Managed Identity for AI Foundry"
+      ],
+      "decision": "Azure App Service B1 on Linux, Node 20 LTS, deployed via standalone zip.",
+      "rationale": "App Service is the lowest-friction path: Managed Identity is available without configuration, zip-deploy is a single curl command, and Node 20 LTS runs the standalone build directly. Avoids Docker overhead (Container Apps) and function-per-route complexity (Static Web Apps). Dogfooding Azure is part of the portfolio's value proposition.",
+      "tradeoffs": "No edge functions or global CDN for HTML (static assets are served from the process). No ISR webhook revalidation — using time-based revalidation instead. B1 tier has limited CPU burst compared to higher tiers.",
+      "outcome": "Running reliably since January 2026. ~3 minute git push to live deployment. ~$13/month. Zero container management overhead. Managed Identity to AI Foundry works with zero secrets in code.",
+      "tags": ["hosting", "azure", "nextjs", "app-service"]
+    },
+    {
+      "id": "adr-002",
+      "number": 2,
+      "title": "Next.js `output: \"standalone\"` over default build for deployment",
+      "status": "accepted",
+      "date": "2025-12-05",
+      "wafPillars": ["operational-excellence", "performance-efficiency"],
+      "context": "Azure App Service zip-deploy works by uploading a zip and letting the process run. The default Next.js build produces a `.next/` folder that still requires a full `node_modules/` (~300MB) at runtime. This made the deploy zip large and slow, and required `npm install` post-deploy or bundling all dependencies.",
+      "options": [
+        "Default Next.js build — deploy `package.json` + `.next/` + run `npm install` on App Service (Oryx build)",
+        "`output: 'standalone'` — Next.js traces dependencies and produces a minimal self-contained `server.js` + minimal `node_modules/`",
+        "Docker container — full control but adds registry + image build step"
+      ],
+      "decision": "`output: 'standalone'` in `next.config.ts`, with a `postbuild.mjs` script that copies `public/` and `.next/static/` into `.next/standalone/`.",
+      "rationale": "Standalone mode reduces the deploy artifact from ~300MB to ~30MB. The app starts instantly with `node server.js` — no npm install needed on the server. This also disables Oryx source builds on App Service (`SCM_DO_BUILD_DURING_DEPLOYMENT=false`), which were unreliable with Next.js 16.",
+      "tradeoffs": "Requires a `postbuild.mjs` copy step — if you forget this, static assets 404. Standalone mode does not bundle `public/` automatically. Turbopack cannot be used in production builds on Windows due to ENOENT issues (`NEXT_TURBOPACK=0` needed in CI).",
+      "outcome": "Deploy zips are ~30MB. GitHub Actions build completes in ~2 minutes. `node server.js` starts in ~3 seconds on B1. No post-deploy install steps needed.",
+      "tags": ["nextjs", "build", "deployment", "performance"]
+    },
+    {
+      "id": "adr-003",
+      "number": 3,
+      "title": "NextAuth v5 credentials-only over OAuth providers for admin access",
+      "status": "accepted",
+      "date": "2025-12-10",
+      "wafPillars": ["security", "operational-excellence"],
+      "context": "The portfolio has an admin panel (`/admin`) for managing all content. Only one person (Saurav) needs access. Authentication was required to protect CRUD APIs and prevent public access to the editor.",
+      "options": [
+        "OAuth (GitHub / Microsoft Entra) — delegated identity, no password management, but adds provider dependency and callback URL configuration",
+        "NextAuth v5 Credentials provider — username/password from env vars, JWT sessions, no external dependency",
+        "Custom JWT middleware — roll-your-own, more control but more code and more surface area for mistakes",
+        "No auth, IP allowlist — not viable on a shared cloud IP"
+      ],
+      "decision": "NextAuth v5 beta with Credentials provider. Username and password stored in environment variables. JWT session strategy with brute-force protection.",
+      "rationale": "Single-user admin with no need for social login. Credentials from env vars means zero database and zero OAuth app registration. NextAuth handles CSRF, session lifecycle, and middleware integration. Brute-force protection (in-memory lockout with exponential backoff) covers the main attack vector.",
+      "tradeoffs": "NextAuth v5 is still in beta — some APIs changed between beta versions. JWT sessions are stateless (cannot revoke individual sessions server-side without adding a denylist). Password rotation requires an env var update and redeployment.",
+      "outcome": "Admin panel has been in production since January 2026 with zero authentication incidents. Brute-force protection has blocked several automated scan attempts (visible in Application Insights).",
+      "tags": ["auth", "security", "nextauth", "admin"]
+    },
+    {
+      "id": "adr-004",
+      "number": 4,
+      "title": "Tailwind CSS v4 CSS-first config over v3 config-file approach",
+      "status": "accepted",
+      "date": "2025-12-12",
+      "wafPillars": ["operational-excellence"],
+      "context": "Starting a new Next.js project in late 2025, Tailwind CSS v4 was available as a release candidate. v4 introduces a CSS-first configuration model using `@theme` in `globals.css`, replacing the JavaScript `tailwind.config.js` file. The choice was to adopt v4 early or stay on the stable v3.",
+      "options": [
+        "Tailwind CSS v3 — stable, well-documented, config-file based, large ecosystem of examples",
+        "Tailwind CSS v4 (CSS-first) — design tokens in `globals.css` via `@theme`, faster build, smaller config surface, but fewer examples available"
+      ],
+      "decision": "Tailwind CSS v4 with CSS-first configuration. All design tokens (`--color-brand-*`, `--color-accent-*`, `--shadow-soft`) live in `app/globals.css` under `@theme`. A minimal `tailwind.config.ts` exists only as an IDE compatibility stub with `darkMode: 'class'`.",
+      "rationale": "v4 collocates the design system with CSS where it belongs, rather than a JS config file. The `@theme` block is readable and self-documenting. v4 also has faster incremental builds. Adopting it early is appropriate for a portfolio that demonstrates cutting-edge stack choices.",
+      "tradeoffs": "Dynamic class interpolation (e.g., `bg-${color}-500`) is impossible — Tailwind purges interpolated classes. All dynamic styles must use full-string lookup maps. Fewer community examples for v4 patterns in late 2025.",
+      "outcome": "Zero CSS configuration drift. Design tokens are co-located with the CSS file. Build times are fast. The lookup-map constraint for dynamic classes is well-enforced by a project-wide rule that has prevented purge issues.",
+      "tags": ["css", "tailwind", "design-system", "frontend"]
+    },
+    {
+      "id": "adr-005",
+      "number": 5,
+      "title": "Azure AI Foundry Agent over direct Azure OpenAI API calls",
+      "status": "accepted",
+      "date": "2026-01-08",
+      "wafPillars": ["reliability", "operational-excellence"],
+      "context": "The portfolio needed an AI chatbot grounded on portfolio content, and an AI Writer that can draft blog posts, case studies, and other content types. The choice was between calling the Azure OpenAI chat completions API directly, or using the Azure AI Foundry Agent API which wraps a model with persistent tools.",
+      "options": [
+        "Direct Azure OpenAI chat completions API — full control, simple, well-understood, but requires manual tool calling, RAG retrieval, and prompt management",
+        "Azure AI Foundry Agent API — managed agent with built-in tools (file_search, web_search, code_interpreter, MCP), stateful or stateless sessions, SSE streaming",
+        "LangChain / LlamaIndex — framework abstraction, but adds dependency weight and hides the Azure-native patterns"
+      ],
+      "decision": "Azure AI Foundry Agent with application-scoped Responses API in stateless mode (`store: false`). Agent configured with `file_search` (RAG), web search, and Microsoft Learn MCP tool.",
+      "rationale": "Foundry Agents provide managed tool execution — the agent decides when to call file_search, web_search, or MCP, without custom orchestration code. The Responses API streams tool use and text deltas over SSE, enabling true token-by-token streaming. Stateless mode (`store: false`) avoids persistent thread storage costs while retaining full streaming fidelity.",
+      "tradeoffs": "Foundry Agent API is newer and had breaking changes between SDK versions. Stateless mode means no conversation history persistence — each chat message is independent. MCP tool calls require auto-approval logic to avoid infinite approval loops.",
+      "outcome": "The chatbot and AI Writer share the same agent infrastructure. RAG grounding, web search, and Microsoft Learn documentation are all available without custom retrieval code. Agent handles multi-turn reasoning internally per request.",
+      "tags": ["ai", "azure", "foundry", "rag", "chatbot"]
+    },
+    {
+      "id": "adr-006",
+      "number": 6,
+      "title": "RAG via AI Foundry `file_search` vector store over custom embedding pipeline",
+      "status": "accepted",
+      "date": "2026-01-10",
+      "wafPillars": ["cost-optimization", "operational-excellence"],
+      "context": "The chatbot needs to answer questions about Saurav's portfolio content (projects, case studies, blog posts, events, talks). A RAG pipeline was needed to ground the model on real content rather than hallucinating. Options ranged from building a custom embedding + vector database pipeline to using managed services.",
+      "options": [
+        "Custom pipeline: Azure OpenAI embeddings + Azure AI Search vector index — full control, but requires Azure AI Search provisioning (~$70/month for Basic tier) and custom retrieval logic",
+        "Custom pipeline: Azure OpenAI embeddings + Postgres pgvector — cheaper but requires a managed Postgres instance",
+        "AI Foundry file_search — managed vector store, embeddings handled automatically, included with AI Foundry, no separate service needed"
+      ],
+      "decision": "AI Foundry `file_search` with `text-embedding-3-small`. Portfolio content is extracted to `content/portfolio-rag.json`, uploaded to a Foundry vector store, and the agent is pointed at it. The admin panel triggers reindex via `/api/admin/reindex`.",
+      "rationale": "file_search requires zero additional Azure services — no Azure AI Search, no separate database. The managed embedding model (`text-embedding-3-small`) is provisioned automatically. Reindex is a single API call. For a portfolio-scale content corpus (~50 documents), this is the correct cost-optimized choice.",
+      "tradeoffs": "Less control over chunking strategy and retrieval parameters compared to Azure AI Search. Cannot do hybrid search (keyword + vector) without switching to Azure AI Search. Vector store is coupled to the Foundry project.",
+      "outcome": "Zero additional Azure services for RAG. Reindex completes in ~10 seconds. Chatbot accurately retrieves and cites portfolio content. Monthly cost for embeddings is negligible at portfolio query volumes.",
+      "tags": ["rag", "ai", "vector-search", "azure-foundry", "cost"]
+    },
+    {
+      "id": "adr-007",
+      "number": 7,
+      "title": "Azure Blob Storage for media over git-tracked binaries",
+      "status": "accepted",
+      "date": "2026-01-15",
+      "wafPillars": ["performance-efficiency", "cost-optimization"],
+      "context": "The admin panel allows uploading cover images for blog posts, case studies, events, and certifications. These images need to be stored somewhere accessible to both the Next.js app and public visitors. Options were to store them in the git repo, or an external blob store.",
+      "options": [
+        "Git-tracked images in `public/` — simple, zero cost, but bloats the repo and makes large images slow to clone and deploy",
+        "Azure Blob Storage with public anonymous read access — images served from a CDN-backed endpoint, separate from the app deployment",
+        "Cloudinary or similar image CDN — automatic resizing, but adds a third-party dependency and cost"
+      ],
+      "decision": "Azure Blob Storage (`sauravportfoliomedia` storage account, `blog-images` container, Hot LRS) with public anonymous blob access. Upload via `@azure/storage-blob` SDK in the admin API route.",
+      "rationale": "Keeps the git repo clean. Images are served directly from Azure Blob Storage's public endpoint without proxying through the Next.js server. Managed Identity can authenticate the upload API without connection strings in production. LRS Hot tier is the lowest-cost option appropriate for a portfolio.",
+      "tradeoffs": "Images are not automatically resized or converted to AVIF/WebP — the app uses `next/image` for optimization at render time, which adds server-side CPU for image optimization on the B1 tier. Public blob access means no per-image authentication.",
+      "outcome": "Git repo stays lean (~30MB deploy zip). Upload latency from admin panel is ~1-2 seconds for typical cover images. Zero CDN cost beyond standard Blob Storage egress (~$0.02/GB in Central India region).",
+      "tags": ["storage", "media", "azure", "blob", "images"]
+    },
+    {
+      "id": "adr-008",
+      "number": 8,
+      "title": "GitHub Actions CI/CD over Azure DevOps Pipelines",
+      "status": "accepted",
+      "date": "2026-01-18",
+      "wafPillars": ["operational-excellence"],
+      "context": "The portfolio needed an automated build and deploy pipeline. As a Microsoft employee, Azure DevOps was the obvious enterprise choice. However, the portfolio is on a personal GitHub repository, not an Azure DevOps organization.",
+      "options": [
+        "Azure DevOps Pipelines — enterprise-grade, familiar from work, but requires a separate DevOps organization and cross-system authentication from GitHub",
+        "GitHub Actions — co-located with the source code, free minutes for public repos, direct integration with GitHub repository",
+        "Manual deployment via Azure CLI — simple but error-prone and not automated"
+      ],
+      "decision": "GitHub Actions with a single `deploy.yml` workflow: lint → build → zip `.next/standalone/` → Kudu zip-deploy → smoke-test live routes.",
+      "rationale": "The pipeline definition lives alongside the code in `.github/workflows/`. GitHub Actions has generous free minutes. Secrets (`AZURE_DEPLOY_USER`, `AZURE_DEPLOY_PASSWORD`) are stored in GitHub repository secrets. The workflow also runs post-deploy smoke tests using curl to verify live routes return 200.",
+      "tradeoffs": "GitHub Actions build runners are Ubuntu (not Windows), requiring `NEXT_TURBOPACK=0` to avoid a Windows-specific Turbopack ENOENT bug during local dev. Cannot use Azure DevOps environments or approval gates without additional configuration.",
+      "outcome": "Every `git push origin main` triggers a full build and deploy. Deploy completes in ~3 minutes. Post-deploy smoke tests catch broken routes before the user notices. Zero manual deployment steps since January 2026.",
+      "tags": ["ci-cd", "github-actions", "devops", "automation"]
+    },
+    {
+      "id": "adr-009",
+      "number": 9,
+      "title": "Managed Identity over API keys for Azure AI service authentication",
+      "status": "accepted",
+      "date": "2026-01-20",
+      "wafPillars": ["security"],
+      "context": "The portfolio calls Azure AI Foundry from the App Service backend for chatbot responses and AI Writer generation. Azure services support two authentication patterns: API keys (static secrets stored in environment variables) or Managed Identity (token-based, no secrets).",
+      "options": [
+        "API keys in environment variables — simple, works everywhere, but keys can be leaked in logs, committed to git accidentally, or exposed via env var listing",
+        "Managed Identity — App Service has a system-assigned identity; grant it `Cognitive Services User` role on the AI Foundry resource; `ManagedIdentityCredential` handles token refresh automatically",
+        "Azure Key Vault — store API keys in Key Vault, fetch at startup; adds Key Vault dependency and startup latency"
+      ],
+      "decision": "System-assigned Managed Identity on App Service with `Cognitive Services User` + `Azure AI Developer` RBAC roles on the AI Foundry resource. `ManagedIdentityCredential` from `@azure/identity` on production (detected via `WEBSITE_SITE_NAME` env var). `AzureCliCredential` on local dev (requires `az login`).",
+      "rationale": "Zero secrets in code or environment variables for production. Token rotation is automatic — no key rotation ceremonies. This is the Microsoft-recommended pattern for Azure-to-Azure authentication and directly demonstrates the principle in a portfolio for a Solution Architect.",
+      "tradeoffs": "Local development requires `az login` with the correct tenant. If the managed identity loses its role assignment, the app fails silently on cold start. `AzureCliCredential` requires Azure CLI installed locally.",
+      "outcome": "Zero API keys in the App Service configuration for AI authentication. Token refresh is transparent. The approach has been a talking point in customer conversations — demonstrating it live on the portfolio site.",
+      "tags": ["security", "managed-identity", "azure", "authentication", "zero-secrets"]
+    },
+    {
+      "id": "adr-010",
+      "number": 10,
+      "title": "Client-side Application Insights over server-side Node.js SDK telemetry",
+      "status": "accepted",
+      "date": "2026-01-25",
+      "wafPillars": ["performance-efficiency", "cost-optimization"],
+      "context": "Monitoring was needed for the portfolio — page views, performance metrics, and exceptions. Azure Application Insights supports both a browser JavaScript SDK and a Node.js server SDK. The choice was which to instrument.",
+      "options": [
+        "Server-side Node.js SDK (`applicationinsights` npm package) — server requests, dependencies, and exceptions tracked automatically; adds cold-start overhead and memory usage on B1 tier",
+        "Client-side browser SDK (`@microsoft/applicationinsights-web`) — page views, client performance, and client-side exceptions; zero server overhead; initialized in a React component",
+        "Both — comprehensive but adds complexity and doubles telemetry ingestion cost"
+      ],
+      "decision": "Client-side Application Insights only, via `@microsoft/applicationinsights-web`. Initialized in `components/AppInsightsProvider.tsx` as a client component loaded in `app/layout.tsx`.",
+      "rationale": "For a portfolio, client-side metrics (page views, Lighthouse-equivalent performance, user navigation) are the most valuable signals. Server-side SDK would add ~50MB memory and initialization latency to the cold start path on B1. Client-side captures the data that matters at zero server cost.",
+      "tradeoffs": "No server-side request tracing (cannot see API route latency in App Insights). Ad blockers will suppress client-side telemetry for some users. Cannot track server-side AI API call latency without adding the server SDK.",
+      "outcome": "Application Insights captures page views and navigation events with zero impact on server performance. The dashboard shows visitor geography, page popularity, and exception rates. Server memory footprint stays lean for the B1 tier.",
+      "tags": ["monitoring", "observability", "application-insights", "performance"]
+    },
+    {
+      "id": "adr-011",
+      "number": 11,
+      "title": "Zod `safeParse` validation at every API boundary",
+      "status": "accepted",
+      "date": "2026-02-01",
+      "wafPillars": ["reliability", "security"],
+      "context": "The admin panel has CRUD API routes for 6 content types. Each route receives JSON payloads from the admin UI. Without validation, malformed payloads could cause unhandled exceptions, corrupt content files, or open injection vectors.",
+      "options": [
+        "No validation — trust the admin UI to send correct data; fast to build but fragile",
+        "Manual validation — hand-written type checks; verbose and error-prone",
+        "Zod schemas — declarative schema definition, `parse` throws on invalid input, `safeParse` returns a result object with errors"
+      ],
+      "decision": "Zod v4 `safeParse` at every API route boundary. All schemas are co-located in `lib/api-schemas.ts`. Routes return structured 400 errors with Zod's error messages when validation fails.",
+      "rationale": "`safeParse` does not throw — the route can inspect `result.error` and return a clean 400 response. Schemas serve as documentation of the expected payload shape. Zod v4 introduces a smaller bundle and faster parsing than v3. Centralizing schemas in `api-schemas.ts` makes them reusable across related routes (e.g., POST and PUT for the same resource).",
+      "tradeoffs": "Zod v4 has some API changes from v3 (`.optional()` behaviour, `.nullable()` semantics). Schema maintenance is needed when content types evolve — forgetting to update the schema causes false 400 errors.",
+      "outcome": "Zero unhandled exceptions from malformed API payloads since January 2026. Schema validation errors are returned with structured field-level messages that the admin UI displays inline. The schemas act as living documentation of each content type's shape.",
+      "tags": ["validation", "api", "zod", "security", "reliability"]
+    },
+    {
+      "id": "adr-012",
+      "number": 12,
+      "title": "Events override merge pattern over direct JSON editing",
+      "status": "accepted",
+      "date": "2026-02-10",
+      "wafPillars": ["reliability", "operational-excellence"],
+      "context": "Events data (32 speaking engagements) is auto-generated from DOCX source files via `scripts/generate-events.mjs`. The generator produces correct IDs and dates but cannot extract professional summaries, curated highlights, or correct topic tags. Manual corrections were needed, but direct edits to `events.json` would be overwritten on the next generation run.",
+      "options": [
+        "Direct edits to `events.json` — simple but fragile; a regeneration run destroys all manual work",
+        "Disable regeneration after first run — prevents overwriting but makes adding new events from DOCX impossible",
+        "Override file (`events-overrides.json`) merged on top of generated data — generator reads overrides and deep-merges them; manual corrections survive regeneration"
+      ],
+      "decision": "`events-overrides.json` as a permanent override layer. The generator reads both files: generated data provides the base, overrides are deep-merged by event slug. `events.json` is the final merged output and is never edited directly.",
+      "rationale": "Separates generated data (from DOCX) from curated data (manual). New events from DOCX are picked up automatically. Corrections in `events-overrides.json` persist across regenerations. The override file is small and focused — only the fields that differ from the generated output.",
+      "tradeoffs": "Two files to maintain instead of one. Developers must know the rule: never edit `events.json`, always edit `events-overrides.json`. A lint or pre-commit hook checking for direct `events.json` modifications would be ideal but is not yet implemented.",
+      "outcome": "All 32 events have accurate summaries, topics, and impact fields. Running `npm run generate-events` adds new events without destroying existing manual corrections. The pattern has survived 4 regeneration runs without data loss.",
+      "tags": ["content", "events", "data-pipeline", "reliability"]
+    }
+  ]
+}

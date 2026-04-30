@@ -8,7 +8,7 @@ interface PageProps {
 
 export default async function EditEventPage({ params }: PageProps) {
   const { slug } = await params;
-  const event = getEvent(slug);
+  const event = getEvent(slug, true);
 
   if (!event) {
     notFound();

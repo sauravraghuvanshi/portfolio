@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import type { BlogPostMeta, CaseStudyMeta, Project, Talk, EventMeta, Certification, RadarEntry, TechRadar } from "./content";
+import type { BlogPostMeta, CaseStudyMeta, Project, Talk, EventMeta, Certification, RadarEntry, TechRadar, ADREntry, ADRGallery } from "./content";
 import { uploadToBlob } from "./azure-storage";
 import { contentDir } from "./content-dir";
 const blogDir = path.join(contentDir, "blog");
@@ -304,6 +304,45 @@ export function deleteRadarEntry(id: string): boolean {
   if (filtered.length === radar.entries.length) return false;
   radar.entries = filtered;
   writeTechRadar(radar);
+  return true;
+}
+
+// --- ADR Gallery ---
+
+const decisionsFile = path.join(contentDir, "decisions.json");
+
+function readADRGallery(): ADRGallery {
+  if (!fs.existsSync(decisionsFile)) {
+    return { publishedAt: new Date().toISOString().slice(0, 10), summary: "", entries: [] };
+  }
+  const raw = fs.readFileSync(decisionsFile, "utf-8").replace(/^\uFEFF/, "");
+  return JSON.parse(raw) as ADRGallery;
+}
+
+function writeADRGallery(gallery: ADRGallery): void {
+  fs.writeFileSync(decisionsFile, JSON.stringify(gallery, null, 2) + "\n", "utf-8");
+}
+
+export function saveADREntry(entry: ADREntry): void {
+  sanitizeSlug(entry.id);
+  const gallery = readADRGallery();
+  const idx = gallery.entries.findIndex((e) => e.id === entry.id);
+  if (idx >= 0) {
+    gallery.entries[idx] = entry;
+  } else {
+    gallery.entries.push(entry);
+  }
+  gallery.entries.sort((a, b) => a.number - b.number);
+  writeADRGallery(gallery);
+}
+
+export function deleteADREntry(id: string): boolean {
+  sanitizeSlug(id);
+  const gallery = readADRGallery();
+  const filtered = gallery.entries.filter((e) => e.id !== id);
+  if (filtered.length === gallery.entries.length) return false;
+  gallery.entries = filtered;
+  writeADRGallery(gallery);
   return true;
 }
 

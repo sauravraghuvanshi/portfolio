@@ -122,6 +122,49 @@ export const CONTENT_TYPES: Record<AIContentType, ContentTypeConfig> = {
     ],
     saveable: false,
   },
+  adr: {
+    key: "adr",
+    label: "Architecture Decision",
+    description: "Document architecture decisions with WAF pillars and real trade-offs",
+    icon: "GitBranch",
+    requiredQuestions: [
+      "ADR number (e.g., 13)",
+      "Short title (what was decided)",
+      "Context — what problem or constraint triggered this decision",
+      "Options considered (list 2–4)",
+      "The decision made",
+      "Rationale — why this option over the others",
+      "Trade-offs — what you gave up or accepted",
+      "Outcome — what actually happened after the decision",
+      "WAF pillars affected (reliability / security / cost-optimization / operational-excellence / performance-efficiency)",
+    ],
+    optionalQuestions: [
+      "Tags (e.g., azure, nextjs, auth)",
+      "Date (defaults to today)",
+    ],
+    saveable: true,
+    saveEndpoint: "/api/admin/decisions",
+  },
+  "tech-radar-entry": {
+    key: "tech-radar-entry",
+    label: "Tech Radar Entry",
+    description: "Add a technology opinion to your radar — Adopt, Trial, Assess, or Hold",
+    icon: "Crosshair",
+    requiredQuestions: [
+      "Technology name",
+      "Quadrant (languages / platforms / tools / techniques)",
+      "Ring (adopt / trial / assess / hold)",
+      "Summary — your opinion based on production experience",
+      "When to use it",
+      "When to avoid it",
+    ],
+    optionalQuestions: [
+      "Moved from (previous ring, if changed)",
+      "Tags",
+    ],
+    saveable: true,
+    saveEndpoint: "/api/admin/tech-radar",
+  },
 };
 
 export function getContentTypeConfig(type: AIContentType): ContentTypeConfig {

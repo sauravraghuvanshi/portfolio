@@ -565,6 +565,22 @@
         "ai",
         "developer-tools"
       ]
+    },
+    {
+      "id": "openai-voice-live-api",
+      "name": "OpenAI Voice Live API",
+      "quadrant": "tools",
+      "ring": "adopt",
+      "summary": "I put OpenAI Voice Live API in Adopt for production voice agents because it removes coordination complexity — end-to-end real-time voice collapses STT, LLM orchestration, and TTS into one integrated interaction path. Biggest win: fewer synchronization bugs and lower latency. Biggest trade-off: cost at scale.",
+      "useWhen": "When you need an end-to-end voice agent without separate STT and TTS — natural conversation quality matters and you want interruption handling, turn detection, and function calling in one integrated path.",
+      "avoidWhen": "When you are very cost constrained, only need transcription, or your backends are slow and unreliable. A stitched STT + LLM + TTS pipeline is cheaper for high-volume or purely transactional bots.",
+      "tags": [
+        "stt-tts",
+        "voice-agents",
+        "realtime-ai",
+        "azure",
+        "openai"
+      ]
     }
   ]
 }

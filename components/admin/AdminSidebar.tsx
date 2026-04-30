@@ -16,6 +16,7 @@ import {
   LogOut,
   Sparkles,
   Crosshair,
+  GitBranch,
 } from "lucide-react";
 
 const navSections = [
@@ -77,6 +78,13 @@ const navSections = [
     items: [
       { label: "Tech Radar", href: "/admin/tech-radar", icon: Crosshair },
       { label: "New Entry", href: "/admin/tech-radar/new", icon: Plus },
+    ],
+  },
+  {
+    title: "ADR Gallery",
+    items: [
+      { label: "Decisions", href: "/admin/decisions", icon: GitBranch },
+      { label: "New ADR", href: "/admin/decisions/new", icon: Plus },
     ],
   },
 ];

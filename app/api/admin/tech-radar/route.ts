@@ -50,6 +50,7 @@ export async function POST(request: NextRequest) {
       ...(parsed.data.avoidWhen && { avoidWhen: parsed.data.avoidWhen }),
       ...(parsed.data.movedFrom && { movedFrom: parsed.data.movedFrom }),
       ...(parsed.data.tags?.length && { tags: parsed.data.tags }),
+      status: parsed.data.status ?? "draft",
     };
 
     saveRadarEntry(entry);

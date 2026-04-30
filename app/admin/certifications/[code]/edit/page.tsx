@@ -9,7 +9,7 @@ interface PageProps {
 export default async function EditCertificationPage({ params }: PageProps) {
   const { code } = await params;
   const decoded = decodeURIComponent(code);
-  const cert = getCertifications().find((c) => c.code === decoded);
+  const cert = getCertifications(true).find((c) => c.code === decoded);
 
   if (!cert) return notFound();
 

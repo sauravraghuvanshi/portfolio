@@ -207,8 +207,8 @@ export const getEvents = cache(function getEvents(includeDrafts = false): Event[
     .filter((e) => includeDrafts || e.status !== "draft");
 });
 
-export function getEvent(slug: string): Event | null {
-  return getEvents().find((e) => e.slug === slug) ?? null;
+export function getEvent(slug: string, includeDrafts = false): Event | null {
+  return getEvents(includeDrafts).find((e) => e.slug === slug) ?? null;
 }
 
 // ---------------------------------------------------------------------------
@@ -253,6 +253,7 @@ export interface RadarEntry {
   avoidWhen?: string;
   movedFrom?: RadarRing;
   tags?: string[];
+  status?: "draft" | "published";
 }
 
 export interface TechRadar {
@@ -339,3 +340,45 @@ export const getAllBlogPosts = cache(function getAllBlogPosts(includeDrafts = fa
 export function getFeaturedBlogPosts(): BlogPost[] {
   return getAllBlogPosts().filter((post) => post.featured).slice(0, 3);
 }
+
+// ---------------------------------------------------------------------------
+// ADR Gallery
+// ---------------------------------------------------------------------------
+
+export type WAFPillar =
+  | "reliability"
+  | "security"
+  | "cost-optimization"
+  | "operational-excellence"
+  | "performance-efficiency";
+
+export type ADRStatus = "accepted" | "proposed" | "deprecated" | "superseded";
+
+export interface ADREntry {
+  id: string;
+  number: number;
+  title: string;
+  status: ADRStatus;
+  date: string;
+  wafPillars: WAFPillar[];
+  context: string;
+  options: string[];
+  decision: string;
+  rationale: string;
+  tradeoffs: string;
+  outcome: string;
+  tags?: string[];
+}
+
+export interface ADRGallery {
+  publishedAt: string;
+  summary: string;
+  entries: ADREntry[];
+}
+
+export const getADRGallery = cache(function getADRGallery(): ADRGallery | null {
+  const filePath = path.join(contentDir, "decisions.json");
+  if (!fs.existsSync(filePath)) return null;
+  const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
+  return JSON.parse(raw) as ADRGallery;
+});

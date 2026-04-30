@@ -25,13 +25,16 @@ import {
 } from "lucide-react";
 import type { AIContentType, AIWriterPayload, ImageTask } from "@/types/ai-writer";
 import { CONTENT_TYPES } from "@/lib/ai/content-schemas";
+import ReviewModal from "./ReviewModal";
+import type { ReviewModalFields } from "./ReviewModal";
 
 interface ContentPreviewProps {
   payload: AIWriterPayload | null;
   rawJson: string;
-  onSave: () => void;
+  onSave: (fields: ReviewModalFields) => Promise<void>;
   onRegenerate: () => void;
   isSaving: boolean;
+  saveError?: string | null;
   contentType: AIContentType;
   imageTasks: ImageTask[];
   isGeneratingImages: boolean;
@@ -51,6 +54,7 @@ export default function ContentPreview({
   onSave,
   onRegenerate,
   isSaving,
+  saveError,
   contentType,
   imageTasks,
   isGeneratingImages,
@@ -77,6 +81,9 @@ export default function ContentPreview({
   const [rewriteFeedback, setRewriteFeedback] = useState("");
   const [isRewriting, setIsRewriting] = useState(false);
   const editTextareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Review modal
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
 
   const config = CONTENT_TYPES[contentType];
   const activeMarkdown = bodyMarkdownOverride ?? payload?.bodyMarkdown ?? "";
@@ -536,13 +543,19 @@ export default function ContentPreview({
       {/* Save button */}
       {config.saveable && (
         <button
-          onClick={onSave}
+          onClick={() => setReviewModalOpen(true)}
           disabled={isSaving}
           className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Save className="h-4 w-4" />
           {isSaving ? "Saving..." : `Save as ${config.label}`}
         </button>
+      )}
+
+      {saveError && (
+        <div className="mt-2 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-400">
+          {saveError}
+        </div>
       )}
 
       {!config.saveable && (
@@ -553,6 +566,19 @@ export default function ContentPreview({
           <Copy className="h-4 w-4" />
           Copy to Clipboard
         </button>
+      )}
+
+      {/* Review modal */}
+      {payload && (
+        <ReviewModal
+          contentType={contentType}
+          payload={payload}
+          isOpen={reviewModalOpen}
+          isSaving={isSaving}
+          saveError={saveError}
+          onClose={() => setReviewModalOpen(false)}
+          onConfirm={onSave}
+        />
       )}
 
       {/* Image lightbox */}

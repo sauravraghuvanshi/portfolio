@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 };
 
 export default function ProjectsPage() {
-  const projects = getProjects();
+  const projects = getProjects().filter((p) => p.status !== "draft");
 
   return (
     <>

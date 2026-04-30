@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 };
 
 export default function TalksPage() {
-  const talks = getTalks();
+  const talks = getTalks().filter((t) => t.status !== "draft");
 
   return (
     <>

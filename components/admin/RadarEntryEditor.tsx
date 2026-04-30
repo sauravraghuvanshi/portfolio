@@ -43,6 +43,7 @@ export default function RadarEntryEditor({ mode, initialData }: RadarEntryEditor
   const [avoidWhen, setAvoidWhen] = useState(initialData?.avoidWhen ?? "");
   const [movedFrom, setMovedFrom] = useState<RadarRing | "">(initialData?.movedFrom ?? "");
   const [tags, setTags] = useState(initialData?.tags?.join(", ") ?? "");
+  const [status, setStatus] = useState<"draft" | "published">(initialData?.status ?? "draft");
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
@@ -85,6 +86,7 @@ export default function RadarEntryEditor({ mode, initialData }: RadarEntryEditor
     if (parsedTags.length > 0) {
       payload.tags = parsedTags;
     }
+    payload.status = status;
 
     const url =
       mode === "create"
@@ -274,6 +276,19 @@ export default function RadarEntryEditor({ mode, initialData }: RadarEntryEditor
             className={inputClass}
             placeholder="azure, ai, devops"
           />
+        </div>
+
+        {/* Status */}
+        <div>
+          <label className="mb-1 block text-xs font-medium uppercase text-slate-400">Status</label>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value as "draft" | "published")}
+            className={selectClass}
+          >
+            <option value="draft">Draft</option>
+            <option value="published">Published</option>
+          </select>
         </div>
       </div>
     </div>

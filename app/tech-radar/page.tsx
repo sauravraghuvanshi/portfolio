@@ -40,6 +40,11 @@ export default function TechRadarPage() {
     );
   }
 
+  const publishedRadar = {
+    ...radar,
+    entries: radar.entries.filter((e) => e.status !== "draft"),
+  };
+
   const formattedDate = new Date(radar.publishedAt).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
@@ -71,7 +76,7 @@ export default function TechRadarPage() {
             </p>
           </div>
 
-          <TechRadar radar={radar} />
+          <TechRadar radar={publishedRadar} />
         </div>
       </main>
     </>

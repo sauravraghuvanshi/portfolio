@@ -8,7 +8,7 @@ interface PageProps {
 
 export default async function EditProjectPage({ params }: PageProps) {
   const { id } = await params;
-  const project = getProjects().find((p) => p.id === id);
+  const project = getProjects(true).find((p) => p.id === id);
 
   if (!project) {
     notFound();

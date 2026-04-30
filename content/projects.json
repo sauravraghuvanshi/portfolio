@@ -217,5 +217,41 @@
     "featured": false,
     "year": 2023,
     "status": "published"
+  },
+  {
+    "id": "architecture-playground",
+    "title": "Architecture Playground",
+    "description": "Architecture Playground is an interactive Azure architecture learning platform that helps engineers, architects, and cloud learners explore Azure services and design patterns through a guided, hands-on web experience. I built it to turn architecture concepts into something practical and navigable rather than leaving them as static diagrams or theory-heavy documentation. The project exists to make cloud architecture learning more experiential, approachable, and implementation-oriented.",
+    "outcomes": [
+      "Created a live Azure-hosted architecture learning experience accessible through Azure App Service",
+      "Built a practical reference project that turns Azure architecture concepts into an interactive exploration workflow",
+      "Established a reusable project format for explaining cloud design decisions in a more hands-on, implementation-oriented way"
+    ],
+    "tags": [
+      "azure",
+      "cloud architecture",
+      "interactive learning",
+      "developer education",
+      "reference architecture",
+      "app service",
+      "architecture patterns"
+    ],
+    "category": [
+      "azure",
+      "cloud architecture"
+    ],
+    "techStack": [
+      "Microsoft Azure",
+      "Azure App Service",
+      "Web Apps",
+      "GitHub",
+      "Markdown",
+      "README-driven documentation"
+    ],
+    "githubUrl": "https://github.com/sauravraghuvanshi/architecture-playground",
+    "liveUrl": "https://architecture-playground.azurewebsites.net/",
+    "featured": false,
+    "status": "draft",
+    "year": 2026
   }
 ]

@@ -1,4 +1,4 @@
-export type AIContentType = "blog" | "case-study" | "project" | "talk" | "event" | "social";
+export type AIContentType = "blog" | "case-study" | "project" | "talk" | "event" | "social" | "adr" | "tech-radar-entry";
 
 export type ImageStatus = "pending" | "generating" | "done" | "error";
 
@@ -40,6 +40,8 @@ export interface AIWriterPayload {
   youtubeEmbeds?: { placeholder: string; url: string; title: string }[];
   tags: string[];
   tech: string[];
+  githubUrl?: string;
+  liveUrl?: string;
   timeline?: string;
   role?: string;
   impact: string[];
@@ -47,4 +49,20 @@ export interface AIWriterPayload {
   assets: string[];
   sources: string[];
   verificationNotes: string[];
+  // Tech Radar Entry fields
+  ring?: string;
+  quadrant?: string;
+  useWhen?: string;
+  avoidWhen?: string;
+  // ADR fields
+  number?: number;
+  status?: string;
+  date?: string;
+  wafPillars?: string[];
+  context?: string;
+  options?: string[];
+  decision?: string;
+  rationale?: string;
+  tradeoffs?: string;
+  outcome?: string;
 }

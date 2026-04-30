@@ -8,7 +8,7 @@ interface PageProps {
 
 export default async function EditTalkPage({ params }: PageProps) {
   const { id } = await params;
-  const talk = getTalks().find((t) => t.id === id);
+  const talk = getTalks(true).find((t) => t.id === id);
 
   if (!talk) {
     notFound();

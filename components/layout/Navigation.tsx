@@ -60,6 +60,11 @@ const navEntries: NavEntry[] = [
         href: "/tech-radar",
         description: "My opinions on 50+ cloud, AI, and platform technologies — Adopt, Trial, Assess, Hold.",
       },
+      {
+        label: "ADR Gallery",
+        href: "/decisions",
+        description: "12 architecture decisions: context, options, trade-offs, and real outcomes.",
+      },
     ],
   },
   {

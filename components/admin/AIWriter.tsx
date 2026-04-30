@@ -24,7 +24,7 @@ import {
   Maximize2,
   Minimize2,
 } from "lucide-react";
-import type { AIContentType, AIWriterPayload, ImageTask } from "@/types/ai-writer";
+import type { AIContentType, AIWriterPayload } from "@/types/ai-writer";
 import { CONTENT_TYPES } from "@/lib/ai/content-schemas";
 import { processAllMarkers, applyImageResults } from "@/lib/ai/marker-processing";
 import { triggerReindex } from "@/lib/triggerReindex";
@@ -32,6 +32,7 @@ import ContentTypeSelector from "./ai-writer/ContentTypeSelector";
 import ChatMessages from "./ai-writer/ChatMessages";
 import { getMessageText } from "./ai-writer/ChatMessages";
 import ContentPreview from "./ai-writer/ContentPreview";
+import type { ReviewModalFields } from "./ai-writer/ReviewModal";
 import { useImageGeneration } from "./ai-writer/useImageGeneration";
 
 interface Attachment {
@@ -48,6 +49,7 @@ export default function AIWriter() {
   const router = useRouter();
   const [contentType, setContentType] = useState<AIContentType | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [input, setInput] = useState("");
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -166,29 +168,24 @@ export default function AIWriter() {
     imageGen.reset();
   }, [setMessages, imageGen]);
 
-  const handleSave = useCallback(async () => {
+  const handleSaveWithReview = useCallback(async (fields: ReviewModalFields) => {
     if (!payload || !contentType) return;
     const config = CONTENT_TYPES[contentType];
     if (!config.saveable || !config.saveEndpoint) return;
 
     setIsSaving(true);
+    setSaveError(null);
     try {
-      // Apply completed image results to the payload before saving
-      const finalPayload = { ...payload };
-      // Use bodyMarkdownOverride if section rewrites have been applied
-      if (bodyMarkdownOverride) {
-        finalPayload.bodyMarkdown = bodyMarkdownOverride;
-      }
-      if (imageGen.tasks.length > 0) {
-        const { content, coverImageUrl } = applyImageResults(
-          finalPayload.bodyMarkdown,
-          imageGen.tasks
-        );
-        finalPayload.bodyMarkdown = content;
-        if (coverImageUrl) finalPayload.coverImage = coverImageUrl;
+      // Apply image results for blog/case-study
+      let processedBody = bodyMarkdownOverride ?? payload.bodyMarkdown;
+      let coverImageUrl = payload.coverImage;
+      if (imageGen.tasks.length > 0 && (contentType === "blog" || contentType === "case-study")) {
+        const result = applyImageResults(processedBody ?? "", imageGen.tasks);
+        processedBody = result.content;
+        if (result.coverImageUrl) coverImageUrl = result.coverImageUrl;
       }
 
-      const savePayload = buildSavePayload(contentType, finalPayload);
+      const savePayload = buildSavePayloadFromReview(contentType, payload, fields, processedBody, coverImageUrl);
       const res = await fetch(config.saveEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -202,7 +199,7 @@ export default function AIWriter() {
         if (editPath) router.push(editPath);
       } else {
         const err = await res.json().catch(() => ({ error: `Save failed (${res.status})` }));
-        alert(err.error || `Save failed with status ${res.status}`);
+        setSaveError(err.error ? (typeof err.error === "string" ? err.error : JSON.stringify(err.error)) : `Save failed with status ${res.status}`);
       }
     } finally {
       setIsSaving(false);
@@ -506,9 +503,10 @@ export default function AIWriter() {
             <ContentPreview
               payload={payload}
               rawJson={rawJson}
-              onSave={handleSave}
+              onSave={handleSaveWithReview}
               onRegenerate={handleRegenerate}
               isSaving={isSaving}
+              saveError={saveError}
               contentType={contentType}
               imageTasks={imageGen.tasks}
               isGeneratingImages={imageGen.isGenerating}
@@ -547,67 +545,118 @@ function readAsText(file: File): Promise<string> {
 }
 
 /**
- * Convert AI payload to the shape expected by each admin API route.
+ * Convert AI payload + review modal fields to the shape expected by each admin API route.
  */
-function buildSavePayload(contentType: AIContentType, payload: AIWriterPayload): Record<string, unknown> {
+function buildSavePayloadFromReview(
+  contentType: AIContentType,
+  payload: AIWriterPayload,
+  fields: ReviewModalFields,
+  processedBody?: string,
+  coverImageUrl?: string,
+): Record<string, unknown> {
   switch (contentType) {
     case "blog":
       return {
-        title: payload.title,
-        description: payload.summary,
-        content: payload.bodyMarkdown,
-        category: payload.tags.slice(0, 3),
-        tags: payload.tags,
-        coverImage: payload.coverImage ?? "",
-        featured: false,
-        status: "draft",
+        title: fields.title || payload.title,
+        description: fields.description || payload.summary,
+        content: processedBody || payload.bodyMarkdown,
+        category: fields.category || payload.tags.slice(0, 3),
+        tags: fields.tags || payload.tags,
+        coverImage: coverImageUrl || payload.coverImage || "",
+        featured: fields.featured ?? false,
+        status: fields.status ?? "draft",
       };
     case "case-study":
       return {
-        title: payload.title,
-        subtitle: payload.summary,
-        content: payload.bodyMarkdown,
-        tags: payload.tags,
-        category: payload.tags.slice(0, 2),
+        title: fields.title || payload.title,
+        subtitle: fields.subtitle || payload.summary,
+        content: processedBody || payload.bodyMarkdown,
+        tags: fields.tags || payload.tags,
+        category: fields.category || payload.tags.slice(0, 2),
         timeline: payload.timeline ?? "",
         role: payload.role ?? "",
         client: "Anonymised",
-        featured: false,
-        coverImage: payload.coverImage ?? "",
+        featured: fields.featured ?? false,
+        coverImage: coverImageUrl || payload.coverImage || "",
         metrics: payload.impact.map((i) => ({ value: "", label: i })),
+        status: fields.status ?? "draft",
       };
-    case "project":
+    case "project": {
+      const projTags = fields.tags || payload.tags;
       return {
-        title: payload.title,
-        description: payload.summary,
-        outcomes: payload.impact,
-        tags: payload.tags,
-        category: payload.tags.slice(0, 2),
-        techStack: payload.tech,
-        githubUrl: "",
-        liveUrl: "",
-        featured: false,
-        year: new Date().getFullYear(),
+        title: fields.title || payload.title,
+        description: fields.description || payload.summary,
+        outcomes: fields.outcomes || payload.impact,
+        tags: projTags,
+        category: fields.category || projTags.slice(0, 2),
+        techStack: fields.techStack || payload.tech,
+        githubUrl: fields.githubUrl || "",
+        liveUrl: fields.liveUrl || "",
+        featured: fields.featured ?? false,
+        year: fields.year ?? new Date().getFullYear(),
+        status: fields.status ?? "draft",
       };
+    }
     case "talk":
       return {
-        title: payload.title,
-        topic: payload.tags[0] ?? "",
-        description: payload.summary,
-        featured: false,
+        title: fields.title || payload.title,
+        topic: fields.topic || payload.tags[0] || "",
+        description: fields.description || payload.summary,
+        featured: fields.featured ?? false,
+        tags: fields.tags || payload.tags,
+        status: fields.status ?? "draft",
       };
     case "event":
       return {
-        title: payload.title,
-        year: new Date().getFullYear(),
-        format: "Speaker",
-        topic: payload.tags[0] ?? "",
-        tags: payload.tags,
-        summary: payload.summary,
-        highlights: payload.impact,
+        title: fields.title || payload.title,
+        year: fields.year ?? new Date().getFullYear(),
+        format: fields.format || "Speaker",
+        topic: fields.topic || payload.tags[0] || "",
+        tags: fields.tags || payload.tags,
+        summary: fields.summary || payload.summary,
+        highlights: fields.highlights || payload.impact,
         impact: [],
-        featured: false,
+        featured: fields.featured ?? false,
+        status: fields.status ?? "draft",
       };
+    case "adr": {
+      const num = fields.number ?? payload.number ?? (Date.now() % 1000);
+      const id = payload.slug || `adr-${String(num).padStart(3, "0")}`;
+      const validPillars = ["reliability", "security", "cost-optimization", "operational-excellence", "performance-efficiency"];
+      const wafPillars = fields.wafPillars || payload.wafPillars || ["operational-excellence"];
+      return {
+        id,
+        number: num,
+        title: fields.title || payload.title,
+        status: fields.adrStatus || payload.status || "accepted",
+        date: fields.date || payload.date || new Date().toISOString().slice(0, 10),
+        wafPillars: wafPillars.length > 0 ? wafPillars : ["operational-excellence"],
+        context: payload.context || payload.summary,
+        options: payload.options || payload.impact,
+        decision: fields.decision || payload.decision || payload.summary,
+        rationale: payload.rationale || "",
+        tradeoffs: payload.tradeoffs || "",
+        outcome: payload.outcome || "",
+        tags: (fields.tags || payload.tags).filter((t) => !validPillars.includes(t)),
+      };
+    }
+    case "tech-radar-entry": {
+      const techName = fields.name || payload.title;
+      const techId = payload.slug || techName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      return {
+        id: techId,
+        name: techName,
+        quadrant: fields.quadrant || payload.quadrant || "tools",
+        ring: fields.ring || payload.ring || "trial",
+        summary: fields.summary || payload.summary,
+        useWhen: fields.useWhen || payload.useWhen || "",
+        avoidWhen: fields.avoidWhen || payload.avoidWhen || "",
+        tags: (fields.tags || payload.tags).filter((t) =>
+          !["adopt", "trial", "assess", "hold", "languages", "platforms", "tools", "techniques"].includes(t)
+        ),
+        status: fields.status ?? "draft",
+      };
+    }
     default:
       return payload as unknown as Record<string, unknown>;
   }
@@ -620,6 +669,8 @@ function getEditPath(contentType: AIContentType, id: string): string | null {
     project: `/admin/projects/${id}/edit`,
     talk: `/admin/talks/${id}/edit`,
     event: `/admin/events/${id}/edit`,
+    adr: `/admin/decisions/${id}/edit`,
+    "tech-radar-entry": `/admin/tech-radar/${id}/edit`,
   };
   return map[contentType] ?? null;
 }
