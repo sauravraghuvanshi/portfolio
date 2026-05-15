@@ -61,7 +61,7 @@ export async function POST(req: Request) {
       controller.enqueue(sse({ type: "text-start", id: textId }));
 
       try {
-        for await (const event of streamFoundryAgent(systemPrompt, messages, "chatbot")) {
+        for await (const event of streamFoundryAgent(systemPrompt, messages, "chatbot", true)) {
           if (event.type === "text-delta") {
             controller.enqueue(sse({ type: "text-delta", id: textId, delta: event.text }));
           }
