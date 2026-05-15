@@ -31,6 +31,7 @@ _Last synced: 2026-04-21_
 
 ## Features
 
+- **AI Architecture Advisor** (`/advisor`) — Describe an Azure workload (or take a 25-question quiz tailored to your brief), get a Microsoft Well-Architected Framework scorecard with risks, recommended Azure services, and Microsoft Learn citations under each pillar. Downloadable ADR markdown export. Powered by Azure AI Foundry + Microsoft Learn MCP. Rate-limited (5 deep-dives/hr, 10 quizzes/day per IP).
 - **Portfolio & Resume** — Skills, certifications, projects, case studies, downloadable PDF resume
 - **Interactive Career Timeline** — Vertical timeline with expanding cards, animated stat counters, tech badges, milestone icons, and "Present" pulse badge
 - **Command Palette** — Spotlight-style search (Cmd+K / Ctrl+K) across blogs, case studies, projects, talks, events, and pages with fuzzy matching
