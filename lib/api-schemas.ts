@@ -163,6 +163,93 @@ export const ADREntrySchema = z.object({
 
 export const ADREntryUpdateSchema = ADREntrySchema.partial();
 
+// ---------- AI Architecture Advisor ----------
+export const WAF_PILLARS = [
+  "reliability",
+  "security",
+  "cost-optimization",
+  "operational-excellence",
+  "performance-efficiency",
+] as const;
+
+export const AdvisorRequestSchema = z.object({
+  workload: z.string().min(10, "Describe the workload in at least 10 characters").max(2000),
+  scale: z.string().max(200).optional().default(""),
+  constraints: z.array(z.string().max(200)).max(10).optional().default([]),
+  region: z.string().max(100).optional().default(""),
+});
+
+const CitationSchema = z.object({
+  title: z.string().max(300),
+  url: z.string().url().max(500),
+});
+
+const PillarAssessmentSchema = z.object({
+  score: z.number().int().min(1).max(5),
+  summary: z.string().max(1000),
+  risks: z.array(z.string().max(300)).max(8).default([]),
+  recommendations: z.array(z.string().max(300)).max(8).default([]),
+  azureServices: z.array(z.string().max(80)).max(10).default([]),
+  citations: z.array(CitationSchema).max(5).default([]),
+});
+
+export const AdvisorResultSchema = z.object({
+  overall: z.object({
+    score: z.number().int().min(1).max(5),
+    summary: z.string().max(2000),
+  }),
+  pillars: z.object({
+    reliability: PillarAssessmentSchema,
+    security: PillarAssessmentSchema,
+    costOptimization: PillarAssessmentSchema,
+    operationalExcellence: PillarAssessmentSchema,
+    performanceEfficiency: PillarAssessmentSchema,
+  }),
+  topRisks: z.array(z.string().max(300)).min(1).max(8),
+  recommendedAzureServices: z.array(z.string().max(80)).max(20).default([]),
+  suggestedADR: z.object({
+    title: z.string().min(1).max(300),
+    context: z.string().min(1).max(2000),
+    options: z.array(z.string().max(200)).max(10).default([]),
+    decision: z.string().min(1).max(500),
+    rationale: z.string().min(1).max(2000),
+    tradeoffs: z.string().min(1).max(2000),
+    outcome: z.string().min(1).max(2000),
+    wafPillars: z.array(z.enum(WAF_PILLARS)).min(1).max(5),
+    tags: z.array(z.string().max(50)).max(20).default([]),
+  }),
+});
+
+// ---------- Advisor Quiz ----------
+export const ADVISOR_PILLAR_KEYS = [
+  "reliability",
+  "security",
+  "costOptimization",
+  "operationalExcellence",
+  "performanceEfficiency",
+] as const;
+
+export const QuizGenerateRequestSchema = z.object({
+  brief: z.string().min(10, "Describe the workload in at least 10 characters").max(500),
+});
+
+const QuizOptionSchema = z.object({
+  label: z.string().min(1).max(200),
+  weight: z.number().min(0).max(1),
+});
+
+const QuizQuestionSchema = z.object({
+  id: z.string().min(1).max(80),
+  pillar: z.enum(ADVISOR_PILLAR_KEYS),
+  question: z.string().min(1).max(300),
+  options: z.array(QuizOptionSchema).min(2).max(5),
+});
+
+export const QuizSchema = z.object({
+  brief: z.string().max(500),
+  questions: z.array(QuizQuestionSchema).min(15).max(35),
+});
+
 // ---------- Upload params ----------
 export const UploadParamsSchema = z.object({
   folder: z

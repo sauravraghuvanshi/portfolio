@@ -45,6 +45,11 @@ const navEntries: NavEntry[] = [
     label: "Builds",
     items: [
       {
+        label: "AI Architecture Advisor",
+        href: "/advisor",
+        description: "Describe a workload → WAF scorecard + Microsoft Learn citations + downloadable ADR.",
+      },
+      {
         label: "Architecture Playground",
         href: "https://architecture-playground.azurewebsites.net",
         description: "Drag-and-drop Azure / AWS / GCP icons, animate sequences, export PNG · GIF · JSON.",
