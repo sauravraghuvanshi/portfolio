@@ -49,14 +49,21 @@ export function getCaseStudy(slug: string): CaseStudy | null {
 
 export const getAllCaseStudies = cache(function getAllCaseStudies(includeDrafts = false): CaseStudy[] {
   const slugs = getCaseStudySlugs();
-  return slugs
+  const all = slugs
     .map((slug) => getCaseStudy(slug))
     .filter((cs): cs is CaseStudy => {
       if (!cs) return false;
       if (!includeDrafts && cs.status === "draft") return false;
       return true;
-    })
-    .sort((a, b) => (a.featured === b.featured ? 0 : a.featured ? -1 : 1));
+    });
+  // Newest-first within each featured tier: reverse the natural order so the most
+  // recently added file (admin appends) surfaces at the top, then keep featured ahead.
+  const indexed = all.map((cs, i) => ({ cs, i }));
+  indexed.sort((a, b) => {
+    if (a.cs.featured !== b.cs.featured) return a.cs.featured ? -1 : 1;
+    return b.i - a.i;
+  });
+  return indexed.map(({ cs }) => cs);
 });
 
 export function getFeaturedCaseStudies(): CaseStudy[] {
@@ -89,13 +96,21 @@ export const getProjects = cache(function getProjects(includeDrafts = false): Pr
   const filePath = path.join(contentDir, "projects.json");
   if (!fs.existsSync(filePath)) return [];
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
-  return (JSON.parse(raw) as Project[])
+  const all = (JSON.parse(raw) as Project[])
     .map((p) => ({
       ...p,
       category: normalizeCategory(p.category),
       status: p.status ?? "published" as const,
     }))
     .filter((p) => includeDrafts || p.status !== "draft");
+  // Newest-first: featured tier, then year desc, then reverse file order for ties.
+  const indexed = all.map((p, i) => ({ p, i }));
+  indexed.sort((a, b) => {
+    if (a.p.featured !== b.p.featured) return a.p.featured ? -1 : 1;
+    if (a.p.year !== b.p.year) return (b.p.year ?? 0) - (a.p.year ?? 0);
+    return b.i - a.i;
+  });
+  return indexed.map(({ p }) => p);
 });
 
 export function getFeaturedProjects(): Project[] {
@@ -128,13 +143,21 @@ export const getCertifications = cache(function getCertifications(includeDrafts 
   const filePath = path.join(contentDir, "certifications.json");
   if (!fs.existsSync(filePath)) return [];
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
-  return (JSON.parse(raw) as Certification[])
+  const all = (JSON.parse(raw) as Certification[])
     .map((c) => ({
       ...c,
       featured: c.featured ?? false,
       status: c.status ?? "published" as const,
     }))
     .filter((c) => includeDrafts || c.status !== "draft");
+  // Newest-first: featured tier, then year desc, then reverse file order for ties.
+  const indexed = all.map((c, i) => ({ c, i }));
+  indexed.sort((a, b) => {
+    if (a.c.featured !== b.c.featured) return a.c.featured ? -1 : 1;
+    if (a.c.year !== b.c.year) return (b.c.year ?? 0) - (a.c.year ?? 0);
+    return b.i - a.i;
+  });
+  return indexed.map(({ c }) => c);
 });
 
 // ---------------------------------------------------------------------------
@@ -199,12 +222,22 @@ export const getEvents = cache(function getEvents(includeDrafts = false): Event[
   const filePath = path.join(contentDir, "events.json");
   if (!fs.existsSync(filePath)) return [];
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
-  return (JSON.parse(raw) as Event[])
+  const all = (JSON.parse(raw) as Event[])
     .map((e) => ({
       ...e,
       status: e.status ?? "published" as const,
     }))
     .filter((e) => includeDrafts || e.status !== "draft");
+  // Newest-first: featured tier, then year desc, then reverse file order for ties.
+  const indexed = all.map((e, i) => ({ e, i }));
+  indexed.sort((a, b) => {
+    const aFeat = !!a.e.featured;
+    const bFeat = !!b.e.featured;
+    if (aFeat !== bFeat) return aFeat ? -1 : 1;
+    if (a.e.year !== b.e.year) return (b.e.year ?? 0) - (a.e.year ?? 0);
+    return b.i - a.i;
+  });
+  return indexed.map(({ e }) => e);
 });
 
 export function getEvent(slug: string, includeDrafts = false): Event | null {
@@ -228,12 +261,19 @@ export const getTalks = cache(function getTalks(includeDrafts = false): Talk[] {
   const filePath = path.join(contentDir, "talks.json");
   if (!fs.existsSync(filePath)) return [];
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
-  return (JSON.parse(raw) as Talk[])
+  const all = (JSON.parse(raw) as Talk[])
     .map((t) => ({
       ...t,
       status: t.status ?? "published" as const,
     }))
     .filter((t) => includeDrafts || t.status !== "draft");
+  // Newest-first: featured tier, then reverse file order so admin-appended talks surface first.
+  const indexed = all.map((t, i) => ({ t, i }));
+  indexed.sort((a, b) => {
+    if (a.t.featured !== b.t.featured) return a.t.featured ? -1 : 1;
+    return b.i - a.i;
+  });
+  return indexed.map(({ t }) => t);
 });
 
 // ---------------------------------------------------------------------------
@@ -267,7 +307,9 @@ export const getTechRadar = cache(function getTechRadar(): TechRadar | null {
   const filePath = path.join(contentDir, "tech-radar.json");
   if (!fs.existsSync(filePath)) return null;
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
-  return JSON.parse(raw) as TechRadar;
+  const radar = JSON.parse(raw) as TechRadar;
+  // Newest-first: reverse entries so admin-appended items surface at the top.
+  return { ...radar, entries: [...radar.entries].reverse() };
 });
 
 // ---------------------------------------------------------------------------
@@ -380,5 +422,8 @@ export const getADRGallery = cache(function getADRGallery(): ADRGallery | null {
   const filePath = path.join(contentDir, "decisions.json");
   if (!fs.existsSync(filePath)) return null;
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
-  return JSON.parse(raw) as ADRGallery;
+  const gallery = JSON.parse(raw) as ADRGallery;
+  // Newest-first: sort by ADR number desc (admin assigns next sequential number).
+  const entries = [...gallery.entries].sort((a, b) => (b.number ?? 0) - (a.number ?? 0));
+  return { ...gallery, entries };
 });
