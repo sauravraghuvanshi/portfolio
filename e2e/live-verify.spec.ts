@@ -75,10 +75,13 @@ test("decisions: ADR cards load, WAF filter chips work, drawer opens", async ({ 
   await page.goto(`${BASE}/decisions`, { waitUntil: "domcontentloaded" });
   await page.waitForSelector("text=ADR-001", { timeout: 15_000 });
 
-  // Spot check a few ADR entries
-  for (const n of ["ADR-001", "ADR-006", "ADR-012"]) {
+  // Spot check a few ADR entries. Don't assert on specific high-numbered ADRs —
+  // any of them may legitimately be set to draft from the admin panel, which
+  // hides them here by design.
+  for (const n of ["ADR-001", "ADR-006"]) {
     await expect(page.locator(`text=${n}`).first()).toBeVisible();
   }
+  expect(await page.locator("article[role='button']").count()).toBeGreaterThanOrEqual(5);
 
   // WAF filter chips exist
   const filterChips = page.locator("button").filter({ hasText: /reliability|security|cost|operational|performance/i });
@@ -259,7 +262,8 @@ test("decisions admin: draft is hidden from /decisions, publish reveals it", asy
   // At least one WAF pillar is required, otherwise handleSave short-circuits.
   await page.locator("button").filter({ hasText: /^Reliability$/ }).click();
   await page.fill("textarea[placeholder*='What problem or constraint']", "Automated live test — safe to delete");
-  await page.fill("textarea[placeholder*='What was decided']", "Automated live test — safe to delete");
+  // Decision is a single-line <input>, unlike the other long-form fields.
+  await page.fill("input[placeholder*='What was decided']", "Automated live test — safe to delete");
   await page.fill("textarea[placeholder*='Why this option over the others']", "Automated live test — safe to delete");
   await page.fill("textarea[placeholder*='What did you give up']", "Automated live test — safe to delete");
   await page.fill("textarea[placeholder*='What actually happened after']", "Automated live test — safe to delete");

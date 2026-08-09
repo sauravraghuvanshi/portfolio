@@ -1,5 +1,32 @@
 import { z } from "zod";
 
+/**
+ * Build a PATCH-style update schema from a create schema.
+ *
+ * `.partial()` alone is NOT safe here: it makes keys optional but leaves any
+ * inner `.default()` intact, so an update payload that omits a key still parses
+ * to the default and overwrites stored data — a save without `status` silently
+ * unpublished the record, and one without `tags` wiped them. Stripping the
+ * defaults leaves omitted keys `undefined` so route handlers' `?? existing.x`
+ * fallbacks actually fire.
+ */
+function toUpdateSchema<T extends z.ZodObject<z.ZodRawShape>>(
+  schema: T
+): ReturnType<T["partial"]> {
+  const shape: Record<string, z.ZodTypeAny> = {};
+  for (const [key, field] of Object.entries(schema.shape)) {
+    let inner = field as z.ZodTypeAny;
+    // Unwrap ZodDefault/ZodOptional layers to reach the real validator.
+    while (inner instanceof z.ZodDefault || inner instanceof z.ZodOptional) {
+      inner = inner.def.innerType as z.ZodTypeAny;
+    }
+    shape[key] = inner.optional();
+  }
+  // Statically identical to `schema.partial()` (every key optional); only the
+  // runtime differs, in that omitted keys no longer resolve to their defaults.
+  return z.object(shape) as unknown as ReturnType<T["partial"]>;
+}
+
 // ---------- Blog ----------
 export const BlogPostSchema = z.object({
   title: z.string().min(1, "Title is required").max(200),
@@ -14,7 +41,7 @@ export const BlogPostSchema = z.object({
   externalSource: z.string().max(100).optional(),
 });
 
-export const BlogPostUpdateSchema = BlogPostSchema.partial();
+export const BlogPostUpdateSchema = toUpdateSchema(BlogPostSchema);
 
 // ---------- Case Study ----------
 export const CaseStudySchema = z.object({
@@ -36,7 +63,7 @@ export const CaseStudySchema = z.object({
   content: z.string().optional().default(""),
 });
 
-export const CaseStudyUpdateSchema = CaseStudySchema.partial();
+export const CaseStudyUpdateSchema = toUpdateSchema(CaseStudySchema);
 
 // ---------- Project ----------
 export const ProjectSchema = z.object({
@@ -53,7 +80,7 @@ export const ProjectSchema = z.object({
   year: z.number().int().min(2000).max(2100).optional(),
 });
 
-export const ProjectUpdateSchema = ProjectSchema.partial();
+export const ProjectUpdateSchema = toUpdateSchema(ProjectSchema);
 
 // ---------- Talk ----------
 export const TalkSchema = z.object({
@@ -65,7 +92,7 @@ export const TalkSchema = z.object({
   status: z.enum(["draft", "published"]).optional().default("draft"),
 });
 
-export const TalkUpdateSchema = TalkSchema.partial();
+export const TalkUpdateSchema = toUpdateSchema(TalkSchema);
 
 // ---------- Event ----------
 const LocationSchema = z
@@ -95,7 +122,7 @@ export const EventSchema = z.object({
   location: LocationSchema,
 });
 
-export const EventUpdateSchema = EventSchema.partial();
+export const EventUpdateSchema = toUpdateSchema(EventSchema);
 
 // ---------- Certification ----------
 export const CertificationSchema = z.object({
@@ -111,7 +138,7 @@ export const CertificationSchema = z.object({
   status: z.enum(["draft", "published"]).optional().default("draft"),
 });
 
-export const CertificationUpdateSchema = CertificationSchema.partial();
+export const CertificationUpdateSchema = toUpdateSchema(CertificationSchema);
 
 // ---------- Tech Radar ----------
 export const RadarEntrySchema = z.object({
@@ -127,7 +154,7 @@ export const RadarEntrySchema = z.object({
   status: z.enum(["draft", "published"]).optional().default("draft"),
 });
 
-export const RadarEntryUpdateSchema = RadarEntrySchema.partial();
+export const RadarEntryUpdateSchema = toUpdateSchema(RadarEntrySchema);
 
 // ---------- ADR Gallery ----------
 export const ADREntrySchema = z.object({
@@ -163,7 +190,7 @@ export const ADREntrySchema = z.object({
   tags: z.array(z.string().max(50)).max(20).optional().default([]),
 });
 
-export const ADREntryUpdateSchema = ADREntrySchema.partial();
+export const ADREntryUpdateSchema = toUpdateSchema(ADREntrySchema);
 
 // ---------- AI Architecture Advisor ----------
 export const WAF_PILLARS = [
