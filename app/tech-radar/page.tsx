@@ -3,6 +3,8 @@ import { BreadcrumbListSchema } from "@/components/JsonLd";
 import { getTechRadar } from "@/lib/content";
 import TechRadar from "@/components/sections/TechRadar";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "Tech Radar — Saurav Raghuvanshi",
   description:

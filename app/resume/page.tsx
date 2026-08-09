@@ -3,6 +3,8 @@ import { Download, MapPin, Mail, Linkedin, Github, GraduationCap, BookOpen, User
 import CareerTimeline from "@/components/sections/CareerTimeline";
 import type { Metadata } from "next";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "Resume",
   description:

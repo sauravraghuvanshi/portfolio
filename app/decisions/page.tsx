@@ -3,6 +3,8 @@ import { BreadcrumbListSchema } from "@/components/JsonLd";
 import { getADRGallery } from "@/lib/content";
 import ADRGallery from "@/components/sections/ADRGallery";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "Architecture Decisions — Saurav Raghuvanshi",
   description:

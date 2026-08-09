@@ -94,5 +94,13 @@
     "topic": "DevOps",
     "featured": true,
     "status": "published"
+  },
+  {
+    "id": "SDFln1NxcmM",
+    "title": "3Cs: College, Community & Corporate",
+    "topic": "College, Corporate, Placement, Community",
+    "description": "In this podcast, I shared about my journey from Dehradun to working with top technology communities and helping students build successful careers in tech. \nThis session was recorded during an interaction with students, where industry insights, career guidance, and practical learning came together to inspire the next generation of tech professionals.\nIf you are a student, developer, or someone interested in Microsoft, AI, Cloud Computing, career growth, and technology communities, this podcast is for you.",
+    "featured": true,
+    "status": "published"
   }
 ]

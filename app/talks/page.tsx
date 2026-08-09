@@ -3,6 +3,8 @@ import { BreadcrumbListSchema } from "@/components/JsonLd";
 import TalksGrid from "@/components/sections/TalksGrid";
 import type { Metadata } from "next";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "Talks & Sessions — Saurav Raghuvanshi",
   description:

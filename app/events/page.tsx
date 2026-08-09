@@ -3,6 +3,8 @@ import { BreadcrumbListSchema } from "@/components/JsonLd";
 import EventsPageClient from "@/components/sections/EventsPageClient";
 import type { Metadata } from "next";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "Community Events — Saurav Raghuvanshi",
   description:

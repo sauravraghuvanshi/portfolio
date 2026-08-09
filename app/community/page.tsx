@@ -3,6 +3,8 @@ import { BreadcrumbListSchema } from "@/components/JsonLd";
 import CommunityContent from "@/components/sections/CommunityContent";
 import type { Metadata } from "next";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "Community Impact — Saurav Raghuvanshi",
   description:

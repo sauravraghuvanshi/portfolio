@@ -1013,5 +1013,40 @@
       "lat": 28.6139,
       "lng": 77.209
     }
+  },
+  "the-frontier-event-building-whats-next-with-ai-on-microsoft-": {
+    "title": "The Frontier Event: Building What's Next with AI on Microsoft ",
+    "year": 2026,
+    "format": "Speaker",
+    "topic": "Azure AI, Agentic AI, Foundry",
+    "tags": [
+      "Azure",
+      "AI",
+      "Agents",
+      "Founders",
+      "Digital Native startup"
+    ],
+    "summary": "Co-led content and execution for The Frontier Event: Building What's Next with Agentic AI at Microsoft's Gurugram office, in partnership with WeTransact. The event brought together Digital Native startup founders, CXOs, CTOs, and ISV leaders for a focused afternoon of practical AI discussions, GTM guidance, and founder conversations — designed to help AI-native startups move from pilots to enterprise-ready scale.",
+    "highlights": [
+      "Drove content strategy and end-to-end execution for the event, hosted at Microsoft Office, Gurugram in partnership with WeTransact.",
+      "Delivered sessions on Azure, Microsoft Foundry, and production-grade agentic AI — covering architecture patterns, identity, memory, MCP, and enterprise-grade controls.",
+      "Brought together over 60 companies across the startup and ISV ecosystem, generating meaningful follow-through conversations on AI adoption and Marketplace growth."
+    ],
+    "impact": [],
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/1781722320700-post-poster.jpg",
+    "coverImagePosition": "center",
+    "images": [
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/1781722333609-img.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/1781722341371-img-2.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/1781722346780-img-3.jpg"
+    ],
+    "featured": true,
+    "status": "published",
+    "location": {
+      "city": "Gurugram",
+      "country": "India",
+      "lat": 28.4595,
+      "lng": 77.0266
+    }
   }
 }

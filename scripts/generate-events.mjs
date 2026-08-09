@@ -361,6 +361,29 @@ async function main() {
     }
   }
 
+  // Admin-created events exist only in events-overrides.json — they have no
+  // DOCX source, so the loop above never emits them. Without this pass, a local
+  // regeneration silently deletes every event added through /admin.
+  const generatedSlugs = new Set(events.map((e) => e.slug));
+  for (const [slug, override] of Object.entries(overrides)) {
+    if (generatedSlugs.has(slug)) continue;
+    events.push({
+      slug,
+      title: slug,
+      year: new Date().getFullYear(),
+      format: "Speaker",
+      topic: "Cloud",
+      tags: [],
+      summary: "",
+      highlights: [],
+      impact: [],
+      coverImage: null,
+      images: [],
+      ...override,
+    });
+    console.log(`  ✓ ${override.title || slug} (${override.year ?? "?"}) [admin-created — no DOCX]`);
+  }
+
   // Sort: non-AWS events first (year desc), then AWS events at the end
   events.sort((a, b) => {
     const aAws = a.topic === "AWS" ? 1 : 0;

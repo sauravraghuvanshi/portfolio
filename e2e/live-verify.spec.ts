@@ -132,7 +132,10 @@ test("ai-writer: talk type produces compact JSON, no bodyMarkdown", async ({ pag
 // ---------------------------------------------------------------------------
 // 4. AI Writer — ReviewModal opens when Save is clicked
 // ---------------------------------------------------------------------------
-test("ai-writer: ReviewModal opens on Save click", { timeout: 480_000 }, async ({ page }) => {
+test("ai-writer: ReviewModal opens on Save click", async ({ page }) => {
+  // Playwright's TestDetails arg accepts only `annotation`/`tag` — per-test
+  // timeouts go through setTimeout(). Generation + save can take minutes.
+  test.setTimeout(480_000);
   await login(page);
   await page.goto(`${BASE}/admin/ai-writer`, { waitUntil: "domcontentloaded" });
 

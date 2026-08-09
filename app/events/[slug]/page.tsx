@@ -8,6 +8,8 @@ import { SpeakingEventSchema, BreadcrumbListSchema } from "@/components/JsonLd";
 import EventGallery from "@/components/events/EventGallery";
 import type { Metadata } from "next";
 
+export const revalidate = 60;
+
 interface EventPageProps {
   params: Promise<{ slug: string }>;
 }
