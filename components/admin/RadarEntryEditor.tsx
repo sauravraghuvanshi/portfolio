@@ -43,7 +43,11 @@ export default function RadarEntryEditor({ mode, initialData }: RadarEntryEditor
   const [avoidWhen, setAvoidWhen] = useState(initialData?.avoidWhen ?? "");
   const [movedFrom, setMovedFrom] = useState<RadarRing | "">(initialData?.movedFrom ?? "");
   const [tags, setTags] = useState(initialData?.tags?.join(", ") ?? "");
-  const [status, setStatus] = useState<"draft" | "published">(initialData?.status ?? "draft");
+  // Entries predating the publish flag were publicly visible, so default
+  // existing records to "published" and only new ones to "draft".
+  const [status, setStatus] = useState<"draft" | "published">(
+    initialData ? (initialData.status ?? "published") : "draft"
+  );
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 

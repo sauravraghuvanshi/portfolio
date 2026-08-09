@@ -11,7 +11,7 @@ const RING_BADGE: Record<string, string> = {
 };
 
 export default function AdminTechRadarPage() {
-  const radar = getTechRadar();
+  const radar = getTechRadar(true);
   const entries = radar?.entries ?? [];
 
   return (
@@ -52,6 +52,7 @@ export default function AdminTechRadarPage() {
                 <th className="px-5 py-3 font-medium">Name</th>
                 <th className="px-5 py-3 font-medium">Quadrant</th>
                 <th className="px-5 py-3 font-medium">Ring</th>
+                <th className="px-5 py-3 font-medium">Status</th>
                 <th className="px-5 py-3 font-medium hidden md:table-cell">Tags</th>
                 <th className="px-5 py-3 font-medium text-right">Actions</th>
               </tr>
@@ -66,6 +67,17 @@ export default function AdminTechRadarPage() {
                   <td className="px-5 py-3">
                     <span className={`rounded-full px-2 py-0.5 text-xs font-medium capitalize ${RING_BADGE[entry.ring] ?? ""}`}>
                       {entry.ring}
+                    </span>
+                  </td>
+                  <td className="px-5 py-3">
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                        (entry.status ?? "published") === "published"
+                          ? "bg-accent-500/15 text-accent-400"
+                          : "bg-yellow-500/15 text-yellow-400"
+                      }`}
+                    >
+                      {entry.status ?? "published"}
                     </span>
                   </td>
                   <td className="px-5 py-3 hidden md:table-cell text-slate-500 text-xs">

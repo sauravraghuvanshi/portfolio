@@ -11,7 +11,7 @@ const STATUS_BADGE: Record<string, string> = {
 };
 
 export default function AdminDecisionsPage() {
-  const gallery = getADRGallery();
+  const gallery = getADRGallery(true);
   const entries = gallery?.entries ?? [];
 
   return (
@@ -48,6 +48,7 @@ export default function AdminDecisionsPage() {
                 <th className="px-5 py-3 font-medium w-20">No.</th>
                 <th className="px-5 py-3 font-medium">Title</th>
                 <th className="px-5 py-3 font-medium">Status</th>
+                <th className="px-5 py-3 font-medium">Decision</th>
                 <th className="px-5 py-3 font-medium hidden md:table-cell">WAF Pillars</th>
                 <th className="px-5 py-3 font-medium hidden lg:table-cell">Date</th>
                 <th className="px-5 py-3 font-medium text-right">Actions</th>
@@ -61,6 +62,17 @@ export default function AdminDecisionsPage() {
                   </td>
                   <td className="px-5 py-3 font-medium text-white max-w-xs truncate">
                     {entry.title}
+                  </td>
+                  <td className="px-5 py-3">
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                        (entry.publishStatus ?? "published") === "published"
+                          ? "bg-accent-500/15 text-accent-400"
+                          : "bg-yellow-500/15 text-yellow-400"
+                      }`}
+                    >
+                      {entry.publishStatus ?? "published"}
+                    </span>
                   </td>
                   <td className="px-5 py-3">
                     <span

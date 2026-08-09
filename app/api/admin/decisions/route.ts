@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
 
-    const gallery = getADRGallery();
+    const gallery = getADRGallery(true);
     const existing = gallery?.entries.find((e) => e.id === parsed.data.id);
     if (existing) {
       return NextResponse.json({ error: "An ADR with this ID already exists" }, { status: 409 });
@@ -30,6 +30,7 @@ export async function POST(request: NextRequest) {
       number: parsed.data.number,
       title: parsed.data.title,
       status: parsed.data.status,
+      publishStatus: parsed.data.publishStatus ?? "draft",
       date: parsed.data.date,
       wafPillars: parsed.data.wafPillars,
       context: parsed.data.context,

@@ -36,6 +36,12 @@ export default function ADREditor({ mode, initialData }: ADREditorProps) {
   const [number, setNumber] = useState(String(initialData?.number ?? ""));
   const [title, setTitle] = useState(initialData?.title ?? "");
   const [status, setStatus] = useState<ADRStatus>(initialData?.status ?? "accepted");
+  // Publish state is separate from `status` (the decision lifecycle). ADRs that
+  // predate this field were publicly visible, so default existing records to
+  // "published" and only new ones to "draft".
+  const [publishStatus, setPublishStatus] = useState<"draft" | "published">(
+    initialData ? (initialData.publishStatus ?? "published") : "draft"
+  );
   const [date, setDate] = useState(initialData?.date ?? new Date().toISOString().slice(0, 10));
   const [wafPillars, setWafPillars] = useState<WAFPillar[]>(initialData?.wafPillars ?? []);
   const [context, setContext] = useState(initialData?.context ?? "");
@@ -84,6 +90,7 @@ export default function ADREditor({ mode, initialData }: ADREditorProps) {
       number: parseInt(number, 10) || 1,
       title: title.trim(),
       status,
+      publishStatus,
       date,
       wafPillars,
       context: context.trim(),
@@ -197,14 +204,28 @@ export default function ADREditor({ mode, initialData }: ADREditorProps) {
           />
         </div>
 
-        {/* Status */}
+        {/* Decision lifecycle */}
         <div>
-          <label className={labelClass}>Status</label>
+          <label className={labelClass}>Decision Status</label>
           <select value={status} onChange={(e) => setStatus(e.target.value as ADRStatus)} className={selectClass}>
             {STATUS_OPTIONS.map((s) => (
               <option key={s.value} value={s.value}>{s.label}</option>
             ))}
           </select>
+        </div>
+
+        {/* Publish state — controls visibility on the public /decisions page */}
+        <div>
+          <label className={labelClass}>Status</label>
+          <select
+            value={publishStatus}
+            onChange={(e) => setPublishStatus(e.target.value as "draft" | "published")}
+            className={selectClass}
+          >
+            <option value="draft">Draft</option>
+            <option value="published">Published</option>
+          </select>
+          <p className="mt-1 text-xs text-slate-500">Drafts are hidden from the public site.</p>
         </div>
 
         {/* Title */}

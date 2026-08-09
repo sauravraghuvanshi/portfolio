@@ -139,6 +139,8 @@ export const ADREntrySchema = z.object({
   number: z.number().int().min(1).max(999),
   title: z.string().min(1, "Title is required").max(300),
   status: z.enum(["accepted", "proposed", "deprecated", "superseded"]).default("accepted"),
+  // Publish state — distinct from `status`, which is the decision lifecycle.
+  publishStatus: z.enum(["draft", "published"]).optional().default("draft"),
   date: z.string().min(1, "Date is required").max(20),
   wafPillars: z
     .array(

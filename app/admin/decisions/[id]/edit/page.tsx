@@ -8,7 +8,7 @@ interface PageProps {
 
 export default async function EditDecisionPage({ params }: PageProps) {
   const { id } = await params;
-  const gallery = getADRGallery();
+  const gallery = getADRGallery(true);
   const entry = gallery?.entries.find((e) => e.id === id);
   if (!entry) notFound();
 

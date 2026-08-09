@@ -18,7 +18,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
   try {
     const { id } = await params;
-    const gallery = getADRGallery();
+    const gallery = getADRGallery(true);
     const existing = gallery?.entries.find((e) => e.id === id);
     if (!existing) {
       return NextResponse.json({ error: "ADR not found" }, { status: 404 });
@@ -35,6 +35,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       number: parsed.data.number ?? existing.number,
       title: parsed.data.title ?? existing.title,
       status: parsed.data.status ?? existing.status,
+      // Legacy ADRs carry no `publishStatus`; they were publicly visible, so an
+      // update that omits the field must not silently unpublish them.
+      publishStatus: parsed.data.publishStatus ?? existing.publishStatus ?? "published",
       date: parsed.data.date ?? existing.date,
       wafPillars: parsed.data.wafPillars ?? existing.wafPillars,
       context: parsed.data.context ?? existing.context,

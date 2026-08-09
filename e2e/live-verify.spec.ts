@@ -241,3 +241,62 @@ test("tech-radar admin: CRUD cycle — create draft, publish, delete", async ({ 
   await page.goto(`${BASE}/admin/tech-radar`, { waitUntil: "domcontentloaded" });
   await expect(page.locator(`text=${testEntry}`)).not.toBeVisible();
 });
+
+test("decisions admin: draft is hidden from /decisions, publish reveals it", async ({ page }) => {
+  test.setTimeout(180_000);
+  await login(page);
+
+  // ADR ids derive from the number, so pick a high one the real records never use.
+  const number = 900 + (Date.now() % 90);
+  const adrId = `adr-${number}`;
+  const title = `LiveTest ADR ${Date.now()}`;
+
+  await page.goto(`${BASE}/admin/decisions/new`, { waitUntil: "domcontentloaded" });
+  await page.waitForSelector("input[placeholder='e.g. 13']", { timeout: 10_000 });
+
+  await page.fill("input[placeholder='e.g. 13']", String(number));
+  await page.fill("input[placeholder*='Azure App Service over Container Apps']", title);
+  // At least one WAF pillar is required, otherwise handleSave short-circuits.
+  await page.locator("button").filter({ hasText: /^Reliability$/ }).click();
+  await page.fill("textarea[placeholder*='What problem or constraint']", "Automated live test — safe to delete");
+  await page.fill("textarea[placeholder*='What was decided']", "Automated live test — safe to delete");
+  await page.fill("textarea[placeholder*='Why this option over the others']", "Automated live test — safe to delete");
+  await page.fill("textarea[placeholder*='What did you give up']", "Automated live test — safe to delete");
+  await page.fill("textarea[placeholder*='What actually happened after']", "Automated live test — safe to delete");
+
+  // selects: [0] = decision lifecycle, [1] = publish state
+  const selects = page.locator("select");
+  await selects.nth(1).selectOption("draft");
+  await page.locator("button").filter({ hasText: /^Save$/ }).click();
+  await page.waitForTimeout(3_000);
+
+  // Admin list shows the draft...
+  await page.goto(`${BASE}/admin/decisions`, { waitUntil: "domcontentloaded" });
+  await expect(page.locator(`text=${title}`).first()).toBeVisible({ timeout: 10_000 });
+
+  // ...but the public page must not. This is the regression the fix targets.
+  await page.goto(`${BASE}/decisions`, { waitUntil: "domcontentloaded" });
+  await expect(page.locator(`text=${title}`)).not.toBeVisible();
+
+  // Flip to published and confirm it surfaces publicly.
+  await page.goto(`${BASE}/admin/decisions/${adrId}/edit`, { waitUntil: "domcontentloaded" });
+  await page.waitForSelector("input[placeholder*='Azure App Service over Container Apps']", { timeout: 10_000 });
+  await page.locator("select").nth(1).selectOption("published");
+  await page.locator("button").filter({ hasText: /^Save$/ }).click();
+  await page.waitForTimeout(3_000);
+
+  await page.goto(`${BASE}/decisions`, { waitUntil: "domcontentloaded" });
+  await expect(page.locator(`text=${title}`).first()).toBeVisible({ timeout: 10_000 });
+
+  // Cleanup.
+  await page.goto(`${BASE}/admin/decisions`, { waitUntil: "domcontentloaded" });
+  const delRow = page.locator("tr").filter({ hasText: title });
+  await delRow.locator("button").last().click();
+  await page.waitForTimeout(500);
+  const confirmBtn = page.locator("button").filter({ hasText: /confirm|yes|delete/i }).first();
+  if (await confirmBtn.isVisible()) await confirmBtn.click();
+  await page.waitForTimeout(2_000);
+
+  await page.goto(`${BASE}/admin/decisions`, { waitUntil: "domcontentloaded" });
+  await expect(page.locator(`text=${title}`)).not.toBeVisible();
+});

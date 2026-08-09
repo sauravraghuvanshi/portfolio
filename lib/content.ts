@@ -303,13 +303,18 @@ export interface TechRadar {
   entries: RadarEntry[];
 }
 
-export const getTechRadar = cache(function getTechRadar(): TechRadar | null {
+export const getTechRadar = cache(function getTechRadar(includeDrafts = false): TechRadar | null {
   const filePath = path.join(contentDir, "tech-radar.json");
   if (!fs.existsSync(filePath)) return null;
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
   const radar = JSON.parse(raw) as TechRadar;
   // Newest-first: reverse entries so admin-appended items surface at the top.
-  return { ...radar, entries: [...radar.entries].reverse() };
+  // Entries predating the publish flag have no `status` \u2014 treat those as published
+  // so nothing already live disappears.
+  const entries = [...radar.entries]
+    .reverse()
+    .filter((e) => includeDrafts || e.status !== "draft");
+  return { ...radar, entries };
 });
 
 // ---------------------------------------------------------------------------
@@ -400,7 +405,10 @@ export interface ADREntry {
   id: string;
   number: number;
   title: string;
+  /** Decision lifecycle — NOT the publish flag. See `publishStatus`. */
   status: ADRStatus;
+  /** Publish state, shown on the public /decisions page only when not "draft". */
+  publishStatus?: "draft" | "published";
   date: string;
   wafPillars: WAFPillar[];
   context: string;
@@ -418,12 +426,16 @@ export interface ADRGallery {
   entries: ADREntry[];
 }
 
-export const getADRGallery = cache(function getADRGallery(): ADRGallery | null {
+export const getADRGallery = cache(function getADRGallery(includeDrafts = false): ADRGallery | null {
   const filePath = path.join(contentDir, "decisions.json");
   if (!fs.existsSync(filePath)) return null;
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
   const gallery = JSON.parse(raw) as ADRGallery;
   // Newest-first: sort by ADR number desc (admin assigns next sequential number).
-  const entries = [...gallery.entries].sort((a, b) => (b.number ?? 0) - (a.number ?? 0));
+  // `publishStatus` is separate from `status` (the decision lifecycle). Entries
+  // predating the flag have none \u2014 treat those as published.
+  const entries = [...gallery.entries]
+    .filter((e) => includeDrafts || e.publishStatus !== "draft")
+    .sort((a, b) => (b.number ?? 0) - (a.number ?? 0));
   return { ...gallery, entries };
 });

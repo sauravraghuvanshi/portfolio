@@ -629,6 +629,8 @@ function buildSavePayloadFromReview(
         number: num,
         title: fields.title || payload.title,
         status: fields.adrStatus || payload.status || "accepted",
+        // Publish state is separate from the decision lifecycle above.
+        publishStatus: fields.status ?? "draft",
         date: fields.date || payload.date || new Date().toISOString().slice(0, 10),
         wafPillars: wafPillars.length > 0 ? wafPillars : ["operational-excellence"],
         context: payload.context || payload.summary,

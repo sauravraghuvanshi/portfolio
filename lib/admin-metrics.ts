@@ -86,7 +86,7 @@ export function getAdminMetrics(): AdminMetrics {
   const talks = getTalks(true);
   const events = getEvents(true);
   const certs = getCertifications(true);
-  const radar = getTechRadar();
+  const radar = getTechRadar(true);
 
   const totals: Record<ContentKind, number> = {
     blog: blogs.length,

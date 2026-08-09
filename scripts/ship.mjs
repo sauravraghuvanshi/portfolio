@@ -52,29 +52,56 @@ function banner(text) { process.stdout.write(`\n━━━ ${text} ━━━\n`);
 function ok(text) { process.stdout.write(`✓ ${text}\n`); }
 function fail(text) { process.stdout.write(`✗ ${text}\n`); }
 
-function runInherit(cmd, args, opts = {}) {
+/**
+ * Windows needs `shell: true` to launch `npm`, because npm is a `.cmd` shim
+ * rather than a real executable. But `shell: true` makes Node concatenate argv
+ * into a single command string *without escaping* — so cmd.exe re-splits any
+ * argument containing spaces. A commit message such as
+ * `fix: make content visible on /events` then reaches git as four extra
+ * pathspecs and it aborts with `'/events' is outside repository`.
+ *
+ * git IS a real executable, so it never needs the shell. Everything git-related
+ * goes through runGit/execGit with `shell: false` and argv is passed verbatim.
+ */
+function spawnAsync(cmd, args, useShell, opts = {}) {
   return new Promise((resolve) => {
     const child = spawn(cmd, args, {
       stdio: "inherit",
-      shell: process.platform === "win32",
+      shell: useShell,
       cwd: portfolioRoot,
       ...opts,
     });
-    child.on("exit", (code) => resolve(code ?? 1));
+    // Without this, a spawn failure (e.g. ENOENT) leaves the promise pending
+    // forever and ship hangs instead of reporting the error.
+    child.on("error", (e) => {
+      fail(`could not run ${cmd}: ${e.message}`);
+      resolve(1);
+    });
+    child.on("exit", (code, signal) => resolve(code ?? (signal ? 1 : 1)));
   });
 }
 
-function exec(cmd, args, opts = {}) {
-  return spawnSync(cmd, args, {
+/** Run an npm script (needs the shell on Windows — npm is a .cmd shim). */
+function runInherit(cmd, args, opts = {}) {
+  return spawnAsync(cmd, args, process.platform === "win32", opts);
+}
+
+/** Run git — never through a shell, so arguments survive verbatim. */
+function runGit(args, opts = {}) {
+  return spawnAsync("git", args, false, opts);
+}
+
+function execGit(args, opts = {}) {
+  return spawnSync("git", args, {
     encoding: "utf8",
-    shell: process.platform === "win32",
+    shell: false,
     cwd: portfolioRoot,
     ...opts,
   });
 }
 
 function gitStatusPorcelain() {
-  const r = exec("git", ["status", "--porcelain"]);
+  const r = execGit(["status", "--porcelain"]);
   return (r.stdout || "").trim();
 }
 
@@ -116,18 +143,19 @@ async function phasePush() {
     return 0;
   }
   // AUTO_PUSH path
-  let code = (await runInherit("git", ["add", "-A"])) ?? 0;
+  let code = await runGit(["add", "-A"]);
   if (code !== 0) { fail("git add failed"); return code; }
-  code = await runInherit("git", ["commit", "-m", COMMIT_MSG]);
+  code = await runGit(["commit", "-m", COMMIT_MSG]);
   if (code !== 0) {
-    // commit may exit non-zero if nothing to commit; continue to push
+    // `git commit` also exits non-zero when there is simply nothing staged.
+    // Distinguish the two: a still-dirty tree means the commit genuinely failed.
     const s2 = gitStatusPorcelain();
     if (s2) { fail("git commit failed"); return code; }
     ok("Nothing to commit, continuing");
   } else {
     ok(`Committed: ${COMMIT_MSG}`);
   }
-  code = await runInherit("git", ["push"]);
+  code = await runGit(["push"]);
   if (code !== 0) { fail("git push failed"); return code; }
   ok("Pushed to origin");
   return 0;

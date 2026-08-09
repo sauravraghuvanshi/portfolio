@@ -8,7 +8,7 @@ interface PageProps {
 
 export default async function EditRadarEntryPage({ params }: PageProps) {
   const { id } = await params;
-  const entry = getTechRadar()?.entries.find((e) => e.id === id);
+  const entry = getTechRadar(true)?.entries.find((e) => e.id === id);
   if (!entry) notFound();
 
   return (

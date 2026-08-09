@@ -14,7 +14,8 @@
       "tags": [
         "frontend",
         "backend"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "python-311",
@@ -27,7 +28,8 @@
       "tags": [
         "backend",
         "ai"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "bicep",
@@ -40,7 +42,8 @@
       "tags": [
         "azure",
         "iac"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "arm-templates",
@@ -53,7 +56,8 @@
       "tags": [
         "azure",
         "iac"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "shell-scripts",
@@ -66,7 +70,8 @@
       "tags": [
         "devops",
         "linux"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "nextjs-app-router",
@@ -75,7 +80,8 @@
       "ring": "adopt",
       "summary": "Server components plus streaming have changed how I structure frontends. This site runs on it.",
       "useWhen": "Marketing + dashboard hybrids, any SSR/SSG mix, anything needing edge rendering.",
-      "avoidWhen": "Pure SPAs where Vite is simpler, or extreme low-bundle requirements."
+      "avoidWhen": "Pure SPAs where Vite is simpler, or extreme low-bundle requirements.",
+      "status": "published"
     },
     {
       "id": "fastapi",
@@ -84,7 +90,8 @@
       "ring": "adopt",
       "summary": "Pydantic-typed APIs with auto-OpenAPI is the productivity peak for Python services.",
       "useWhen": "Python backends, AI service wrappers, anything that needs a typed contract fast.",
-      "avoidWhen": "If your team is already on Django REST Framework and happy."
+      "avoidWhen": "If your team is already on Django REST Framework and happy.",
+      "status": "published"
     },
     {
       "id": "tailwind-v4",
@@ -93,7 +100,8 @@
       "ring": "adopt",
       "summary": "Oxide engine is fast, CSS-first config is sane. I no longer write component-level CSS.",
       "useWhen": "Any new web project.",
-      "avoidWhen": "Design systems with strict token + theming requirements that need a CSS-in-JS lib."
+      "avoidWhen": "Design systems with strict token + theming requirements that need a CSS-in-JS lib.",
+      "status": "published"
     },
     {
       "id": "react-server-components",
@@ -101,7 +109,8 @@
       "quadrant": "languages",
       "ring": "trial",
       "summary": "Real productivity wins for content-heavy sites once you internalize the server/client split.",
-      "useWhen": "Content + dashboard apps, anywhere data fetching dominates render."
+      "useWhen": "Content + dashboard apps, anywhere data fetching dominates render.",
+      "status": "published"
     },
     {
       "id": "azure-container-apps",
@@ -114,7 +123,8 @@
       "tags": [
         "azure",
         "compute"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "azure-functions-flex",
@@ -127,7 +137,8 @@
       "tags": [
         "azure",
         "serverless"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "docker",
@@ -140,7 +151,8 @@
       "tags": [
         "devops",
         "compute"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "linux",
@@ -152,7 +164,8 @@
       "avoidWhen": "Windows-specific workloads like .NET Framework or legacy IIS apps.",
       "tags": [
         "infrastructure"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "azure-foundry",
@@ -165,7 +178,8 @@
       "tags": [
         "azure",
         "ai"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "aks",
@@ -178,7 +192,8 @@
       "tags": [
         "azure",
         "kubernetes"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "azure-ai-search",
@@ -191,7 +206,8 @@
       "tags": [
         "azure",
         "ai"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "cosmos-db",
@@ -204,7 +220,8 @@
       "tags": [
         "azure",
         "database"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "postgres-flex",
@@ -217,7 +234,8 @@
       "tags": [
         "azure",
         "database"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "service-bus",
@@ -230,7 +248,8 @@
       "tags": [
         "azure",
         "messaging"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "event-hubs",
@@ -242,7 +261,8 @@
       "tags": [
         "azure",
         "messaging"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "azure-redis",
@@ -253,7 +273,8 @@
       "tags": [
         "azure",
         "caching"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "key-vault",
@@ -265,7 +286,8 @@
       "tags": [
         "azure",
         "security"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "aws",
@@ -278,7 +300,8 @@
       "tags": [
         "cloud",
         "multi-cloud"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "alibaba-cloud",
@@ -291,7 +314,8 @@
       "tags": [
         "cloud",
         "multi-cloud"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "github-actions",
@@ -304,7 +328,8 @@
       "tags": [
         "devops",
         "cicd"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "azd",
@@ -317,7 +342,8 @@
       "tags": [
         "azure",
         "devops"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "claude-code",
@@ -330,7 +356,8 @@
       "tags": [
         "ai",
         "developer-tools"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "github-copilot",
@@ -342,7 +369,8 @@
       "tags": [
         "ai",
         "developer-tools"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "playwright",
@@ -354,7 +382,8 @@
       "avoidWhen": "Pure unit tests.",
       "tags": [
         "testing"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "terraform",
@@ -367,7 +396,8 @@
       "tags": [
         "iac",
         "devops"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "azure-cli",
@@ -378,7 +408,8 @@
       "tags": [
         "azure",
         "devops"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "vagrant",
@@ -391,7 +422,8 @@
       "tags": [
         "devops",
         "infrastructure"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "codex",
@@ -404,7 +436,8 @@
       "tags": [
         "ai",
         "developer-tools"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "azure-portal",
@@ -414,7 +447,8 @@
       "summary": "For exploration and breakglass only. Everything that ships should be code.",
       "tags": [
         "azure"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "mcp-servers",
@@ -426,7 +460,8 @@
       "tags": [
         "ai",
         "developer-tools"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "generative-ai-agentic",
@@ -438,7 +473,8 @@
       "avoidWhen": "Deterministic problems with no ambiguity — regex and rules are still faster and cheaper.",
       "tags": [
         "ai"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "rag-hybrid",
@@ -449,7 +485,8 @@
       "useWhen": "Any production RAG over heterogeneous content.",
       "tags": [
         "ai"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "ai-evals",
@@ -460,7 +497,8 @@
       "useWhen": "Always when an LLM is in the request path.",
       "tags": [
         "ai"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "managed-identity",
@@ -472,7 +510,8 @@
       "tags": [
         "azure",
         "security"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "zero-trust",
@@ -482,7 +521,8 @@
       "summary": "Private endpoints + NSGs + Entra Conditional Access. The new baseline for anything touching prod data.",
       "tags": [
         "security"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "azure-waf",
@@ -494,7 +534,8 @@
       "tags": [
         "azure",
         "architecture"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "cloud-adoption-framework",
@@ -506,7 +547,8 @@
       "tags": [
         "azure",
         "architecture"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "serverless-architecture",
@@ -518,7 +560,8 @@
       "avoidWhen": "Long-running, stateful, or latency-sensitive workloads.",
       "tags": [
         "architecture"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "hybrid-cloud",
@@ -531,7 +574,8 @@
         "azure",
         "architecture",
         "cloud"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "iac-as-product",
@@ -542,7 +586,8 @@
       "tags": [
         "iac",
         "devops"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "finops-tagging",
@@ -553,7 +598,8 @@
       "tags": [
         "azure",
         "finops"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "agentic-workflows",
@@ -564,7 +610,8 @@
       "tags": [
         "ai",
         "developer-tools"
-      ]
+      ],
+      "status": "published"
     },
     {
       "id": "openai-voice-live-api",
@@ -580,7 +627,8 @@
         "realtime-ai",
         "azure",
         "openai"
-      ]
+      ],
+      "status": "published"
     }
   ]
 }

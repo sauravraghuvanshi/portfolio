@@ -12,7 +12,7 @@ export async function GET() {
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const radar = getTechRadar();
+  const radar = getTechRadar(true);
   return NextResponse.json(radar?.entries ?? []);
 }
 
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
 
-    const existing = getTechRadar()?.entries.find((e) => e.id === parsed.data.id);
+    const existing = getTechRadar(true)?.entries.find((e) => e.id === parsed.data.id);
     if (existing) {
       return NextResponse.json({ error: "An entry with this ID already exists" }, { status: 409 });
     }

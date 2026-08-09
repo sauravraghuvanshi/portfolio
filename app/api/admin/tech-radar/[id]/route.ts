@@ -16,7 +16,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const { id } = await params;
-  const entry = getTechRadar()?.entries.find((e) => e.id === id);
+  const entry = getTechRadar(true)?.entries.find((e) => e.id === id);
   if (!entry) {
     return NextResponse.json({ error: "Entry not found" }, { status: 404 });
   }
@@ -31,7 +31,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
   try {
     const { id } = await params;
-    const existing = getTechRadar()?.entries.find((e) => e.id === id);
+    const existing = getTechRadar(true)?.entries.find((e) => e.id === id);
     if (!existing) {
       return NextResponse.json({ error: "Entry not found" }, { status: 404 });
     }
@@ -52,7 +52,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       ...((parsed.data.avoidWhen ?? existing.avoidWhen) && { avoidWhen: parsed.data.avoidWhen ?? existing.avoidWhen }),
       ...((parsed.data.movedFrom ?? existing.movedFrom) && { movedFrom: parsed.data.movedFrom ?? existing.movedFrom }),
       ...((parsed.data.tags ?? existing.tags)?.length && { tags: parsed.data.tags ?? existing.tags }),
-      status: parsed.data.status ?? existing.status ?? "draft",
+      // Legacy entries carry no `status`; they were publicly visible, so an
+      // update that omits the field must not silently unpublish them.
+      status: parsed.data.status ?? existing.status ?? "published",
     };
 
     saveRadarEntry(entry);
