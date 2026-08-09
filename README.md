@@ -14,14 +14,14 @@
 | Area | Count |
 |---|---|
 | Certifications | 12 |
-| Projects | 6 |
+| Projects | 9 |
 | Case Studies | 3 |
-| Blog Posts | 4 |
-| YouTube Talks | 12 |
-| Events | 32 |
+| Blog Posts | 5 |
+| YouTube Talks | 13 |
+| Events | 33 |
 | Speaking Engagements | 4 |
 
-_Last synced: 2026-04-21_
+_Last synced: 2026-08-09_
 
 <!-- SYNC:STATS:END -->
 
@@ -35,9 +35,9 @@ _Last synced: 2026-04-21_
 - **Portfolio & Resume** — Skills, certifications, projects, case studies, downloadable PDF resume
 - **Interactive Career Timeline** — Vertical timeline with expanding cards, animated stat counters, tech badges, milestone icons, and "Present" pulse badge
 - **Command Palette** — Spotlight-style search (Cmd+K / Ctrl+K) across blogs, case studies, projects, talks, events, and pages with fuzzy matching
-- **Speaking & Events** — 32 speaking engagements with photo galleries, filters, and interactive speaking footprint map
+- **Speaking & Events** — 33 speaking engagements with photo galleries, filters, and interactive speaking footprint map
 - **Speaking Events Map** — India-centered interactive SVG map with glowing pins, image-rich popups, city filtering, and dark-mode glow effects (`react-simple-maps`)
-- **YouTube Talks** — 12 sessions with lazy-loaded embeds (thumbnail-first, iframe on click)
+- **YouTube Talks** — 13 sessions with lazy-loaded embeds (thumbnail-first, iframe on click)
 - **Technical Blog** — MDX-powered blog with rich typography, syntax highlighting, reading time, Table of Contents with scroll-spy, and related posts
 - **Social Sharing** — LinkedIn (copies post text + opens composer), X/Twitter, and copy link on blog posts
 - **RSS Feed** — Auto-generated RSS feed at `/feed.xml` with link auto-discovery
@@ -55,7 +55,8 @@ _Last synced: 2026-04-21_
 - **Tech Radar** — `/tech-radar` — ThoughtWorks-style interactive radar with 50 entries across 4 quadrants (Languages & Frameworks · Platforms · Tools · Techniques) and 4 rings (Adopt · Trial · Assess · Hold). Custom SVG (no chart library) with deterministic FNV-1a hash–seeded dot positions, quadrant filter chips, ring-movement ▲/▼ indicators, accessible quadrant lists rendered below the radar (mobile + screen-reader fallback), and a Framer Motion right-side detail drawer showing summary, "Use when," "Avoid when," and tags. Data lives in `content/tech-radar.json` with edition + `publishedAt` so future revisions can show ring movements.
 - **ADR Gallery** — `/decisions` — Architecture Decision Records gallery documenting 12 decisions made while building this portfolio. WAF pillar filter chips (Reliability · Security · Cost Optimization · Operational Excellence · Performance Efficiency), 2-col card grid with status badges (Accepted/Proposed/Deprecated/Superseded), and a Framer Motion slide-in drawer showing Context, Options Considered, Decision, Rationale, Trade-offs, and Outcome. Data in `content/decisions.json`. Full admin CRUD at `/admin/decisions` — unique among cloud architect portfolios for showing decision-making process, not just outcomes.
 - **Architecture Playground** — Extracted to its own repo/App Service at [architecture-playground.azurewebsites.net](https://architecture-playground.azurewebsites.net). Interactive multi-cloud architecture diagram editor (Azure/AWS/GCP icons, connectable edges, animated playback, PNG/JSON/GIF export). Navigation links to it externally.
-- **Spotlight Project Card** — The portfolio website itself (`portfolio-website`) renders as a branded spotlight card in the Projects grid: brand-blue border, stagger animations, infra stat chips, and a pulsing "Live on Azure" badge.
+- **Frontier Boardroom** — Featured project: five AI agents acting as a virtual C-suite (CEO/CFO/CMO/CTO/Legal), each on a different frontier model via Microsoft Foundry + Azure Databricks Mosaic AI, with a Teams-style chat UI and RAG over a Foundry IQ Knowledge Base. [Repo](https://github.com/sauravraghuvanshi/frontier-boardroom) · [Live](https://app-frontier-prod-frontend.azurewebsites.net)
+- **Uniform Project Cards** — Every project in the grid renders through the same card, with no per-`id` special cases. Titles, descriptions, and outcomes are clamped (`line-clamp` + `min-h`) and the tech-stack footer is pinned with `mt-auto`, so a long record can't stretch its grid row and leave neighbours with dead space. Full text lives on `/projects/[slug]`.
 - **Certification Verify URLs + Click-to-Copy** — Each certification has an optional `verifyUrl` (Microsoft Learn, AWS, Udacity). A `CopyIdPill` component lets visitors click to copy the credential ID with visual feedback — particularly useful for AWS certs that require manual paste.
 - **Content Sync System** — On every App Service startup, `sync-content.mjs` merges bundled git-tracked content into `/home/data/content/` (persistent storage). Uses field-merge semantics: admin-created MDX files are never overwritten; JSON arrays receive new git-tracked records while preserving admin edits. Prevents admin content from being wiped on each deploy.
 - **Admin Panel** — Protected dashboard at `/admin` with authentication, managing blogs, case studies, projects, talks, events, certifications, tech radar entries, and architecture decision records (ADR Gallery)

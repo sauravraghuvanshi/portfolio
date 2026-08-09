@@ -253,5 +253,62 @@
     "featured": false,
     "status": "draft",
     "year": 2026
+  },
+  {
+    "id": "frontier-boardroom",
+    "title": "Frontier Boardroom — A Multi-Model AI C-Suite",
+    "description": "Five AI agents act as a virtual C-suite — CEO, CFO, CMO, CTO and Legal — each running on a different frontier model and debating a real business decision in a live Teams-style conversation. OpenAI, xAI, Meta and Mistral route through Microsoft Foundry; Anthropic through Azure Databricks Mosaic AI. Any seat can be reassigned or hot-swapped mid-session, and every persona answers from one shared Foundry IQ knowledge base with inspectable citations.",
+    "outcomes": [
+      "Five frontier models in one live debate — three seats on Microsoft Foundry, two on Azure Databricks Mosaic AI",
+      "Any seat reassigned or hot-swapped mid-session, with no change to persona or orchestration code",
+      "Grounded, not improvised — shared Foundry IQ retrieval with citations users can open and inspect",
+      "Model line-up — CEO and CMO on Microsoft Foundry deployments, CTO on gpt-4.1, CFO on Claude Sonnet 4.6 and Legal on Claude Opus 4.6 served from Azure Databricks Mosaic AI",
+      "Prep mode — private 1:1 coaching with any persona, plus @mention delegation from the CEO seat (\"@CTO estimate the delivery risk\") that returns a CEO synthesis grounded in the delegated response",
+      "Real-time WebSocket experience — turns, tokens, citations, server-controlled mood transitions from cordial to resolved, and Azure AI Speech audio with visemes stream into a Teams-style UI",
+      "Demo-safe by design — a recorded fallback debate keeps the keynote demo running when live model services are unavailable, so a stage demo never depends on model availability",
+      "Zero secrets in code — managed identity for Azure resources, external model-endpoint credentials in Key Vault, and the full stack provisioned from Bicep with ACR, App Service and Application Insights"
+    ],
+    "tags": [
+      "Multi-Agent AI",
+      "Microsoft Foundry",
+      "Azure Databricks",
+      "Mosaic AI",
+      "Foundry IQ",
+      "RAG",
+      "FastAPI",
+      "WebSockets",
+      "Azure AI Speech",
+      "Bicep"
+    ],
+    "category": ["AI", "Azure"],
+    "techStack": [
+      "Python 3.12",
+      "FastAPI",
+      "Pydantic v2",
+      "WebSockets",
+      "React 18",
+      "TypeScript",
+      "Vite",
+      "Zustand",
+      "Tailwind CSS",
+      "Microsoft Foundry",
+      "Azure Databricks Mosaic AI",
+      "Microsoft Foundry IQ",
+      "Azure AI Search",
+      "Azure Blob Storage",
+      "Azure AI Speech",
+      "Azure AI Language",
+      "Azure App Service",
+      "Azure Container Registry",
+      "Azure Key Vault",
+      "Application Insights",
+      "Bicep",
+      "Docker"
+    ],
+    "githubUrl": "https://github.com/sauravraghuvanshi/frontier-boardroom",
+    "liveUrl": "https://app-frontier-prod-frontend.azurewebsites.net",
+    "featured": true,
+    "year": 2026,
+    "status": "published"
   }
 ]

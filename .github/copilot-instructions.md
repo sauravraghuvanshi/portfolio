@@ -16,7 +16,7 @@
 - **`troubleshoot-deploy`** — Troubleshoot Deployment (`.claude/skills/troubleshoot-deploy/SKILL.md`)
 - **`update-ai-agent`** — Update AI Agent (`.claude/skills/update-ai-agent/SKILL.md`)
 
-_Last synced: 2026-04-21_
+_Last synced: 2026-08-09_
 
 <!-- SYNC:SKILLS:END -->
 
@@ -107,6 +107,6 @@ Any failure → fix → re-run → only then confirm to the user.
 
 ---
 
-_**Last auto-synced:** 2026-04-21T19:47:28.398Z · commit `b99a623 feat(certs): click-to-copy credential ID pill with AWS verification hint` · via [`scripts/sync-docs.mjs`](../scripts/sync-docs.mjs)_
+_**Last auto-synced:** 2026-08-09T18:49:55.846Z · commit `082a908 fix(api): stop update schemas silently overwriting omitted fields` · via [`scripts/sync-docs.mjs`](../scripts/sync-docs.mjs)_
 
 <!-- SYNC:FOOTER:END -->
