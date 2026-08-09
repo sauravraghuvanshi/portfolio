@@ -77,7 +77,7 @@ Before the session ends or when the user says "done", "that's all", "push", or s
 |---|---|
 | Subscription | `60e58e3f-da14-4fa7-89dd-3d0369ddbc8b` (Visual Studio Enterprise) |
 | RG | `rg-saurav-portfolio` (Central India) |
-| App Service | `saurav-portfolio` (F1 Free, Linux, Node 20) |
+| App Service | `saurav-portfolio` (B1, Linux, Node 20) |
 | AI Foundry | `saurav-portfolio-ai` (East US) — Agent: `saurav-portfolio-ai-project-agent` |
 
 ## CI/CD

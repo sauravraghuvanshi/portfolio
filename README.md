@@ -10,6 +10,7 @@
 [![Next.js 16](https://img.shields.io/badge/Next.js-16-000?logo=next.js)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=fff)](https://www.typescriptlang.org)
 [![Azure App Service](https://img.shields.io/badge/Azure-App%20Service-0078D4?logo=microsoftazure&logoColor=fff)](https://azure.microsoft.com/products/app-service)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
 <img src="docs/screenshots/home.jpg" alt="Portfolio homepage showing the hero section, headline, call-to-action buttons and navigation" width="900">
 
@@ -297,6 +298,14 @@ Content is validated with Zod at every boundary, so a malformed entry fails loud
 - Managed identity in production — no AI credentials in code or environment
 - Production builds emit no `console.log` output
 - Semantic HTML, keyboard navigable, ARIA-labelled, skip-to-content link, honours `prefers-reduced-motion`
+
+---
+
+## License
+
+The **code** is released under the [MIT License](LICENSE) — fork it, adapt it, ship your own portfolio on it. Attribution is appreciated but not required.
+
+The **content is not.** Everything under `content/` and the images in `public/` — blog posts, case studies, talks, résumé, photographs and personal branding — remain the property of Saurav Raghuvanshi and are not covered by the MIT grant. If you fork this, replace them with your own (see [Make it yours](#6-make-it-yours)).
 
 ---
 
