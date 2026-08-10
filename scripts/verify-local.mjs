@@ -62,6 +62,26 @@ async function probe(path) {
   }
 }
 
+/**
+ * Poll the base URL until the server actually accepts a connection.
+ * Stdout patterns alone are unreliable — `predev` output can false-positive
+ * (e.g. "Already up to date." contains "ready"), and Next prints "- Local: ..."
+ * before it finishes binding. Only a successful connect proves readiness.
+ */
+async function waitForPort(deadline) {
+  let lastErr = "no attempt";
+  while (Date.now() < deadline) {
+    try {
+      await fetch(BASE, { signal: AbortSignal.timeout(5_000) });
+      return;
+    } catch (e) {
+      lastErr = String(e?.message || e);
+      await sleep(500);
+    }
+  }
+  throw new Error(`Server never accepted a connection at ${BASE} — last error: ${lastErr}`);
+}
+
 async function waitForReady(child) {
   const deadline = Date.now() + READY_TIMEOUT_MS;
   let buffer = "";
@@ -70,10 +90,10 @@ async function waitForReady(child) {
       const text = chunk.toString();
       buffer += text;
       process.stdout.write(text.replace(/^/gm, "  | "));
-      if (/Ready|Local:\s+http|started server on/i.test(buffer)) {
+      // \bReady in\b — NOT /Ready/i, which matches "Already up to date." from predev
+      if (/\bReady in\b|Local:\s+http|started server on/i.test(buffer)) {
         cleanup();
-        // small grace period so Next finishes binding
-        setTimeout(resolve, 500);
+        waitForPort(deadline).then(resolve, reject);
       }
     };
     const onExit = (code) => {
