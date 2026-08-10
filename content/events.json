@@ -1113,5 +1113,41 @@
       "lat": 28.4595,
       "lng": 77.0266
     }
+  },
+  {
+    "slug": "ai-first-founders-meetup",
+    "title": "AI First Founders' Meetup — Chennai",
+    "year": 2026,
+    "format": "Speaker",
+    "topic": "Generative AI",
+    "tags": [
+      "AI",
+      "Generative AI",
+      "Azure",
+      "Microsoft",
+      "Startups"
+    ],
+    "summary": "Spoke at the AI First Founders' Meetup in Chennai — a founder-focused summit run by Microsoft's AI Partner Catalyst Digital Native team in partnership with MudhalVC and hosted by Idea Pattarai. The session met founders where the conversation has moved to: no longer whether AI belongs in the product, but how to get it right at scale, at speed, and without burning runway. Covered building AI-native products on Microsoft's AI ecosystem, agent design patterns, and the path from product to market with a defensible view of ROI.",
+    "highlights": [
+      "Delivered a guest speaker session on building AI-native products and agentic systems with Microsoft's AI ecosystem",
+      "Walked founders through the agent capability spectrum — retrieval, task, and autonomous — and where each one earns its place in a product roadmap",
+      "Joined Microsoft Startups colleagues Shyam Sankaran (Account Director) and RamGanesh V J (Solutions Engineer) on the speaker lineup",
+      "Addressed the implementation, scaling, and ROI questions specific to early-stage teams building under runway constraints"
+    ],
+    "impact": [],
+    "coverImage": "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/ai-first-founders-meetup/cover.webp",
+    "coverImagePosition": "center",
+    "images": [
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/ai-first-founders-meetup/photo-1.jpg",
+      "https://sauravportfoliomedia.blob.core.windows.net/blog-images/events/ai-first-founders-meetup/photo-2.jpg"
+    ],
+    "featured": true,
+    "status": "published",
+    "location": {
+      "city": "Chennai",
+      "country": "India",
+      "lat": 13.0827,
+      "lng": 80.2707
+    }
   }
 ]
