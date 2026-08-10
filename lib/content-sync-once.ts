@@ -28,6 +28,10 @@ const SPECS: Record<string, MergeSpec> = {
     key: "code",
     placeholderValues: { verifyUrl: ["#", "", null] },
   },
+  // Events added in the repo (committed to content/events.json) must reach
+  // /home/data/content/events.json, otherwise they exist in the bundle and the
+  // sitemap but never render — the page getters read the persistent copy.
+  "events.json": { key: "slug" },
 };
 
 const synced = new Set<string>();

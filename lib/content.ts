@@ -219,6 +219,7 @@ export function getEventClusters(events: Event[]): CityCluster[] {
 }
 
 export const getEvents = cache(function getEvents(includeDrafts = false): Event[] {
+  ensureContentSynced("events.json");
   const filePath = path.join(contentDir, "events.json");
   if (!fs.existsSync(filePath)) return [];
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");

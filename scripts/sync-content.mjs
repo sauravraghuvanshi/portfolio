@@ -38,6 +38,7 @@ const FIELD_MERGE = {
   },
   "projects.json": { key: "id" },
   "talks.json": { key: "id" },
+  "events.json": { key: "slug" },
 };
 
 function copyFileIfMissing(src, dest) {
