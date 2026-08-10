@@ -71,6 +71,7 @@ export function getFeaturedCaseStudies(): CaseStudy[] {
 }
 
 export const getProfile = cache(function getProfile() {
+  ensureContentSynced("profile.json");
   const filePath = path.join(contentDir, "profile.json");
   if (!fs.existsSync(filePath)) return { name: "", title: "", summary: "", social: {}, skills: [], experience: [] };
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
@@ -93,6 +94,7 @@ export interface Project {
 }
 
 export const getProjects = cache(function getProjects(includeDrafts = false): Project[] {
+  ensureContentSynced("projects.json");
   const filePath = path.join(contentDir, "projects.json");
   if (!fs.existsSync(filePath)) return [];
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
@@ -259,6 +261,7 @@ export interface Talk {
 }
 
 export const getTalks = cache(function getTalks(includeDrafts = false): Talk[] {
+  ensureContentSynced("talks.json");
   const filePath = path.join(contentDir, "talks.json");
   if (!fs.existsSync(filePath)) return [];
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
@@ -305,6 +308,7 @@ export interface TechRadar {
 }
 
 export const getTechRadar = cache(function getTechRadar(includeDrafts = false): TechRadar | null {
+  ensureContentSynced("tech-radar.json");
   const filePath = path.join(contentDir, "tech-radar.json");
   if (!fs.existsSync(filePath)) return null;
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
@@ -428,6 +432,7 @@ export interface ADRGallery {
 }
 
 export const getADRGallery = cache(function getADRGallery(includeDrafts = false): ADRGallery | null {
+  ensureContentSynced("decisions.json");
   const filePath = path.join(contentDir, "decisions.json");
   if (!fs.existsSync(filePath)) return null;
   const raw = fs.readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");

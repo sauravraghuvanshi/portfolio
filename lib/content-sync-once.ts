@@ -1,12 +1,20 @@
 /**
- * content-sync-once.ts — Lazy, idempotent field-merge of bundled content
+ * content-sync-once.ts — Lazy, idempotent reconciliation of bundled content
  * into the Azure persistent volume, run on first access from the server.
  *
- * Why: sync-content.mjs is intended to run at startup but isn't currently
- * wired into the standalone entry. This makes the sync self-healing: the
- * first time a content getter runs after a deploy, it field-merges bundled
- * values into `/home/data/content/<file>.json`, preserving admin-edited
- * values and replacing only missing/placeholder fields.
+ * Why: production reads `/home/data/content` (Azure Files), NOT the deployed
+ * bundle — that's what makes admin-panel edits survive zipdeploy. The flip
+ * side is that content committed to `content/*.json` in the repo reaches the
+ * zip and the build-time prerender (sitemap) but never the running pages.
+ * sync-content.mjs exists to reconcile the two, but nothing invokes it in
+ * production. This makes the sync self-healing: the first time a content
+ * getter runs after a deploy, it reconciles the bundle into the volume.
+ *
+ * Two modes:
+ *   - merge (default): append bundle-only records, backfill fields that are
+ *     missing/placeholder in the persistent copy. Admin edits always win.
+ *   - overwrite: copy the bundle over the persistent file wholesale. Only for
+ *     code-managed files that no admin route writes.
  *
  * Called from `lib/content.ts` getters. Cheap: each file syncs at most once
  * per process, behind a module-level flag. Safe: any failure is logged and
@@ -19,11 +27,18 @@ import { contentDir, bundledContentDir } from "./content-dir";
 type Placeholders = Record<string, unknown[]>;
 
 interface MergeSpec {
+  /** Field that identifies a record within the array. */
   key: string;
+  /** Persistent values to treat as "missing" and replace from the bundle. */
   placeholderValues?: Placeholders;
+  /**
+   * For object-wrapped files (e.g. `{ edition, entries: [...] }`), the property
+   * holding the record array. Omit for files that are a top-level array.
+   */
+  entriesField?: string;
 }
 
-const SPECS: Record<string, MergeSpec> = {
+const SPECS = {
   "certifications.json": {
     key: "code",
     placeholderValues: { verifyUrl: ["#", "", null] },
@@ -32,7 +47,21 @@ const SPECS: Record<string, MergeSpec> = {
   // /home/data/content/events.json, otherwise they exist in the bundle and the
   // sitemap but never render — the page getters read the persistent copy.
   "events.json": { key: "slug" },
-};
+  "projects.json": { key: "id" },
+  "talks.json": { key: "id" },
+  // Object-wrapped: the records live under `entries`, so a plain array merge
+  // would silently no-op on these two.
+  "tech-radar.json": { key: "id", entriesField: "entries" },
+  "decisions.json": { key: "id", entriesField: "entries" },
+} satisfies Record<string, MergeSpec>;
+
+/**
+ * Code-managed files with no admin write path — the bundle is the source of
+ * truth, so replace the persistent copy outright.
+ */
+const OVERWRITE = ["profile.json"] as const;
+
+export type SyncableFile = keyof typeof SPECS | (typeof OVERWRITE)[number];
 
 const synced = new Set<string>();
 
@@ -47,18 +76,38 @@ function readJson(p: string): unknown {
   return JSON.parse(fs.readFileSync(p, "utf-8").replace(/^\uFEFF/, ""));
 }
 
-function fieldMerge(file: string, spec: MergeSpec) {
+/** Resolve bundle/persistent paths, or null when there is nothing to do. */
+function resolvePaths(file: string) {
   const bundledPath = path.join(bundledContentDir, file);
   const persistentPath = path.join(contentDir, file);
+  if (!fs.existsSync(bundledPath)) return null; // nothing to sync from
+  // Local dev: contentDir === bundledContentDir, so this is a no-op.
+  if (path.resolve(bundledPath) === path.resolve(persistentPath)) return null;
+  return { bundledPath, persistentPath };
+}
 
-  if (!fs.existsSync(bundledPath)) return; // nothing to merge from
-  // If contentDir === bundledContentDir (local dev), do nothing.
-  if (path.resolve(bundledPath) === path.resolve(persistentPath)) return;
+/** Seed a missing persistent file straight from the bundle. */
+function seed(bundledPath: string, persistentPath: string, file: string) {
+  fs.mkdirSync(path.dirname(persistentPath), { recursive: true });
+  fs.copyFileSync(bundledPath, persistentPath);
+  console.log(`[content-sync] seeded ${file} from bundle`);
+}
+
+function overwrite(file: string) {
+  const paths = resolvePaths(file);
+  if (!paths) return;
+  fs.mkdirSync(path.dirname(paths.persistentPath), { recursive: true });
+  fs.copyFileSync(paths.bundledPath, paths.persistentPath);
+  console.log(`[content-sync] overwrote ${file} from bundle`);
+}
+
+function fieldMerge(file: string, spec: MergeSpec) {
+  const paths = resolvePaths(file);
+  if (!paths) return;
+  const { bundledPath, persistentPath } = paths;
 
   if (!fs.existsSync(persistentPath)) {
-    fs.mkdirSync(path.dirname(persistentPath), { recursive: true });
-    fs.copyFileSync(bundledPath, persistentPath);
-    console.log(`[content-sync] seeded ${file} from bundle`);
+    seed(bundledPath, persistentPath, file);
     return;
   }
 
@@ -70,20 +119,32 @@ function fieldMerge(file: string, spec: MergeSpec) {
     console.warn(`[content-sync] ${file}: parse failed — ${(e as Error).message}`);
     return;
   }
-  if (!Array.isArray(bundled) || !Array.isArray(persistent)) return;
+
+  // Unwrap object-shaped files ({ edition, entries: [...] }) down to the array.
+  // `persistentRecords` stays a live reference into `persistent`, so mutating
+  // it updates the wrapper we write back.
+  const pick = (v: unknown) =>
+    spec.entriesField ? (v as Record<string, unknown> | null)?.[spec.entriesField] : v;
+  const bundledRecords = pick(bundled);
+  const persistentRecords = pick(persistent);
+  if (!Array.isArray(bundledRecords) || !Array.isArray(persistentRecords)) {
+    console.warn(`[content-sync] ${file}: expected an array of records — skipping`);
+    return;
+  }
 
   const { key, placeholderValues = {} } = spec;
   const byKey = new Map<unknown, Record<string, unknown>>(
-    persistent.map((r) => [(r as Record<string, unknown>)?.[key], r as Record<string, unknown>])
+    persistentRecords.map((r) => [(r as Record<string, unknown>)?.[key], r as Record<string, unknown>])
   );
   let changes = 0;
 
-  for (const bRecord of bundled as Record<string, unknown>[]) {
+  for (const bRecord of bundledRecords as Record<string, unknown>[]) {
     const id = bRecord[key];
     if (id == null) continue;
     const pRecord = byKey.get(id);
     if (!pRecord) {
-      (persistent as Record<string, unknown>[]).push({ ...bRecord });
+      persistentRecords.push({ ...bRecord });
+      byKey.set(id, bRecord);
       changes++;
       continue;
     }
@@ -108,14 +169,15 @@ function fieldMerge(file: string, spec: MergeSpec) {
 }
 
 /**
- * Ensure a bundled content file has been field-merged into the persistent
- * volume at least once this process. Safe no-op after the first call.
+ * Ensure a bundled content file has been reconciled into the persistent volume
+ * at least once this process. Safe no-op after the first call, and on local dev.
  */
-export function ensureContentSynced(file: keyof typeof SPECS) {
+export function ensureContentSynced(file: SyncableFile) {
   if (synced.has(file)) return;
   synced.add(file);
   try {
-    fieldMerge(file, SPECS[file]);
+    if ((OVERWRITE as readonly string[]).includes(file)) overwrite(file);
+    else fieldMerge(file, SPECS[file as keyof typeof SPECS]);
   } catch (e) {
     console.warn(`[content-sync] ${file}: unexpected error — ${(e as Error).message}`);
   }

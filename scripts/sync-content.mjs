@@ -9,10 +9,14 @@
  *   - JSON files: copy only if file doesn't exist (admin is source of truth)
  *   - profile.json: ALWAYS overwrite (code-managed, no admin API)
  *   - portfolio-rag.json: ALWAYS overwrite (generated)
- *   - certifications.json: FIELD-MERGE — preserves admin edits, backfills
- *     missing/placeholder fields from the bundle (so code-driven enrichment
- *     like new verifyUrl / credentialId values reach persistent storage
- *     without clobbering anything the admin has changed).
+ *   - FIELD_MERGE files: preserve admin edits, append bundle-only records, and
+ *     backfill missing/placeholder fields from the bundle (so code-driven
+ *     content added in the repo reaches persistent storage without clobbering
+ *     anything the admin has changed).
+ *
+ * NOTE: nothing invokes this script in production — the running app relies on
+ * lib/content-sync-once.ts, which does the same reconciliation lazily on first
+ * content read. Keep FIELD_MERGE here in sync with SPECS there.
  */
 
 import fs from "fs";
@@ -30,6 +34,11 @@ const ALWAYS_OVERWRITE = new Set(["profile.json", "portfolio-rag.json"]);
  *   - key: which field identifies a record in the array
  *   - placeholderValues: values in persistent that should be treated as
  *     "missing" and replaced by bundled values (e.g. "#" for a dead link)
+ *   - entriesField: for object-wrapped files ({ edition, entries: [...] }),
+ *     the property holding the record array. Omit for top-level arrays.
+ *
+ * Keep this in sync with SPECS in lib/content-sync-once.ts — that module is
+ * what actually runs in production (nothing invokes this script there).
  */
 const FIELD_MERGE = {
   "certifications.json": {
@@ -39,6 +48,8 @@ const FIELD_MERGE = {
   "projects.json": { key: "id" },
   "talks.json": { key: "id" },
   "events.json": { key: "slug" },
+  "tech-radar.json": { key: "id", entriesField: "entries" },
+  "decisions.json": { key: "id", entriesField: "entries" },
 };
 
 function copyFileIfMissing(src, dest) {
@@ -63,7 +74,8 @@ function isMissing(value, placeholders) {
 }
 
 /**
- * Field-merge an array-of-objects JSON file.
+ * Field-merge an array-of-objects JSON file (or an object wrapping one under
+ * `config.entriesField`).
  * For each record in the bundle:
  *   - Match by `key`. If not present in persistent → append (treat as new).
  *   - If present → backfill any field where persistent is missing/placeholder.
@@ -86,22 +98,28 @@ function fieldMergeArrayJson(srcPath, destPath, config) {
     console.error(`[sync-content] FIELD-MERGE failed to parse ${filename}: ${e.message}. Skipping.`);
     return;
   }
-  if (!Array.isArray(bundled) || !Array.isArray(persistent)) {
+  // Unwrap object-shaped files ({ edition, entries: [...] }) down to the array.
+  // `persistentRecords` stays a live reference into `persistent`, so mutating it
+  // updates the wrapper we write back.
+  const pick = (v) => (config.entriesField ? v?.[config.entriesField] : v);
+  const bundledRecords = pick(bundled);
+  const persistentRecords = pick(persistent);
+  if (!Array.isArray(bundledRecords) || !Array.isArray(persistentRecords)) {
     console.error(`[sync-content] FIELD-MERGE expected array for ${filename}. Skipping.`);
     return;
   }
 
   const { key, placeholderValues = {} } = config;
-  const persistentByKey = new Map(persistent.map((r) => [r?.[key], r]));
+  const persistentByKey = new Map(persistentRecords.map((r) => [r?.[key], r]));
   let changes = 0;
 
-  for (const bRecord of bundled) {
+  for (const bRecord of bundledRecords) {
     const id = bRecord?.[key];
     if (id == null) continue;
     const pRecord = persistentByKey.get(id);
     if (!pRecord) {
       // Append new record from bundle
-      persistent.push({ ...bRecord });
+      persistentRecords.push({ ...bRecord });
       persistentByKey.set(id, bRecord);
       changes++;
       console.log(`[sync-content] MERGE ${filename}: + new ${key}=${id}`);
