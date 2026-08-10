@@ -311,6 +311,7 @@ export default function CertificationEditor({ mode, initialData }: Certification
           </div>
           {badge && (
             <div className="mt-2">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={badge}
                 alt="Badge preview"

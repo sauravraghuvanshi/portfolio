@@ -197,6 +197,7 @@ export default function ContentPreview({
           <div className="space-y-4">
             {/* Cover image */}
             {payload.coverImage ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={payload.coverImage}
                 alt={payload.title}
@@ -254,6 +255,7 @@ export default function ContentPreview({
                             title="Preview full size"
                             className="relative group"
                           >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src={task.url} alt="" className="h-8 w-8 rounded object-cover ring-1 ring-transparent group-hover:ring-brand-500 transition" />
                             <ZoomIn className="absolute inset-0 m-auto h-3 w-3 text-white opacity-0 group-hover:opacity-100 transition" />
                           </button>
@@ -456,6 +458,7 @@ export default function ContentPreview({
                   pre: ({ children }) => <>{children}</>,
                   img: ({ src, alt }) => (
                     src ? (
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={src as string}
                         alt={alt ?? ""}
@@ -593,6 +596,7 @@ export default function ContentPreview({
           >
             <X className="h-5 w-5" />
           </button>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={lightboxUrl}
             alt="Full size preview"

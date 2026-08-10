@@ -52,14 +52,6 @@ function lineCount(content) {
   return content.split("\n").length;
 }
 
-function findLineNumber(content, pattern) {
-  const lines = content.split("\n");
-  for (let i = 0; i < lines.length; i++) {
-    if (lines[i].includes(pattern)) return i + 1;
-  }
-  return null;
-}
-
 /** Check if a line number is wrapped in try-catch by looking backwards. */
 function isInsideTryCatch(content, targetLine) {
   const lines = content.split("\n");
@@ -826,13 +818,10 @@ function checkAPIRouteConsistency() {
   const findings = [];
   const apiDir = path.join(PROJECT_ROOT, "app", "api", "admin");
   const routes = findFiles(apiDir, [".ts"]);
-  let missingAuth = 0;
-  let missingTryCatch = 0;
   for (const f of routes) {
     const content = readSafe(f);
     if (!content) continue;
     if (!content.includes("auth(") && !content.includes("session")) {
-      missingAuth++;
       findings.push({ id: "ARCH-004", severity: "HIGH", title: "Admin API route missing auth check", file: rel(f), description: "This admin route does not verify the user is authenticated." });
     }
     // Check each handler has try-catch

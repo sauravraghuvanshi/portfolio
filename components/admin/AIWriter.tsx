@@ -68,7 +68,6 @@ export default function AIWriter() {
         api: "/api/admin/ai-writer",
         body: () => ({ contentType: contentTypeRef.current }),
       }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 

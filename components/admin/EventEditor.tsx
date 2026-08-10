@@ -623,6 +623,7 @@ export default function EventEditor({ mode, initialData }: EventEditorProps) {
           </div>
           {coverImage && (
             <div className="mt-2 flex items-center gap-2">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={coverImage}
                 alt="Cover preview"
@@ -693,6 +694,7 @@ export default function EventEditor({ mode, initialData }: EventEditorProps) {
                 if (!url) return null;
                 return (
                   <div key={i} className="group relative">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={url}
                       alt={`Image ${i + 1}`}

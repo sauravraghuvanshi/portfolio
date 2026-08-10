@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 export default function ImageWithShimmer({
   className,
   onLoad,
+  alt,
   ...props
 }: ImageProps) {
   const [loaded, setLoaded] = useState(false);
@@ -22,6 +23,7 @@ export default function ImageWithShimmer({
       )}
       <Image
         {...props}
+        alt={alt}
         className={cn(
           className,
           "transition-opacity duration-300",

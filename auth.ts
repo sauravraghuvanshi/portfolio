@@ -39,7 +39,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, request) {
+      async authorize(credentials) {
         // Use username as brute-force key (no IP available in authorize callback)
         const key = String(credentials?.username ?? "unknown");
 
