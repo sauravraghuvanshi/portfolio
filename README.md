@@ -105,6 +105,8 @@ A NextAuth-protected CMS at `/admin` with full create / edit / publish-or-draft 
 
 Because the admin writes to the App Service's persistent volume rather than the repo, **content changes go live immediately** — no build, no deploy. A CI step and the `npm run pull:live` script sync that content back into the repository so the two never drift.
 
+The dashboard reports every content type from a single source of truth — totals, drafts, featured items, a publishing timeline and recent activity — alongside an SEO audit, an infrastructure health view, and **built-in traffic analytics**: a first-party page-view counter with a 30-day trend, top pages and top referrers. No third-party script, no cookie, no raw IP stored — visitors are counted with a daily-rotating salted hash, so the numbers survive ad-blockers and need no consent banner.
+
 ### 🧩 Everywhere else
 
 - **⌘K command palette** — fuzzy search across every page and content item
@@ -128,7 +130,7 @@ Because the admin writes to the App Service's persistent volume rather than the 
 | **Auth** | NextAuth v5 — credentials provider, JWT sessions, middleware-protected routes |
 | **Hosting** | Azure App Service (B1, Linux, Node 20 LTS) |
 | **Storage** | Azure Blob Storage for uploaded media |
-| **Telemetry** | Azure Application Insights (client-side) |
+| **Analytics** | First-party page-view counter (no cookies, no third party) · Azure Application Insights hooks, optional |
 | **CI/CD** | GitHub Actions → standalone zip → Kudu ZipDeploy |
 | **Quality** | Playwright E2E · ESLint · `tsc --noEmit` |
 
