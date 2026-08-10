@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { getAdminMetrics } from "@/lib/admin-metrics";
+import { getAnalyticsMetrics, WINDOW_DAYS } from "@/lib/admin-analytics";
 import {
   FileText,
   BookOpen,
@@ -13,6 +15,12 @@ import {
   PieChart as PieIcon,
   BarChart3,
   Crosshair,
+  Scale,
+  Timer,
+  Users,
+  Gauge,
+  MousePointerClick,
+  ArrowRight,
 } from "lucide-react";
 import { StatCard } from "@/components/admin/ui/StatCard";
 import { MotionCard } from "@/components/admin/ui/MotionCard";
@@ -27,31 +35,22 @@ export const dynamic = "force-dynamic";
 
 export default function AdminDashboard() {
   const m = getAdminMetrics();
+  const a = getAnalyticsMetrics();
 
-  const totalContent =
-    m.totals.blog +
-    m.totals["case-study"] +
-    m.totals.project +
-    m.totals.talk +
-    m.totals.event +
-    m.totals.certification +
-    m.radarCount;
-
-  const lastYear = m.timeline.at(-1);
-  const prevYear = m.timeline.at(-2);
-  const yoyDelta =
-    lastYear && prevYear
-      ? lastYear.Blogs +
-        lastYear["Case Studies"] +
-        lastYear.Projects +
-        lastYear.Events +
-        lastYear.Certs -
-        (prevYear.Blogs +
-          prevYear["Case Studies"] +
-          prevYear.Projects +
-          prevYear.Events +
-          prevYear.Certs)
+  // Sum every series in a timeline row. Derived from the row itself rather than
+  // a hand-written list of kinds, so adding a series in `admin-metrics.ts`
+  // cannot silently leave this total behind.
+  const rowTotal = (row: (typeof m.timeline)[number] | undefined) =>
+    row
+      ? Object.entries(row).reduce(
+          (sum, [key, value]) =>
+            key === "year" || typeof value !== "number" ? sum : sum + value,
+          0,
+        )
       : 0;
+
+  const totalSparkline = m.timeline.map(rowTotal);
+  const yoyDelta = rowTotal(m.timeline.at(-1)) - rowTotal(m.timeline.at(-2));
 
   return (
     <div className="space-y-8">
@@ -71,23 +70,16 @@ export default function AdminDashboard() {
       </div>
 
       {/* Hero stat row */}
-      <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-5">
         <StatCard
           label="Total Content"
-          value={totalContent}
+          value={m.totalContent}
           delta={yoyDelta}
           deltaLabel="YoY"
           icon={<Activity />}
           accent="text-brand-400"
           delay={0}
-          sparkline={m.timeline.map(
-            (t) =>
-              t.Blogs +
-              t["Case Studies"] +
-              t.Projects +
-              t.Events +
-              t.Certs,
-          )}
+          sparkline={totalSparkline}
         />
         <StatCard
           label="Published"
@@ -110,10 +102,18 @@ export default function AdminDashboard() {
           accent="text-amber-400"
           delay={0.15}
         />
+        <StatCard
+          label="Blog Reading"
+          value={m.blogReadingMinutes}
+          suffix=" min"
+          icon={<Timer />}
+          accent="text-sky-400"
+          delay={0.2}
+        />
       </div>
 
       {/* Per-kind cards */}
-      <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 xl:grid-cols-7">
+      <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 xl:grid-cols-4">
         <StatCard
           label="Blogs"
           value={m.totals.blog}
@@ -138,6 +138,7 @@ export default function AdminDashboard() {
           sparkline={m.sparklines.project}
           delay={0.15}
         />
+        {/* Talks and Tech Radar carry no per-item date, so they get no sparkline. */}
         <StatCard
           label="Talks"
           value={m.totals.talk}
@@ -162,12 +163,98 @@ export default function AdminDashboard() {
           delay={0.3}
         />
         <StatCard
-          label="Tech Radar"
-          value={m.radarCount}
-          icon={<Crosshair />}
-          accent="text-teal-400"
+          label="Decisions"
+          value={m.totals.decision}
+          icon={<Scale />}
+          accent="text-yellow-400"
+          sparkline={m.sparklines.decision}
           delay={0.35}
         />
+        <StatCard
+          label="Tech Radar"
+          value={m.totals.radar}
+          icon={<Crosshair />}
+          accent="text-teal-400"
+          delay={0.4}
+        />
+      </div>
+
+      {/* Traffic — first-party page views. Full breakdown lives on
+          /admin/analytics; this row is the at-a-glance summary. */}
+      <div className="space-y-3">
+        <SectionHeading
+          icon={<Gauge />}
+          title="Traffic"
+          subtitle={`First-party page views · last ${WINDOW_DAYS} days`}
+          action={
+            <Link
+              href="/admin/analytics"
+              className="inline-flex items-center gap-1 rounded-lg border border-slate-800 px-2.5 py-1.5 text-xs font-medium text-slate-300 transition hover:border-brand-500/50 hover:text-white"
+            >
+              View analytics
+              <ArrowRight className="h-3 w-3" />
+            </Link>
+          }
+        />
+        {a.hasData ? (
+          <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
+            <StatCard
+              label={`Views (${WINDOW_DAYS}d)`}
+              value={a.views30d}
+              delta={a.viewsDelta}
+              deltaLabel="vs prev"
+              icon={<Eye />}
+              accent="text-brand-400"
+              sparkline={a.sparkline}
+              delay={0}
+            />
+            <StatCard
+              label={`Visitors (${WINDOW_DAYS}d)`}
+              value={a.uniqueVisitors30d}
+              delta={a.visitorsDelta}
+              deltaLabel="vs prev"
+              icon={<Users />}
+              accent="text-emerald-400"
+              delay={0.05}
+            />
+            <StatCard
+              label="Views today"
+              value={a.viewsToday}
+              icon={<Activity />}
+              accent="text-amber-400"
+              delay={0.1}
+            />
+            {/* Top page is a path, not a number, so it cannot use StatCard
+                (whose `value` is strictly numeric) — same shell, text value. */}
+            <MotionCard delay={0.15} hoverable className="p-5">
+              <div className="flex items-center gap-2.5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-800/60 text-violet-400 [&_svg]:h-4 [&_svg]:w-4">
+                  <MousePointerClick />
+                </div>
+                <p className="text-xs font-medium uppercase tracking-wider text-slate-400">
+                  Top page
+                </p>
+              </div>
+              <p className="mt-3 truncate text-xl font-bold text-white">
+                {a.topPage?.name ?? "—"}
+              </p>
+              <p className="mt-1 text-xs text-slate-400">
+                {a.topPage ? `${a.topPage.value} views` : "No views yet"}
+              </p>
+            </MotionCard>
+          </div>
+        ) : (
+          <MotionCard className="p-6 text-center">
+            <p className="text-base font-semibold text-white">
+              Collecting since {a.startedAt}
+            </p>
+            <p className="mx-auto mt-1.5 max-w-md text-sm text-slate-400">
+              No page views recorded yet. There is no historical data to
+              backfill — numbers appear as soon as a visitor lands on a public
+              page.
+            </p>
+          </MotionCard>
+        )}
       </div>
 
       {/* Quick actions */}
@@ -194,7 +281,7 @@ export default function AdminDashboard() {
             </div>
             <BarChart3 className="h-4 w-4 text-slate-500" />
           </div>
-          <ContentTimelineChart data={m.timeline} />
+          <ContentTimelineChart data={m.timeline} series={m.timelineSeries} />
         </MotionCard>
         <MotionCard className="p-5" delay={0.15}>
           <div className="mb-3 flex items-center justify-between">

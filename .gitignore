@@ -54,6 +54,9 @@ tmpclaude-*
 # task planning (local only, not tracked)
 tasks/
 
+# local first-party analytics store (production writes to /home/data)
+.data/
+
 # generated RAG data (re-generate with: node scripts/extract-portfolio-rag-data.mjs)
 content/portfolio-rag.json
 content/portfolio-rag.jsonl

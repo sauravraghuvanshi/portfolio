@@ -11,32 +11,38 @@ import {
   Legend,
 } from "recharts";
 
-export interface TimelinePoint {
-  year: string;
-  Blogs: number;
-  "Case Studies": number;
-  Projects: number;
-  Talks: number;
-  Events: number;
-  Certs: number;
+/** A row of the chart: one x-axis value plus one number per series key. */
+export type TimelineRow = Record<string, string | number>;
+
+export interface TimelineSeries {
+  key: string;
+  color: string;
 }
 
-const SERIES: { key: keyof Omit<TimelinePoint, "year">; color: string }[] = [
-  { key: "Blogs", color: "#60a5fa" },
-  { key: "Case Studies", color: "#22d3ee" },
-  { key: "Projects", color: "#a78bfa" },
-  { key: "Talks", color: "#f472b6" },
-  { key: "Events", color: "#fb923c" },
-  { key: "Certs", color: "#34d399" },
-];
-
-export function ContentTimelineChart({ data }: { data: TimelinePoint[] }) {
+/**
+ * Generic stacked-area timeline. Series are passed in rather than hardcoded so
+ * the same chart serves the content timeline (per-year counts by kind) and the
+ * analytics page (per-day views/visitors).
+ */
+export function ContentTimelineChart({
+  data,
+  series,
+  xKey = "year",
+  height = "h-72",
+  showLegend = true,
+}: {
+  data: TimelineRow[];
+  series: TimelineSeries[];
+  xKey?: string;
+  height?: string;
+  showLegend?: boolean;
+}) {
   return (
-    <div className="h-72 w-full">
+    <div className={`w-full ${height}`}>
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data} margin={{ top: 10, right: 16, left: -8, bottom: 0 }}>
           <defs>
-            {SERIES.map((s) => (
+            {series.map((s) => (
               <linearGradient key={s.key} id={`fill-${s.key}`} x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor={s.color} stopOpacity={0.5} />
                 <stop offset="100%" stopColor={s.color} stopOpacity={0} />
@@ -45,11 +51,12 @@ export function ContentTimelineChart({ data }: { data: TimelinePoint[] }) {
           </defs>
           <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" vertical={false} />
           <XAxis
-            dataKey="year"
+            dataKey={xKey}
             stroke="#64748b"
             tickLine={false}
             axisLine={false}
             tick={{ fontSize: 11 }}
+            minTickGap={16}
           />
           <YAxis
             stroke="#64748b"
@@ -68,11 +75,10 @@ export function ContentTimelineChart({ data }: { data: TimelinePoint[] }) {
             labelStyle={{ color: "#e2e8f0", fontWeight: 600 }}
             cursor={{ stroke: "#334155", strokeWidth: 1 }}
           />
-          <Legend
-            wrapperStyle={{ fontSize: 11, paddingTop: 8 }}
-            iconType="circle"
-          />
-          {SERIES.map((s) => (
+          {showLegend && (
+            <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} iconType="circle" />
+          )}
+          {series.map((s) => (
             <Area
               key={s.key}
               type="monotone"

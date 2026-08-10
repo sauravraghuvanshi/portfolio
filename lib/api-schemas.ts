@@ -279,6 +279,19 @@ export const QuizSchema = z.object({
   questions: z.array(QuizQuestionSchema).min(15).max(35),
 });
 
+// ---------- Page view beacon ----------
+// The beacon is public and unauthenticated, so the schema is deliberately
+// strict: a path must look like a path, and the referrer is capped so a crafted
+// payload cannot bloat the analytics file.
+export const PageViewSchema = z.object({
+  path: z
+    .string()
+    .min(1)
+    .max(300)
+    .refine((v) => v.startsWith("/"), "path must start with /"),
+  referrer: z.string().max(500).optional(),
+});
+
 // ---------- Upload params ----------
 export const UploadParamsSchema = z.object({
   folder: z

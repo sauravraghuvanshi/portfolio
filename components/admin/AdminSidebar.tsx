@@ -17,6 +17,9 @@ import {
   Sparkles,
   Crosshair,
   GitBranch,
+  BarChart3,
+  Search,
+  Server,
 } from "lucide-react";
 
 const navSections = [
@@ -85,6 +88,16 @@ const navSections = [
     items: [
       { label: "Decisions", href: "/admin/decisions", icon: GitBranch },
       { label: "New ADR", href: "/admin/decisions/new", icon: Plus },
+    ],
+  },
+  {
+    // SEO and Infra existed but were only reachable via the dashboard's
+    // Quick Actions — surfaced here alongside the new Analytics page.
+    title: "Insights",
+    items: [
+      { label: "Analytics", href: "/admin/analytics", icon: BarChart3 },
+      { label: "SEO", href: "/admin/seo", icon: Search },
+      { label: "Infrastructure", href: "/admin/infra", icon: Server },
     ],
   },
 ];

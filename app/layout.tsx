@@ -12,6 +12,7 @@ import { PersonSchema, WebSiteSchema } from "@/components/JsonLd";
 import { SITE_URL } from "@/lib/constants";
 import { getAllBlogPosts, getAllCaseStudies, getProjects, getTalks, getEvents, getProfile } from "@/lib/content";
 import AppInsightsProvider from "@/components/AppInsightsProvider";
+import PageViewTracker from "@/components/PageViewTracker";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -167,6 +168,7 @@ export default function RootLayout({
         </LayoutShell>
         <ChatBubble />
         <AppInsightsProvider />
+        <PageViewTracker />
       </body>
     </html>
   );

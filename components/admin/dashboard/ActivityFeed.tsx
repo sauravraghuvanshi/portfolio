@@ -12,10 +12,14 @@ import {
   Award,
   Eye,
   Sparkles,
+  Scale,
+  Crosshair,
 } from "lucide-react";
 import type { ContentKind, ActivityItem } from "@/lib/admin-metrics";
 import { MotionCard } from "../ui/MotionCard";
 
+// Keyed by `ContentKind`, so adding a kind to the metrics layer without adding
+// an entry here is a type error rather than a runtime `undefined.icon` crash.
 const KIND_META: Record<
   ContentKind,
   { label: string; icon: React.ComponentType<{ className?: string }>; color: string }
@@ -26,6 +30,8 @@ const KIND_META: Record<
   talk: { label: "Talk", icon: Video, color: "text-pink-400" },
   event: { label: "Event", icon: Calendar, color: "text-orange-400" },
   certification: { label: "Cert", icon: Award, color: "text-emerald-400" },
+  decision: { label: "Decision", icon: Scale, color: "text-yellow-400" },
+  radar: { label: "Tech Radar", icon: Crosshair, color: "text-teal-400" },
 };
 
 function StatusPill({ status, featured }: { status: ActivityItem["status"]; featured: boolean }) {
