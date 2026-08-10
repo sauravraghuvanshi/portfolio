@@ -310,5 +310,55 @@
     "featured": true,
     "year": 2026,
     "status": "published"
+  },
+  {
+    "id": "marina-meals",
+    "title": "Marina Meals — Bilingual Voice Ordering on Azure Voice Live",
+    "description": "An end-to-end voice ordering experience for a fictional Chennai restaurant, built on the Azure Voice Live API in Azure AI Foundry. Customers speak naturally in English or Tamil to browse the menu, check live prices, find a branch, and place a pickup order — no forms, no ordering flow to navigate. The design point is grounding: restaurant facts are never generated from model memory. Prices, availability, store hours and order totals all come from backend tools that re-read the current restaurant data on every call, and the server — not the model — calculates money.",
+    "outcomes": [
+      "Real-time bilingual conversation — PCM16 mono at 24 kHz with semantic voice activity detection and barge-in, English-first with Tamil replies reserved for complete Tamil utterances",
+      "Tool-grounded answers — menu, price, availability, branch and order facts resolve through backend functions that re-read live JSON on every call, so a price edit is reflected mid-session without a restart",
+      "Server-side order totals — the model never calculates money or invents confirmation numbers",
+      "Show versus tell — visual requests open a menu panel while spoken requests stay audio-only, so the interface matches how the question was asked",
+      "Zero credentials in the browser — short-lived single-use session tickets, Entra identity and WebSocket origin validation, and a managed identity that opens Voice Live server-side; the client never receives an access token, API key or Azure credential",
+      "Hardened CI/CD — GitHub Actions runs the backend and security test suite plus a strict TypeScript/Vite production build, then deploys to Azure App Service via OIDC with an app-scoped managed identity and verifies /api/health — no publish profile or long-lived secret in the repo",
+      "Security-focused test coverage — Entra token validation, ticket replay protection, WebSocket event filtering, origin checks and static-file containment, alongside tool matching, Tamil names and server-side total assertions"
+    ],
+    "tags": [
+      "Voice AI",
+      "Azure Voice Live",
+      "Azure AI Foundry",
+      "Bilingual",
+      "Tamil",
+      "Real-time",
+      "Managed Identity",
+      "FastAPI"
+    ],
+    "category": [
+      "AI",
+      "Azure"
+    ],
+    "techStack": [
+      "Azure Voice Live API",
+      "Azure AI Foundry",
+      "Microsoft Entra ID",
+      "Azure App Service",
+      "Managed Identity",
+      "Python 3.11",
+      "FastAPI",
+      "Uvicorn",
+      "Gunicorn",
+      "React 18",
+      "TypeScript",
+      "Vite",
+      "Web Audio API",
+      "WebSockets",
+      "GitHub Actions"
+    ],
+    "githubUrl": "https://github.com/sauravraghuvanshi/marina-meals",
+    "liveUrl": "https://marina-meals-sri.azurewebsites.net/",
+    "featured": true,
+    "year": 2026,
+    "status": "published"
   }
 ]
