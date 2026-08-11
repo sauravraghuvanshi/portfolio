@@ -580,7 +580,10 @@ export default function ContentPreview({
           isSaving={isSaving}
           saveError={saveError}
           onClose={() => setReviewModalOpen(false)}
-          onConfirm={onSave}
+          onConfirm={async (fields) => {
+            await onSave(fields);
+            setReviewModalOpen(false);
+          }}
         />
       )}
 
