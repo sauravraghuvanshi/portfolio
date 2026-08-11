@@ -93,8 +93,26 @@ export default function AIWriter() {
     if (!lastAI) return { payload: null, rawJson: "" };
 
     const text = getMessageText(lastAI);
-    const jsonMatch = text.match(/```json\n([\s\S]*)\n```\s*$/);
-    if (!jsonMatch) return { payload: null, rawJson: "" };
+    const jsonMatch = text.match(/```[jJ][sS][oO][nN]\s*\n([\s\S]*?)\n```\s*$/);
+    if (!jsonMatch) {
+      // Fallback: try to find JSON object at the very end (no code fence)
+      const rawMatch = text.match(/(\{[\s\S]*\})\s*$/);
+      if (!rawMatch) return { payload: null, rawJson: "" };
+      try {
+        const parsed = JSON.parse(rawMatch[1]) as AIWriterPayload;
+        if (!parsed.title) return { payload: null, rawJson: rawMatch[1] };
+        if (parsed.bodyMarkdown) {
+          const { processed, imageTasks } = processAllMarkers(parsed.bodyMarkdown);
+          parsed.bodyMarkdown = processed;
+          if (imageTasks.length > 0 && imageGen.tasks.length === 0) {
+            imageGen.initTasks(imageTasks);
+          }
+        }
+        return { payload: parsed, rawJson: JSON.stringify(parsed, null, 2) };
+      } catch {
+        return { payload: null, rawJson: "" };
+      }
+    }
 
     try {
       const parsed = JSON.parse(jsonMatch[1]) as AIWriterPayload;
