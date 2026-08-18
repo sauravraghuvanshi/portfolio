@@ -6,6 +6,8 @@ import {
   getTalks,
   getEvents,
   getCertifications,
+  getTechRadar,
+  getADRGallery,
 } from "./content";
 
 export interface SeoIssue {
@@ -21,12 +23,18 @@ export interface SeoCoverage {
   withDescription: number;
   withCoverImage: number;
   averageDescriptionLength: number;
+  /**
+   * Whether a cover/OG image is even a concept for this kind. Text-first
+   * surfaces (decisions, tech radar) have no image field, so they must be
+   * excluded from the "missing cover images" denominator rather than counted
+   * as 100% missing. Absent ⇒ true (the six image-bearing kinds).
+   */
+  imageApplicable?: boolean;
 }
 
 export interface SeoMetrics {
   score: number; // 0-100
-  totals: { kind: string; count: number }[];
-  coverage: Record<string, SeoCoverage>; // by kind
+  coverage: Record<string, SeoCoverage>; // by kind — the single audited universe
   issues: SeoIssue[];
   topTags: { name: string; value: number }[];
   topCategories: { name: string; value: number }[];
@@ -247,6 +255,65 @@ export function getSeoMetrics(): SeoMetrics {
     if (c.badge) certCoverage.withCoverImage++;
   }
 
+  // Decisions (ADR gallery) — a sitemap-indexed surface at /decisions, so it
+  // belongs in the audited universe. Text-first: the description signal is the
+  // decision's `context`; there is no cover-image concept (imageApplicable=false).
+  const decisions = getADRGallery(true)?.entries ?? [];
+  const decisionCoverage: SeoCoverage = {
+    total: decisions.length,
+    withDescription: 0,
+    withCoverImage: 0,
+    averageDescriptionLength: 0,
+    imageApplicable: false,
+  };
+  let decisionDescTotal = 0;
+  for (const d of decisions) {
+    if (d.context) {
+      decisionCoverage.withDescription++;
+      decisionDescTotal += d.context.length;
+    } else {
+      issues.push({
+        severity: "low",
+        kind: "decision",
+        title: `ADR-${String(d.number).padStart(3, "0")} · ${d.title}`,
+        message: "Missing context — the decision's rationale aids indexing",
+        href: `/admin/decisions/${d.id}/edit`,
+      });
+    }
+  }
+  decisionCoverage.averageDescriptionLength = decisionCoverage.withDescription
+    ? Math.round(decisionDescTotal / decisionCoverage.withDescription)
+    : 0;
+
+  // Tech Radar entries — indexed at /tech-radar. Text-first: description signal
+  // is `summary`; no cover-image concept (imageApplicable=false).
+  const radarEntries = getTechRadar(true)?.entries ?? [];
+  const radarCoverage: SeoCoverage = {
+    total: radarEntries.length,
+    withDescription: 0,
+    withCoverImage: 0,
+    averageDescriptionLength: 0,
+    imageApplicable: false,
+  };
+  let radarDescTotal = 0;
+  for (const r of radarEntries) {
+    if (r.summary) {
+      radarCoverage.withDescription++;
+      radarDescTotal += r.summary.length;
+    } else {
+      issues.push({
+        severity: "low",
+        kind: "radar",
+        title: r.name,
+        message: "Missing summary — weakens context on the tech-radar page",
+        href: `/admin/tech-radar/${r.id}/edit`,
+      });
+    }
+  }
+  radarCoverage.averageDescriptionLength = radarCoverage.withDescription
+    ? Math.round(radarDescTotal / radarCoverage.withDescription)
+    : 0;
+
   // Tag/category aggregation across blogs + projects + case studies.
   const tagMap = new Map<string, number>();
   const catMap = new Map<string, number>();
@@ -315,14 +382,6 @@ export function getSeoMetrics(): SeoMetrics {
 
   return {
     score,
-    totals: [
-      { kind: "Blogs", count: blogs.length },
-      { kind: "Case Studies", count: caseStudies.length },
-      { kind: "Projects", count: projects.length },
-      { kind: "Talks", count: talks.length },
-      { kind: "Events", count: events.length },
-      { kind: "Certifications", count: certs.length },
-    ],
     coverage: {
       blog: blogCoverage,
       "case-study": csCoverage,
@@ -330,6 +389,8 @@ export function getSeoMetrics(): SeoMetrics {
       talk: tCoverage,
       event: eCoverage,
       certification: certCoverage,
+      decision: decisionCoverage,
+      radar: radarCoverage,
     },
     issues: issues.slice(0, 50),
     topTags,

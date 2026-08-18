@@ -23,17 +23,26 @@ export const dynamic = "force-dynamic";
 export default function AdminSeoPage() {
   const m = getSeoMetrics();
 
-  const totalContent = m.totals.reduce((acc, t) => acc + t.count, 0);
-  const totalCoverage = Object.values(m.coverage).reduce(
-    (acc, c) => ({
-      total: acc.total + c.total,
-      withDescription: acc.withDescription + c.withDescription,
-      withCoverImage: acc.withCoverImage + c.withCoverImage,
-    }),
-    { total: 0, withDescription: 0, withCoverImage: 0 }
+  // One audited universe: every headline figure below derives from the SAME
+  // reduction over m.coverage, so "Indexed Items" can never disagree with the
+  // coverage grid the way m.totals (6 kinds) once disagreed with it (8 kinds).
+  // Cover-image math is scoped to image-bearing kinds — decisions and tech radar
+  // have no cover image, so counting them as "missing" would be a lie. (lessons #108)
+  const agg = Object.values(m.coverage).reduce(
+    (acc, c) => {
+      const imageApplies = c.imageApplicable !== false;
+      return {
+        total: acc.total + c.total,
+        withDescription: acc.withDescription + c.withDescription,
+        imageTotal: acc.imageTotal + (imageApplies ? c.total : 0),
+        withCoverImage: acc.withCoverImage + (imageApplies ? c.withCoverImage : 0),
+      };
+    },
+    { total: 0, withDescription: 0, imageTotal: 0, withCoverImage: 0 }
   );
-  const missingDesc = totalCoverage.total - totalCoverage.withDescription;
-  const missingCover = totalCoverage.total - totalCoverage.withCoverImage;
+  const totalContent = agg.total;
+  const missingDesc = agg.total - agg.withDescription;
+  const missingCover = agg.imageTotal - agg.withCoverImage;
   const highIssues = m.issues.filter((i) => i.severity === "high").length;
 
   return (
@@ -156,11 +165,15 @@ export default function AdminSeoPage() {
                       value: descPct,
                       color: "#3b82f6",
                     },
-                    {
-                      name: "Cover image",
-                      value: coverPct,
-                      color: "#22c55e",
-                    },
+                    ...(c.imageApplicable !== false
+                      ? [
+                          {
+                            name: "Cover image",
+                            value: coverPct,
+                            color: "#22c55e",
+                          },
+                        ]
+                      : []),
                   ]}
                 />
                 {c.averageDescriptionLength > 0 && (
