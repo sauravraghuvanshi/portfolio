@@ -115,26 +115,43 @@ export function getInfraMetrics(): InfraMetrics {
       category: "storage",
       region: "Central India",
       tier: "Hot · LRS",
-      endpoint: process.env.AZURE_STORAGE_ACCOUNT_NAME
-        ? `https://${process.env.AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net`
-        : null,
+      // The public container URL is inlined at build (deploy.yml); it's a real,
+      // clickable endpoint. The old code built the URL from AZURE_STORAGE_ACCOUNT_NAME
+      // — a var nothing sets — so the endpoint link was always null.
+      endpoint: process.env.NEXT_PUBLIC_AZURE_STORAGE_URL ?? null,
       notes: "Hosts uploaded media (cover images, AI-generated images).",
+      // The vars the storage code actually depends on: azure-storage.ts throws
+      // without AZURE_STORAGE_CONNECTION_STRING (a server secret), and uploaded
+      // images only render because NEXT_PUBLIC_AZURE_STORAGE_URL is inlined at
+      // build. The old list named AZURE_STORAGE_ACCOUNT_NAME + AZURE_STORAGE_CONTAINER
+      // — neither is read anywhere (the real container var is
+      // AZURE_STORAGE_CONTAINER_NAME, and it's optional with a "blog-images"
+      // fallback). Listing the phantoms is what showed two ✗ on an operational
+      // service.
       envKeys: envKeysFor([
-        "AZURE_STORAGE_ACCOUNT_NAME",
-        "AZURE_STORAGE_CONTAINER",
+        "AZURE_STORAGE_CONNECTION_STRING",
+        "NEXT_PUBLIC_AZURE_STORAGE_URL",
       ]),
       color: "#06b6d4",
       status: "operational",
     },
     {
-      id: "appinsights",
-      name: "Application Insights",
+      id: "analytics",
+      name: "First-party Analytics",
       category: "monitoring",
-      tier: "Web · Workspace-based",
-      notes: "Client-side telemetry (page views, perf, exceptions).",
-      envKeys: envKeysFor([
-        "NEXT_PUBLIC_APPINSIGHTS_CONNECTION_STRING",
-      ]),
+      tier: "Persistent volume · privacy-preserving",
+      // Honest reframe. The Application Insights web SDK is bundled but DORMANT:
+      // NEXT_PUBLIC_APPINSIGHTS_CONNECTION_STRING was never set on the App Service,
+      // so initAppInsights() no-ops and zero telemetry was ever collected (see the
+      // header comment in lib/analytics-store.ts). The page-view telemetry that
+      // actually runs is first-party — a cookie-less, salted-hash counter on the
+      // persistent volume. Its Azure code path is gated on WEBSITE_SITE_NAME
+      // (Azure-injected), so that var's presence is the real "this is live" signal.
+      // The card used to check the App Insights connection string and claim
+      // "operational", which is the ✗-on-an-operational-service contradiction.
+      notes:
+        "First-party page-view counter on the persistent volume (no cookies, no third party). The Application Insights SDK is bundled but dormant — its connection string was never set.",
+      envKeys: envKeysFor(["WEBSITE_SITE_NAME"]),
       color: "#0ea5e9",
       status: "operational",
     },
@@ -146,7 +163,12 @@ export function getInfraMetrics(): InfraMetrics {
       endpoint: "https://github.com/sauravraghuvanshi/portfolio/actions",
       notes:
         "Runs lint, build, then publishes a standalone zip and verifies the live site.",
-      envKeys: envKeysFor(["GITHUB_SHA", "GITHUB_REF_NAME"]),
+      // GITHUB_SHA / GITHUB_REF_NAME exist only inside the Actions runner, never at
+      // App Service runtime, so listing them here always rendered two ✗ on a
+      // pipeline that clearly works. The build DOES leave runtime-visible
+      // provenance: deploy.yml inlines these NEXT_PUBLIC_* at build time, so their
+      // presence in the running bundle is the honest signal that CI stamped it.
+      envKeys: envKeysFor(["NEXT_PUBLIC_BUILD_COMMIT", "NEXT_PUBLIC_BUILD_BRANCH"]),
       color: "#24292f",
       status: "operational",
     },
