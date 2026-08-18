@@ -53,6 +53,18 @@ function readNextVersion(): string {
 }
 
 export function getInfraMetrics(): InfraMetrics {
+  // NEXT_PUBLIC_* vars are inlined by the bundler ONLY at STATIC reference sites
+  // like `process.env.NEXT_PUBLIC_BUILD_COMMIT`. The present() helper reads
+  // `process.env[key]` with a computed key, which the bundler never rewrites — so
+  // at App Service runtime those reads hit the real container env, where the build
+  // vars don't exist (they live only in the Actions runner at build time). Read
+  // the build-provenance values here via static access so CI's stamp is baked into
+  // the bundle, then feed the resulting presence into the CI/CD card explicitly.
+  // This is why the GitHub card can't use envKeysFor([...]) like runtime-env
+  // services do — that path always rendered ✗ on a pipeline that clearly works.
+  const buildCommit = process.env.NEXT_PUBLIC_BUILD_COMMIT ?? "";
+  const buildBranch = process.env.NEXT_PUBLIC_BUILD_BRANCH ?? "";
+
   const services: InfraService[] = [
     {
       id: "appservice",
@@ -163,12 +175,14 @@ export function getInfraMetrics(): InfraMetrics {
       endpoint: "https://github.com/sauravraghuvanshi/portfolio/actions",
       notes:
         "Runs lint, build, then publishes a standalone zip and verifies the live site.",
-      // GITHUB_SHA / GITHUB_REF_NAME exist only inside the Actions runner, never at
-      // App Service runtime, so listing them here always rendered two ✗ on a
-      // pipeline that clearly works. The build DOES leave runtime-visible
-      // provenance: deploy.yml inlines these NEXT_PUBLIC_* at build time, so their
-      // presence in the running bundle is the honest signal that CI stamped it.
-      envKeys: envKeysFor(["NEXT_PUBLIC_BUILD_COMMIT", "NEXT_PUBLIC_BUILD_BRANCH"]),
+      // NEXT_PUBLIC_BUILD_* are build-time inlined and never present in the runtime
+      // process.env, so the dynamic present() helper always reported ✗ here even
+      // though CI stamped the bundle. Derive presence from the values captured via
+      // static access at the top of this function instead.
+      envKeys: [
+        { key: "NEXT_PUBLIC_BUILD_COMMIT", present: buildCommit.length > 0 },
+        { key: "NEXT_PUBLIC_BUILD_BRANCH", present: buildBranch.length > 0 },
+      ],
       color: "#24292f",
       status: "operational",
     },
@@ -217,18 +231,11 @@ export function getInfraMetrics(): InfraMetrics {
     buildInfo: {
       nodeVersion: process.version,
       nextVersion: readNextVersion(),
-      // GITHUB_SHA / GITHUB_REF_NAME live only in the Actions runner, never in
-      // the App Service container — reading them at runtime always fell through
-      // to "local"/"main". deploy.yml now inlines the real values as NEXT_PUBLIC_*
-      // at build time; we prefer those, fall back to the raw runner vars (for a
-      // local `next build`), then to sane defaults (for `next dev`).
-      commit:
-        (process.env.NEXT_PUBLIC_BUILD_COMMIT || process.env.GITHUB_SHA || "")
-          .slice(0, 7) || "local",
-      branch:
-        process.env.NEXT_PUBLIC_BUILD_BRANCH ||
-        process.env.GITHUB_REF_NAME ||
-        "main",
+      // Build provenance comes from the NEXT_PUBLIC_BUILD_* values captured via
+      // static access above (inlined by CI at build); fall back to the raw runner
+      // vars for a local `next build`, then to sane defaults for `next dev`.
+      commit: (buildCommit || process.env.GITHUB_SHA || "").slice(0, 7) || "local",
+      branch: buildBranch || process.env.GITHUB_REF_NAME || "main",
       builtAt:
         process.env.NEXT_PUBLIC_BUILD_TIME ||
         process.env.BUILD_TIME ||
