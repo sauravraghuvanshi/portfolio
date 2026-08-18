@@ -54,6 +54,13 @@ jobs:
       - name: Build
         env:
           NEXT_PUBLIC_AZURE_STORAGE_URL: https://sauravportfoliomedia.blob.core.windows.net/blog-images
+          # Build provenance for /admin/infra. These GitHub context values exist
+          # ONLY here in the runner — the App Service container never sees GITHUB_SHA
+          # at runtime — so inlining them as NEXT_PUBLIC_* at build time is the only
+          # way the infra panel can show the real commit/branch/build time.
+          NEXT_PUBLIC_BUILD_COMMIT: ${{ github.sha }}
+          NEXT_PUBLIC_BUILD_BRANCH: ${{ github.ref_name }}
+          NEXT_PUBLIC_BUILD_TIME: ${{ github.event.head_commit.timestamp }}
         run: npm run build
 
       - name: Create deployment zip

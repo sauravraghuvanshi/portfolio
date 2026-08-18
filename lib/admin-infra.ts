@@ -75,14 +75,20 @@ export function getInfraMetrics(): InfraMetrics {
       category: "ai",
       region: process.env.AZURE_FOUNDRY_REGION ?? "East US 2",
       tier: "gpt-5.4 · gpt-4o · MCP enabled",
-      endpoint: process.env.AZURE_FOUNDRY_ENDPOINT ?? null,
+      endpoint: process.env.AZURE_FOUNDRY_PROJECT_ENDPOINT ?? null,
       notes:
         "Powers the RAG chatbot and AI Writer. Application-scoped Responses API; stateless mode.",
+      // Only the two vars the Foundry code actually throws without (see
+      // lib/ai/foundry-agent.ts + rag-pipeline.ts). The old list named
+      // AZURE_FOUNDRY_ENDPOINT — a var that was never set, because every caller
+      // reads AZURE_FOUNDRY_PROJECT_ENDPOINT — plus AI_WRITER_AGENT_NAME (an
+      // optional override that falls back to AZURE_FOUNDRY_AGENT_NAME) and
+      // AZURE_FOUNDRY_API_KEY (never read anywhere; prod authenticates with a
+      // managed identity). Listing those as required is what produced the
+      // "OPERATIONAL yet endpoint ✗" contradiction and the misleading 9/17.
       envKeys: envKeysFor([
-        "AZURE_FOUNDRY_ENDPOINT",
+        "AZURE_FOUNDRY_PROJECT_ENDPOINT",
         "AZURE_FOUNDRY_AGENT_NAME",
-        "AI_WRITER_AGENT_NAME",
-        "AZURE_FOUNDRY_API_KEY",
       ]),
       color: "#7e57c2",
       status: "operational",
@@ -189,9 +195,22 @@ export function getInfraMetrics(): InfraMetrics {
     buildInfo: {
       nodeVersion: process.version,
       nextVersion: readNextVersion(),
-      commit: (process.env.GITHUB_SHA ?? "").slice(0, 7) || "local",
-      branch: process.env.GITHUB_REF_NAME ?? "main",
-      builtAt: process.env.BUILD_TIME ?? new Date().toISOString(),
+      // GITHUB_SHA / GITHUB_REF_NAME live only in the Actions runner, never in
+      // the App Service container — reading them at runtime always fell through
+      // to "local"/"main". deploy.yml now inlines the real values as NEXT_PUBLIC_*
+      // at build time; we prefer those, fall back to the raw runner vars (for a
+      // local `next build`), then to sane defaults (for `next dev`).
+      commit:
+        (process.env.NEXT_PUBLIC_BUILD_COMMIT || process.env.GITHUB_SHA || "")
+          .slice(0, 7) || "local",
+      branch:
+        process.env.NEXT_PUBLIC_BUILD_BRANCH ||
+        process.env.GITHUB_REF_NAME ||
+        "main",
+      builtAt:
+        process.env.NEXT_PUBLIC_BUILD_TIME ||
+        process.env.BUILD_TIME ||
+        new Date().toISOString(),
       environment: process.env.NODE_ENV ?? "development",
     },
     services,
